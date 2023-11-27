@@ -221,15 +221,7 @@ public class ElegirVacunaPaciente extends JDialog {
 				
 				btnRegistrar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						
-						if (paciente == null) {
-							JOptionPane.showMessageDialog(null, "Registrado con éxito", "Registrar Paciente", JOptionPane.INFORMATION_MESSAGE);
-						}
-						else {
-							JOptionPane.showMessageDialog(null, "Modificado con éxito", "Modificar Paciente", JOptionPane.INFORMATION_MESSAGE);
-						}
-						dispose();
-						
+						dispose();					
 					}
 				});
 				btnRegistrar.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));

@@ -84,7 +84,7 @@ public class RegVivienda extends JDialog {
 		}
 		
 		setResizable(false);
-		setBounds(100, 100, 554, 345);
+		setBounds(100, 100, 630, 345);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(new Color(218, 221, 216));
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -94,7 +94,7 @@ public class RegVivienda extends JDialog {
 			JPanel panelContenedor1 = new JPanel();
 			panelContenedor1.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			panelContenedor1.setBackground(new Color(107, 170, 117, 60));
-			panelContenedor1.setBounds(0, 11, 538, 111);
+			panelContenedor1.setBounds(0, 11, 624, 117);
 			contentPanel.add(panelContenedor1);
 			panelContenedor1.setLayout(null);
 			
@@ -104,7 +104,7 @@ public class RegVivienda extends JDialog {
 			lblCalle.setHorizontalAlignment(SwingConstants.CENTER);
 			lblCalle.setForeground(new Color(0, 0, 0));
 			lblCalle.setBackground(new Color(255, 255, 255));
-			lblCalle.setBounds(23, 9, 72, 22);
+			lblCalle.setBounds(23, 11, 72, 22);
 			panelContenedor1.add(lblCalle);
 			{
 				JLabel lblSector = new JLabel("Sector:");
@@ -113,20 +113,20 @@ public class RegVivienda extends JDialog {
 				lblSector.setForeground(Color.BLACK);
 				lblSector.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
 				lblSector.setBackground(Color.WHITE);
-				lblSector.setBounds(23, 44, 72, 22);
+				lblSector.setBounds(23, 46, 72, 22);
 				panelContenedor1.add(lblSector);
 			}
 			
 			txtCalle = new JTextField();
 			txtCalle.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
-			txtCalle.setBounds(105, 9, 140, 22);
+			txtCalle.setBounds(105, 11, 176, 22);
 			panelContenedor1.add(txtCalle);
 			txtCalle.setColumns(10);
 			
 			txtSector = new JTextField();
 			txtSector.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
 			txtSector.setColumns(10);
-			txtSector.setBounds(105, 44, 140, 22);
+			txtSector.setBounds(105, 46, 176, 22);
 			panelContenedor1.add(txtSector);
 			
 			JLabel lblCiudad = new JLabel("Ciudad:");
@@ -135,13 +135,13 @@ public class RegVivienda extends JDialog {
 			lblCiudad.setForeground(Color.BLACK);
 			lblCiudad.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
 			lblCiudad.setBackground(Color.WHITE);
-			lblCiudad.setBounds(291, 9, 72, 22);
+			lblCiudad.setBounds(331, 11, 72, 22);
 			panelContenedor1.add(lblCiudad);
 			
 			txtCiudad = new JTextField();
 			txtCiudad.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
 			txtCiudad.setColumns(10);
-			txtCiudad.setBounds(373, 9, 140, 22);
+			txtCiudad.setBounds(413, 11, 176, 22);
 			panelContenedor1.add(txtCiudad);
 			
 			JLabel lblTelefono = new JLabel("Telefono:");
@@ -150,13 +150,13 @@ public class RegVivienda extends JDialog {
 			lblTelefono.setForeground(Color.BLACK);
 			lblTelefono.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
 			lblTelefono.setBackground(Color.WHITE);
-			lblTelefono.setBounds(291, 44, 72, 22);
+			lblTelefono.setBounds(331, 46, 72, 22);
 			panelContenedor1.add(lblTelefono);
 			
 			txtTelefono = new JTextField();
 			txtTelefono.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
 			txtTelefono.setColumns(10);
-			txtTelefono.setBounds(373, 44, 140, 22);
+			txtTelefono.setBounds(413, 46, 176, 22);
 			panelContenedor1.add(txtTelefono);
 			
 			JLabel lblNumero = new JLabel("N\u00FAmero:");
@@ -165,20 +165,20 @@ public class RegVivienda extends JDialog {
 			lblNumero.setForeground(Color.BLACK);
 			lblNumero.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
 			lblNumero.setBackground(Color.WHITE);
-			lblNumero.setBounds(23, 79, 72, 22);
+			lblNumero.setBounds(23, 81, 72, 22);
 			panelContenedor1.add(lblNumero);
 			
 			spnNumero = new JSpinner();
 			spnNumero.setModel(new SpinnerNumberModel(new Integer(1), new Integer(1), null, new Integer(1)));
 			spnNumero.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
-			spnNumero.setBounds(105, 79, 72, 22);
+			spnNumero.setBounds(105, 81, 72, 22);
 			panelContenedor1.add(spnNumero);
 		}
 		
 		JPanel panelContenedor2 = new JPanel();
 		panelContenedor2.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panelContenedor2.setBackground(new Color(105, 116, 124, 120));
-		panelContenedor2.setBounds(0, 132, 538, 123);
+		panelContenedor2.setBounds(0, 132, 624, 123);
 		contentPanel.add(panelContenedor2);
 		panelContenedor2.setLayout(null);
 		
@@ -188,13 +188,13 @@ public class RegVivienda extends JDialog {
 		lblBuscar.setForeground(Color.BLACK);
 		lblBuscar.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
 		lblBuscar.setBackground(Color.WHITE);
-		lblBuscar.setBounds(22, 14, 62, 22);
+		lblBuscar.setBounds(23, 14, 72, 22);
 		panelContenedor2.add(lblBuscar);
 		
 		txtBuscar = new JTextField();
 		txtBuscar.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
 		txtBuscar.setColumns(10);
-		txtBuscar.setBounds(94, 14, 140, 22);
+		txtBuscar.setBounds(105, 14, 140, 22);
 		panelContenedor2.add(txtBuscar);
 		
 		JButton btnBuscar = new JButton("");
@@ -211,7 +211,7 @@ public class RegVivienda extends JDialog {
 				
 			}
 		});
-		btnBuscar.setBounds(257, 14, 25, 22);
+		btnBuscar.setBounds(255, 14, 25, 22);
 		panelContenedor2.add(btnBuscar);
 		
 		JLabel lblNombre = new JLabel("Nombre:");
@@ -220,13 +220,13 @@ public class RegVivienda extends JDialog {
 		lblNombre.setForeground(Color.BLACK);
 		lblNombre.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
 		lblNombre.setBackground(Color.WHITE);
-		lblNombre.setBounds(22, 52, 62, 22);
+		lblNombre.setBounds(23, 52, 72, 22);
 		panelContenedor2.add(lblNombre);
 		
 		txtNombre = new JTextField();
 		txtNombre.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
 		txtNombre.setColumns(10);
-		txtNombre.setBounds(94, 52, 188, 22);
+		txtNombre.setBounds(105, 52, 176, 22);
 		panelContenedor2.add(txtNombre);
 		
 		btnAsignar = new JButton("Asignar residente");
@@ -240,12 +240,13 @@ public class RegVivienda extends JDialog {
 			}
 		});
 		btnAsignar.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
-		btnAsignar.setBounds(94, 85, 140, 22);
+		btnAsignar.setBounds(105, 85, 140, 22);
 		panelContenedor2.add(btnAsignar);
 		btnAsignar.setEnabled(false);
 		
 		JLabel lblNewLabel = new JLabel("Imagen");
-		lblNewLabel.setBounds(400, 14, 113, 93);
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setBounds(432, 14, 113, 93);
 		panelContenedor2.add(lblNewLabel);
 		{
 			JPanel buttonPane = new JPanel();

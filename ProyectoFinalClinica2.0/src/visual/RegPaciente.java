@@ -12,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import javax.swing.JTextField;
@@ -23,6 +24,7 @@ import javax.swing.JTextArea;
 
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Date;
 import java.awt.event.ActionEvent;
 import javax.swing.JRadioButton;
 import com.toedter.calendar.JDateChooser;
@@ -38,11 +40,11 @@ public class RegPaciente extends JDialog {
 	private JTextField txtNombre;
 	private JTextField txtCedula;
 	private JTextField txtTelefono;
-	private Paciente paciente = null;
 	private JDateChooser dateChooserNacim;
 	private JRadioButton rdbtnMasculino;
 	private JRadioButton rdbtnFemenino;
 	private JTextArea txtareaDireccion;
+	private Paciente paciente = null;
 	private char sexoPaciente;
 	
 	/**
@@ -50,6 +52,11 @@ public class RegPaciente extends JDialog {
 	 */
 	public static void main(String[] args) {
 		try {
+			/* Paciente para probar MODIFICAR
+			Paciente pacienteDePrueba = new Paciente("00101009371", "Julito Pere", new Date(), 'M', "8099098989", "Juan Pablo Duarte", "P---");
+			Vacuna vac2 = new Vacuna("001", "19-Vaccine", "Pfizer");
+			pacienteDePrueba.getMisVacunas().add(vac2);
+			*/
 			RegPaciente dialog = new RegPaciente(null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
@@ -62,9 +69,19 @@ public class RegPaciente extends JDialog {
 	 * Create the dialog.
 	 */
 	public RegPaciente(Paciente pacienteAModificar) {
-		setResizable(false);
+		
+		paciente = pacienteAModificar;
+		
 		setTitle("Registrar Paciente");
-		setBounds(100, 100, 554, 331);
+		
+		if (paciente != null) {
+			
+			setTitle("Modificar Paciente");
+		}
+		
+		setResizable(false);
+		setBounds(100, 100, 604, 331);
+		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(new Color(218, 221, 216));
 		contentPanel.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -74,7 +91,7 @@ public class RegPaciente extends JDialog {
 			JPanel panelContenedor1 = new JPanel();
 			panelContenedor1.setOpaque(false);
 			panelContenedor1.setBackground(new Color(218, 221, 216));
-			panelContenedor1.setBounds(0, 11, 538, 116);
+			panelContenedor1.setBounds(0, 11, 597, 116);
 			contentPanel.add(panelContenedor1);
 			panelContenedor1.setLayout(null);
 			
@@ -84,7 +101,7 @@ public class RegPaciente extends JDialog {
 			lblCodePaciente.setHorizontalAlignment(SwingConstants.CENTER);
 			lblCodePaciente.setForeground(new Color(0, 0, 0));
 			lblCodePaciente.setBackground(new Color(255, 255, 255));
-			lblCodePaciente.setBounds(23, 19, 72, 22);
+			lblCodePaciente.setBounds(23, 21, 72, 22);
 			panelContenedor1.add(lblCodePaciente);
 			{
 				JLabel lblNombre = new JLabel("Nombre:");
@@ -108,7 +125,7 @@ public class RegPaciente extends JDialog {
 			txtNombre = new JTextField();
 			txtNombre.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
 			txtNombre.setColumns(10);
-			txtNombre.setBounds(105, 54, 140, 22);
+			txtNombre.setBounds(105, 54, 176, 22);
 			panelContenedor1.add(txtNombre);
 			
 			JLabel lblCédula = new JLabel("C\u00E9dula:");
@@ -117,13 +134,13 @@ public class RegPaciente extends JDialog {
 			lblCédula.setForeground(Color.BLACK);
 			lblCédula.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
 			lblCédula.setBackground(Color.WHITE);
-			lblCédula.setBounds(291, 19, 72, 22);
+			lblCédula.setBounds(309, 19, 72, 22);
 			panelContenedor1.add(lblCédula);
 			
 			txtCedula = new JTextField();
 			txtCedula.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
 			txtCedula.setColumns(10);
-			txtCedula.setBounds(373, 19, 140, 22);
+			txtCedula.setBounds(391, 19, 176, 22);
 			panelContenedor1.add(txtCedula);
 			
 			JLabel lblFechaNacim = new JLabel("F. de nac:");
@@ -132,11 +149,11 @@ public class RegPaciente extends JDialog {
 			lblFechaNacim.setForeground(Color.BLACK);
 			lblFechaNacim.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
 			lblFechaNacim.setBackground(Color.WHITE);
-			lblFechaNacim.setBounds(291, 54, 72, 22);
+			lblFechaNacim.setBounds(309, 54, 72, 22);
 			panelContenedor1.add(lblFechaNacim);
 			
 			dateChooserNacim = new JDateChooser();
-			dateChooserNacim.setBounds(373, 54, 140, 22);
+			dateChooserNacim.setBounds(391, 54, 176, 22);
 			panelContenedor1.add(dateChooserNacim);
 			
 			JLabel lblSexo = new JLabel("Sexo:");
@@ -149,17 +166,29 @@ public class RegPaciente extends JDialog {
 			lblSexo.setBackground(Color.WHITE);
 			
 			rdbtnMasculino = new JRadioButton("M");
-			rdbtnMasculino.setBounds(129, 87, 38, 22);
+			rdbtnMasculino.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					
+					rdbtnFemenino.setSelected(false);
+				}
+			});
+			rdbtnMasculino.setBounds(105, 87, 38, 22);
 			panelContenedor1.add(rdbtnMasculino);
 			rdbtnMasculino.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
 			
 			rdbtnFemenino = new JRadioButton("F");
-			rdbtnFemenino.setBounds(184, 87, 33, 22);
+			rdbtnFemenino.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					
+					rdbtnMasculino.setSelected(false);
+				}
+			});
+			rdbtnFemenino.setBounds(160, 87, 33, 22);
 			panelContenedor1.add(rdbtnFemenino);
 			rdbtnFemenino.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
 			
 			JLabel lblTelefono = new JLabel("Telefono:");
-			lblTelefono.setBounds(292, 87, 72, 22);
+			lblTelefono.setBounds(309, 87, 72, 22);
 			panelContenedor1.add(lblTelefono);
 			lblTelefono.setOpaque(true);
 			lblTelefono.setHorizontalAlignment(SwingConstants.CENTER);
@@ -168,7 +197,7 @@ public class RegPaciente extends JDialog {
 			lblTelefono.setBackground(Color.WHITE);
 			
 			txtTelefono = new JTextField();
-			txtTelefono.setBounds(374, 87, 140, 22);
+			txtTelefono.setBounds(391, 87, 176, 22);
 			panelContenedor1.add(txtTelefono);
 			txtTelefono.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
 			txtTelefono.setColumns(10);
@@ -177,36 +206,41 @@ public class RegPaciente extends JDialog {
 		JPanel panelVerde = new JPanel();
 		panelVerde.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panelVerde.setBackground(new Color(107, 170, 117, 60));
-		panelVerde.setBounds(0, 21, 538, 114);
+		panelVerde.setBounds(0, 21, 597, 112);
 		contentPanel.add(panelVerde);
 		
 		JPanel panelGris = new JPanel();
 		panelGris.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panelGris.setBackground(new Color(105, 116, 124, 120));
-		panelGris.setBounds(0, 145, 538, 77);
+		panelGris.setBounds(0, 145, 597, 88);
 		contentPanel.add(panelGris);
 		panelGris.setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("(Opcional)");
-		lblNewLabel.setBounds(106, 43, 58, 14);
+		lblNewLabel.setBounds(31, 44, 58, 14);
 		panelGris.add(lblNewLabel);
 		lblNewLabel.setFont(new Font("Gill Sans MT", Font.PLAIN, 13));
 		
 		txtareaDireccion = new JTextArea();
-		txtareaDireccion.setBounds(181, 11, 257, 54);
+		txtareaDireccion.setBounds(105, 17, 275, 54);
 		panelGris.add(txtareaDireccion);
 		txtareaDireccion.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
 		txtareaDireccion.setLineWrap(true);
 		txtareaDireccion.setWrapStyleWord(true);
 		
 		JLabel lblDireccion = new JLabel("Direcci\u00F3n:");
-		lblDireccion.setBounds(97, 18, 74, 22);
+		lblDireccion.setBounds(23, 17, 73, 22);
 		panelGris.add(lblDireccion);
 		lblDireccion.setOpaque(true);
 		lblDireccion.setHorizontalAlignment(SwingConstants.CENTER);
 		lblDireccion.setForeground(Color.BLACK);
 		lblDireccion.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
 		lblDireccion.setBackground(Color.WHITE);
+		
+		JLabel lblImgRegPaciente = new JLabel("Imagen");
+		lblImgRegPaciente.setHorizontalAlignment(SwingConstants.CENTER);
+		lblImgRegPaciente.setBounds(456, 17, 66, 54);
+		panelGris.add(lblImgRegPaciente);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -236,6 +270,7 @@ public class RegPaciente extends JDialog {
 							elegirVacunas.setVisible(true);
 							nuevoPaciente.getMisVacunas().addAll(elegirVacunas.extraerVacunasElegidas());
 							Clinica.getInstance().insertarPaciente(nuevoPaciente);
+							JOptionPane.showMessageDialog(null, "Registrado con éxito", "Registrar Paciente", JOptionPane.INFORMATION_MESSAGE);
 							clean();
 						}
 						else {
@@ -256,9 +291,9 @@ public class RegPaciente extends JDialog {
 							elegirVacunas.setModal(true);
 							elegirVacunas.setVisible(true);
 							paciente.getMisVacunas().clear();
-							paciente.getMisVacunas().addAll(elegirVacunas.extraerVacunasElegidas());
-							
-							//Clinica.getInstance().actualizarPaciente(paciente);
+							paciente.getMisVacunas().addAll(elegirVacunas.extraerVacunasElegidas());							
+							Clinica.getInstance().actualizarPaciente(paciente);
+							JOptionPane.showMessageDialog(null, "Modificado con éxito", "Modificar Paciente", JOptionPane.INFORMATION_MESSAGE);
 							dispose();
 						}
 						
@@ -280,6 +315,15 @@ public class RegPaciente extends JDialog {
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
 			}
+		}
+		
+		if (paciente != null) {
+			
+			txtNombre.setEnabled(false);
+			rdbtnMasculino.setEnabled(false);
+			rdbtnFemenino.setEnabled(false);
+			txtCedula.setEnabled(false);
+			dateChooserNacim.setEnabled(false);
 		}
 		
 		loadPaciente();
