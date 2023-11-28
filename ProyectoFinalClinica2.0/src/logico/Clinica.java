@@ -135,6 +135,7 @@ public class Clinica {
 		misVacunas.add(vacuna);
 		// Sysout de verificación [[Borrar más tarde]]
 		System.out.println(misVacunas.size()+" vacunas");
+		generadorCodeVacuna++;
 	}
 	
 	public void insertarPaciente(Paciente paciente) {
@@ -270,6 +271,24 @@ public class Clinica {
 		}
 		
 		return viviendaABuscar;
+	}
+
+	public Enfermedad buscarEnfermedadByNombre(String nombreEnfermedad) {
+		
+		Enfermedad enfermedadABuscar = null;
+		boolean encontrado = false;
+		int index = 0;
+		
+		while (!encontrado && index < misEnfermedades.size()) {
+			if (misEnfermedades.get(index).getNombre().equalsIgnoreCase(nombreEnfermedad)) {
+				enfermedadABuscar = misEnfermedades.get(index);
+				encontrado = true;
+			}
+			
+			index++;
+		}
+		
+		return enfermedadABuscar;
 	}
 
 

@@ -90,7 +90,7 @@ public class RegEnfermedad extends JDialog {
 		rayita1 = new Color(rayita1.getRed(), rayita1.getGreen(), rayita1.getBlue(), alpha);
 		rayita2 = new Color(rayita2.getRed(), rayita2.getGreen(), rayita2.getBlue(), alpha2);
 		rayita3 = new Color(rayita3.getRed(), rayita3.getGreen(), rayita3.getBlue(), alpha3);
-		contentPanel.setBackground(backgroundColor);
+		contentPanel.setBackground(new Color(255, 250, 250));
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
@@ -212,17 +212,17 @@ public class RegEnfermedad extends JDialog {
 		panel_2.add(lblImagen);
 		
 		JPanel panel_3 = new JPanel();
-		panel_3.setBackground(new Color(255, 255, 255));
+		panel_3.setBackground(new Color(240, 128, 128));
 		panel_3.setBounds(0, 172, 757, 5);
 		contentPanel.add(panel_3);
 		
 		JPanel panel_4 = new JPanel();
-		panel_4.setBackground(new Color(255, 255, 255));
+		panel_4.setBackground(new Color(220, 20, 60));
 		panel_4.setBounds(0, 187, 757, 5);
 		contentPanel.add(panel_4);
 		
 		JPanel panel_5 = new JPanel();
-		panel_5.setBackground(new Color(255, 255, 255));
+		panel_5.setBackground(new Color(178, 34, 34));
 		panel_5.setBounds(0, 202, 757, 5);
 		contentPanel.add(panel_5);
 		{
