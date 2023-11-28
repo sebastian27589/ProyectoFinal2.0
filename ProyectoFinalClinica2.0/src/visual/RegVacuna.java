@@ -74,6 +74,8 @@ public class RegVacuna extends JDialog {
 	 */
 	public RegVacuna(Vacuna vacunaAModificar) {
 		
+		
+		// Pruebas
 		Enfermedad ef1 = new Enfermedad("Sarampión", "Bacteria", "", 1, false);
 		Enfermedad ef2 = new Enfermedad("Tuberculosis", "Bacteria", "", 4, false);
 		Enfermedad ef3 = new Enfermedad("Dengue", "Virus", "", 3, false);
