@@ -146,6 +146,14 @@ public class Clinica {
 		System.out.println(misPersonas.size()+" pacientes");
 	}
 	
+	public void insertarMedico(Medico medico) {
+		
+		misPersonas.add(medico);
+		generadorCodeMedico++;
+		// Sysout de verificación [[Borrar más tarde]]
+		System.out.println(misPersonas.size()+" medicos");
+	}
+	
 	public void insertarEnfermedad(Enfermedad nuevaEnfermedad) {
 		
 		misEnfermedades.add(nuevaEnfermedad);
