@@ -325,8 +325,9 @@ public class Clinica {
 		return enfermedadABuscar;
 	}
 
-
-
-	
+	public void consultaRealizada() {
+		
+		generadorCodeConsMed++;
+	}
 	
 }
