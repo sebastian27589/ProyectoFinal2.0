@@ -42,7 +42,7 @@ public class RegVivienda extends JDialog {
 	private JTextField txtNombre;
 	private Vivienda vivienda = null;
 	private ArrayList<Paciente> residentesAAgregar = new ArrayList<Paciente>();
-	private Paciente pacienteABuscar = new Paciente("", "", null, '0', "", "", "");
+	private Paciente pacienteABuscar = null;
 	private JSpinner spnNumero;
 	private JButton btnAsignar;
 	
@@ -66,8 +66,8 @@ public class RegVivienda extends JDialog {
 		
 		
 		//Pacientes para probar el botón de búsqueda por cédula 
-		Clinica.getInstance().insertarPaciente(new Paciente("001", "Julito", null, 'M', "809", "123232", "000"));
-		Clinica.getInstance().insertarPaciente(new Paciente("100", "Pedrito", null, 'M', "809", "123232", "000"));
+		//Clinica.getInstance().insertarPaciente(new Paciente("001", "Julito", null, 'M', "809", "123232", "000"));
+		//Clinica.getInstance().insertarPaciente(new Paciente("100", "Pedrito", null, 'M', "809", "123232", "000"));
 		
 		setTitle("Registrar Vivienda");
 		

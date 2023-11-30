@@ -10,6 +10,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+
 import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -30,13 +32,18 @@ import javax.swing.JRadioButton;
 import com.toedter.calendar.JDateChooser;
 
 import logico.Clinica;
-import logico.Paciente;
+import logico.Medico;
 import logico.Vacuna;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JScrollBar;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class RegMedico extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
-	private JTextField txtCodePaciente;
+	private JTextField txtCodeMedico;
 	private JTextField txtNombre;
 	private JTextField txtCedula;
 	private JTextField txtTelefono;
@@ -44,19 +51,20 @@ public class RegMedico extends JDialog {
 	private JRadioButton rdbtnMasculino;
 	private JRadioButton rdbtnFemenino;
 	private JTextArea txtareaDireccion;
-	private Paciente paciente = null;
-	private char sexoPaciente;
+	private String selected = null;
+	private static Medico medico = null;
+	private char sexoMedico;
+	private JTable table;
+	private static DefaultTableModel model;
+	private static Object[] row;
+	private static ArrayList<String> especialidadesElegidas = new ArrayList<String>();
+	private JButton btnEliminar;
 	
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			/* Paciente para probar MODIFICAR
-			Paciente pacienteDePrueba = new Paciente("00101009371", "Julito Pere", new Date(), 'M', "8099098989", "Juan Pablo Duarte", "P---");
-			Vacuna vac2 = new Vacuna("001", "19-Vaccine", "Pfizer");
-			pacienteDePrueba.getMisVacunas().add(vac2);
-			*/
 			RegMedico dialog = new RegMedico(null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
@@ -68,19 +76,19 @@ public class RegMedico extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public RegMedico(Paciente pacienteAModificar) {
+	public RegMedico(Medico medicoAModificar) {
 		
-		paciente = pacienteAModificar;
+		medico = medicoAModificar;
 		
-		setTitle("Registrar Paciente");
+		setTitle("Registrar Médico");
 		
-		if (paciente != null) {
+		if (medico != null) {
 			
-			setTitle("Modificar Paciente");
+			setTitle("Modificar Médico");
 		}
 		
 		setResizable(false);
-		setBounds(100, 100, 604, 331);
+		setBounds(100, 100, 800, 395);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(new Color(218, 221, 216));
@@ -91,39 +99,39 @@ public class RegMedico extends JDialog {
 			JPanel panelContenedor1 = new JPanel();
 			panelContenedor1.setOpaque(false);
 			panelContenedor1.setBackground(new Color(218, 221, 216));
-			panelContenedor1.setBounds(0, 11, 597, 116);
+			panelContenedor1.setBounds(0, 11, 794, 116);
 			contentPanel.add(panelContenedor1);
 			panelContenedor1.setLayout(null);
 			
-			JLabel lblCodePaciente = new JLabel("C\u00F3digo:");
-			lblCodePaciente.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
-			lblCodePaciente.setOpaque(true);
-			lblCodePaciente.setHorizontalAlignment(SwingConstants.CENTER);
-			lblCodePaciente.setForeground(new Color(0, 0, 0));
-			lblCodePaciente.setBackground(new Color(255, 255, 255));
-			lblCodePaciente.setBounds(23, 21, 72, 22);
-			panelContenedor1.add(lblCodePaciente);
+			JLabel lblCodemedico = new JLabel("C\u00F3digo:");
+			lblCodemedico.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
+			lblCodemedico.setOpaque(true);
+			lblCodemedico.setHorizontalAlignment(SwingConstants.CENTER);
+			lblCodemedico.setForeground(new Color(0, 0, 0));
+			lblCodemedico.setBackground(new Color(255, 255, 255));
+			lblCodemedico.setBounds(23, 21, 72, 22);
+			panelContenedor1.add(lblCodemedico);
 			{
 				JLabel lblNombre = new JLabel("Nombre:");
 				lblNombre.setOpaque(true);
 				lblNombre.setHorizontalAlignment(SwingConstants.CENTER);
 				lblNombre.setForeground(Color.BLACK);
-				lblNombre.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
+				lblNombre.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 				lblNombre.setBackground(Color.WHITE);
 				lblNombre.setBounds(23, 54, 72, 22);
 				panelContenedor1.add(lblNombre);
 			}
 			
-			txtCodePaciente = new JTextField();
-			txtCodePaciente.setEditable(false);
-			txtCodePaciente.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
-			txtCodePaciente.setBounds(105, 19, 62, 22);
-			panelContenedor1.add(txtCodePaciente);
-			txtCodePaciente.setColumns(10);
-			txtCodePaciente.setText("P-"+Clinica.getInstance().getGeneradorCodePaciente());
+			txtCodeMedico = new JTextField();
+			txtCodeMedico.setEditable(false);
+			txtCodeMedico.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
+			txtCodeMedico.setBounds(105, 21, 62, 22);
+			panelContenedor1.add(txtCodeMedico);
+			txtCodeMedico.setColumns(10);
+			txtCodeMedico.setText("P-"+Clinica.getInstance().getGeneradorCodeMedico());
 			
 			txtNombre = new JTextField();
-			txtNombre.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
+			txtNombre.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 			txtNombre.setColumns(10);
 			txtNombre.setBounds(105, 54, 176, 22);
 			panelContenedor1.add(txtNombre);
@@ -132,22 +140,22 @@ public class RegMedico extends JDialog {
 			lblCédula.setOpaque(true);
 			lblCédula.setHorizontalAlignment(SwingConstants.CENTER);
 			lblCédula.setForeground(Color.BLACK);
-			lblCédula.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
+			lblCédula.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 			lblCédula.setBackground(Color.WHITE);
-			lblCédula.setBounds(309, 19, 72, 22);
+			lblCédula.setBounds(309, 21, 72, 22);
 			panelContenedor1.add(lblCédula);
 			
 			txtCedula = new JTextField();
-			txtCedula.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
+			txtCedula.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 			txtCedula.setColumns(10);
-			txtCedula.setBounds(391, 19, 176, 22);
+			txtCedula.setBounds(391, 21, 176, 22);
 			panelContenedor1.add(txtCedula);
 			
 			JLabel lblFechaNacim = new JLabel("F. de nac:");
 			lblFechaNacim.setOpaque(true);
 			lblFechaNacim.setHorizontalAlignment(SwingConstants.CENTER);
 			lblFechaNacim.setForeground(Color.BLACK);
-			lblFechaNacim.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
+			lblFechaNacim.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 			lblFechaNacim.setBackground(Color.WHITE);
 			lblFechaNacim.setBounds(309, 54, 72, 22);
 			panelContenedor1.add(lblFechaNacim);
@@ -162,7 +170,7 @@ public class RegMedico extends JDialog {
 			lblSexo.setOpaque(true);
 			lblSexo.setHorizontalAlignment(SwingConstants.CENTER);
 			lblSexo.setForeground(Color.BLACK);
-			lblSexo.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
+			lblSexo.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 			lblSexo.setBackground(Color.WHITE);
 			
 			rdbtnMasculino = new JRadioButton("M");
@@ -174,7 +182,7 @@ public class RegMedico extends JDialog {
 			});
 			rdbtnMasculino.setBounds(105, 87, 38, 22);
 			panelContenedor1.add(rdbtnMasculino);
-			rdbtnMasculino.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
+			rdbtnMasculino.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 			
 			rdbtnFemenino = new JRadioButton("F");
 			rdbtnFemenino.addActionListener(new ActionListener() {
@@ -185,7 +193,7 @@ public class RegMedico extends JDialog {
 			});
 			rdbtnFemenino.setBounds(160, 87, 33, 22);
 			panelContenedor1.add(rdbtnFemenino);
-			rdbtnFemenino.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
+			rdbtnFemenino.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 			
 			JLabel lblTelefono = new JLabel("Telefono:");
 			lblTelefono.setBounds(309, 87, 72, 22);
@@ -193,116 +201,196 @@ public class RegMedico extends JDialog {
 			lblTelefono.setOpaque(true);
 			lblTelefono.setHorizontalAlignment(SwingConstants.CENTER);
 			lblTelefono.setForeground(Color.BLACK);
-			lblTelefono.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
+			lblTelefono.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 			lblTelefono.setBackground(Color.WHITE);
 			
 			txtTelefono = new JTextField();
 			txtTelefono.setBounds(391, 87, 176, 22);
 			panelContenedor1.add(txtTelefono);
-			txtTelefono.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
+			txtTelefono.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 			txtTelefono.setColumns(10);
+			
+			JLabel lblNewLabel = new JLabel("Imagen de relleno");
+			lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+			lblNewLabel.setBounds(610, 59, 145, 14);
+			panelContenedor1.add(lblNewLabel);
 		}
 		
-		JPanel panelVerde = new JPanel();
-		panelVerde.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panelVerde.setBackground(new Color(107, 170, 117, 60));
-		panelVerde.setBounds(0, 21, 597, 112);
-		contentPanel.add(panelVerde);
+		JPanel panelAzul = new JPanel();
+		panelAzul.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panelAzul.setBackground(new Color(173, 216, 230));
+		panelAzul.setBounds(0, 21, 794, 112);
+		contentPanel.add(panelAzul);
 		
 		JPanel panelGris = new JPanel();
 		panelGris.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panelGris.setBackground(new Color(105, 116, 124, 120));
-		panelGris.setBounds(0, 145, 597, 88);
+		panelGris.setBounds(0, 145, 415, 121);
 		contentPanel.add(panelGris);
 		panelGris.setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("(Opcional)");
-		lblNewLabel.setBounds(31, 44, 58, 14);
-		panelGris.add(lblNewLabel);
-		lblNewLabel.setFont(new Font("Gill Sans MT", Font.PLAIN, 13));
-		
 		txtareaDireccion = new JTextArea();
-		txtareaDireccion.setBounds(105, 17, 275, 54);
+		txtareaDireccion.setBounds(105, 34, 285, 54);
 		panelGris.add(txtareaDireccion);
-		txtareaDireccion.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
+		txtareaDireccion.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 		txtareaDireccion.setLineWrap(true);
 		txtareaDireccion.setWrapStyleWord(true);
 		
 		JLabel lblDireccion = new JLabel("Direcci\u00F3n:");
-		lblDireccion.setBounds(23, 17, 73, 22);
+		lblDireccion.setBounds(23, 49, 72, 22);
 		panelGris.add(lblDireccion);
 		lblDireccion.setOpaque(true);
 		lblDireccion.setHorizontalAlignment(SwingConstants.CENTER);
 		lblDireccion.setForeground(Color.BLACK);
-		lblDireccion.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
+		lblDireccion.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 		lblDireccion.setBackground(Color.WHITE);
 		
-		JLabel lblImgRegPaciente = new JLabel("Imagen");
-		lblImgRegPaciente.setHorizontalAlignment(SwingConstants.CENTER);
-		lblImgRegPaciente.setBounds(456, 17, 66, 54);
-		panelGris.add(lblImgRegPaciente);
+		JPanel panel = new JPanel();
+		panel.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel.setBounds(425, 145, 369, 121);
+		contentPanel.add(panel);
+		panel.setLayout(null);
+		
+		JLabel lblBuscarEsp = new JLabel("Especialidad:");
+		lblBuscarEsp.setOpaque(true);
+		lblBuscarEsp.setHorizontalAlignment(SwingConstants.CENTER);
+		lblBuscarEsp.setForeground(Color.BLACK);
+		lblBuscarEsp.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
+		lblBuscarEsp.setBackground(Color.WHITE);
+		lblBuscarEsp.setBounds(10, 11, 82, 22);
+		panel.add(lblBuscarEsp);
+		
+		JComboBox cbxElegirEspecialidad = new JComboBox();
+		cbxElegirEspecialidad.setModel(new DefaultComboBoxModel(new String[] {"<Elegir>", "Medicina Interna", "Cardiolog\u00EDa", "Dermatolog\u00EDa", "Gastroenterolog\u00EDa", "Neurolog\u00EDa", "Oftalmolog\u00EDa", "Otorrinolaringolog\u00EDa", "Endocrinolog\u00EDa", "Hematolog\u00EDa", "Nefrolog\u00EDa", "Urolog\u00EDa", "Ginecolog\u00EDa", "Pediatr\u00EDa", "Psiquiatr\u00EDa", "Ortopedia", "Traumatolog\u00EDa", "Cirug\u00EDa General", "Radiolog\u00EDa", "Oncolog\u00EDa", "Reumatolog\u00EDa"}));
+		cbxElegirEspecialidad.setSelectedIndex(0);
+		cbxElegirEspecialidad.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
+		cbxElegirEspecialidad.setBounds(102, 11, 146, 22);
+		//AutoCompleteDecorator.decorate(cbxElegirEspecialidad);
+		panel.add(cbxElegirEspecialidad);
+		
+		JButton btnNewButton = new JButton("A\u00F1adir");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				if (verificarAdicionEspecialidad(cbxElegirEspecialidad.getSelectedItem().toString())) {
+					
+					especialidadesElegidas.add(cbxElegirEspecialidad.getSelectedItem().toString());
+					loadEspecialidades();
+				}
+				
+			}
+		});
+		btnNewButton.setFont(new Font("Gill Sans MT", Font.PLAIN, 13));
+		btnNewButton.setBounds(254, 11, 78, 22);
+		panel.add(btnNewButton);
+		
+		JPanel panelTablaEsps = new JPanel();
+		panelTablaEsps.setBounds(10, 44, 238, 66);
+		panel.add(panelTablaEsps);
+		panelTablaEsps.setLayout(new BorderLayout(0, 0));
+		
+		JScrollPane scrollPane = new JScrollPane();
+		panelTablaEsps.add(scrollPane, BorderLayout.CENTER);
+		
+		Object[] header = {"Especialidades del Médico"};
+		
+		model = new DefaultTableModel() {
+			
+			public boolean isCellEditable(int row, int column) {       
+			       return false;
+			}
+		};
+	
+		model.setColumnIdentifiers(header);
+		table = new JTable(model);
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				int rowIndex = table.getSelectedRow();
+				
+				if (rowIndex >= 0) {
+					
+					selected = buscarEspecialidadTabla(table.getValueAt(rowIndex, 0).toString());
+					btnEliminar.setEnabled(true);
+				}
+				
+			}
+		});
+		table.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
+		scrollPane.setViewportView(table);
+		
+		btnEliminar = new JButton("Eliminar");
+		btnEliminar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				System.out.println(selected);
+				especialidadesElegidas.remove(selected);
+				loadEspecialidades();
+				btnEliminar.setEnabled(false);
+			}
+		});
+		btnEliminar.setEnabled(false);
+		btnEliminar.setFont(new Font("Gill Sans MT", Font.PLAIN, 13));
+		btnEliminar.setBounds(254, 88, 78, 22);
+		panel.add(btnEliminar);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton btnSiguiente = new JButton("Siguiente");
-				btnSiguiente.addActionListener(new ActionListener() {
+				JButton btnRegistrar = new JButton("Registrar");
+				btnRegistrar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						
-						if (paciente == null) {
+						if (medico == null) {
 							
 							if (rdbtnMasculino.isSelected()) {
 								
-								sexoPaciente = 'M';
+								sexoMedico = 'M';
 							}
 							else {
 								
-								sexoPaciente = 'F';
+								sexoMedico = 'F';
 							}
 							
-							Paciente nuevoPaciente = new Paciente(txtCedula.getText(), txtNombre.getText(), dateChooserNacim.getDate(),
-									 sexoPaciente, txtTelefono.getText(), txtareaDireccion.getText(), txtCodePaciente.getText());
+							Medico medicoNuevo = new Medico(txtCedula.getText(), txtNombre.getText(), dateChooserNacim.getDate(), sexoMedico,
+								                            txtTelefono.getText(), txtareaDireccion.getText(), txtCodeMedico.getText());
+							medicoNuevo.getEspecialidades().addAll(especialidadesElegidas);
 							
-							ElegirVacunaPaciente elegirVacunas = new ElegirVacunaPaciente(null);
-							elegirVacunas.setModal(true);
-							elegirVacunas.setVisible(true);
-							nuevoPaciente.getMisVacunas().addAll(elegirVacunas.extraerVacunasElegidas());
-							Clinica.getInstance().insertarPaciente(nuevoPaciente);
-							JOptionPane.showMessageDialog(null, "Registrado con éxito", "Registrar Paciente", JOptionPane.INFORMATION_MESSAGE);
+							Clinica.getInstance().insertarMedico(medicoNuevo);
+							JOptionPane.showMessageDialog(null, "Registrado con éxito", "Registrar Médico", JOptionPane.INFORMATION_MESSAGE);
 							clean();
 						}
 						else {
 					
 							if (rdbtnMasculino.isSelected()) {
 								
-								sexoPaciente = 'M';
+								sexoMedico = 'M';
 							}
 							else {
 								
-								sexoPaciente = 'F';
+								sexoMedico = 'F';
 							}
 							
-							paciente.setTelefono(txtTelefono.getText());
-							paciente.setDireccion(txtareaDireccion.getText());
+							medico.setTelefono(txtTelefono.getText());
+							medico.setDireccion(txtareaDireccion.getText());
+							medico.getEspecialidades().clear();
+							medico.getEspecialidades().addAll(especialidadesElegidas);
 							
-							ElegirVacunaPaciente elegirVacunas = new ElegirVacunaPaciente(paciente);
-							elegirVacunas.setModal(true);
-							elegirVacunas.setVisible(true);
-							paciente.getMisVacunas().clear();
-							paciente.getMisVacunas().addAll(elegirVacunas.extraerVacunasElegidas());							
-							Clinica.getInstance().actualizarPaciente(paciente);
-							JOptionPane.showMessageDialog(null, "Modificado con éxito", "Modificar Paciente", JOptionPane.INFORMATION_MESSAGE);
+							Clinica.getInstance().actualizarMedico(medico);
+							// Poner el JOptionPane en MostrarMedico
+							//JOptionPane.showMessageDialog(null, "Modificado con éxito", "Modificar medico", JOptionPane.INFORMATION_MESSAGE);
 							dispose();
 						}
 						
 					}
 				});
-				btnSiguiente.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
-				btnSiguiente.setActionCommand("OK");
-				buttonPane.add(btnSiguiente);
-				getRootPane().setDefaultButton(btnSiguiente);
+				btnRegistrar.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
+				btnRegistrar.setActionCommand("OK");
+				buttonPane.add(btnRegistrar);
+				getRootPane().setDefaultButton(btnRegistrar);
 			}
 			{
 				JButton cancelButton = new JButton("Cancelar");
@@ -317,7 +405,7 @@ public class RegMedico extends JDialog {
 			}
 		}
 		
-		if (paciente != null) {
+		if (medico != null) {
 			
 			txtNombre.setEnabled(false);
 			rdbtnMasculino.setEnabled(false);
@@ -326,17 +414,17 @@ public class RegMedico extends JDialog {
 			dateChooserNacim.setEnabled(false);
 		}
 		
-		loadPaciente();
+		loadMedicoAModificar();
 		
 	}
 	
-	private void loadPaciente() {
+	private void loadMedicoAModificar() {
 		
-		if (paciente != null) {
+		if (medico != null) {
 			
-			txtCodePaciente.setText(paciente.getCodePaciente());
-			txtNombre.setText(paciente.getNombre());
-			if (paciente.getSexo() == 'M') {
+			txtCodeMedico.setText(medico.getCodeMedico());
+			txtNombre.setText(medico.getNombre());
+			if (medico.getSexo() == 'M') {
 				
 				rdbtnMasculino.setSelected(true);
 			}
@@ -344,17 +432,19 @@ public class RegMedico extends JDialog {
 				
 				rdbtnFemenino.setSelected(true);
 			}
-			txtCedula.setText(paciente.getCedula());
-			dateChooserNacim.setDate(paciente.getFechaDeNacimiento());
-			txtTelefono.setText(paciente.getTelefono());
 			
+			txtCedula.setText(medico.getCedula());
+			dateChooserNacim.setDate(medico.getFechaDeNacimiento());
+			txtTelefono.setText(medico.getTelefono());
+			txtareaDireccion.setText(medico.getDireccion());
+			loadEspecialidades();
 		}
 		
 	}
 	
 	private void clean() {
 		
-		txtCodePaciente.setText("P-"+Clinica.getInstance().getGeneradorCodePaciente());
+		txtCodeMedico.setText("P-"+Clinica.getInstance().getGeneradorCodeMedico());
 		txtNombre.setText("");
 		rdbtnMasculino.setSelected(false);
 		rdbtnFemenino.setSelected(false);
@@ -362,5 +452,77 @@ public class RegMedico extends JDialog {
 		dateChooserNacim.setCalendar(null);
 		txtTelefono.setText("");
 		txtareaDireccion.setText("");
+		especialidadesElegidas.clear();
+		loadEspecialidades();
+	}
+	
+	public static void loadEspecialidades() {
+		
+		if (medico == null) {
+			
+			model.setRowCount(0);
+			row = new Object[model.getColumnCount()];
+			
+			for (String especialidad : especialidadesElegidas) {
+				row[0] = especialidad; 
+				model.addRow(row);
+			}
+		}
+		else {
+			
+			model.setRowCount(0);
+			row = new Object[model.getColumnCount()];
+			
+			for (String especialidad : medico.getEspecialidades()) {
+				row[0] = especialidad; 
+				model.addRow(row);
+			}
+		}
+
+		
+	}
+	
+	public boolean verificarAdicionEspecialidad(String especialidadAVerificar) {
+		
+		boolean permitirElegir = true;
+		
+		if (especialidadAVerificar.equalsIgnoreCase("<Elegir>")) {
+			
+			permitirElegir = false;
+		}
+		else {
+			
+			for (String especialidad : especialidadesElegidas) {
+				
+				if (especialidad.equalsIgnoreCase(especialidadAVerificar)) {
+					
+					permitirElegir = false;
+				}
+			}
+		}
+
+		
+		return permitirElegir;
+	}
+	
+	public String buscarEspecialidadTabla(String especialidadABuscar) {
+		
+		String especialidad = null;
+		boolean encontrado = false;
+		int index = 0;
+		
+		while (!encontrado && index < especialidadesElegidas.size()) {
+			
+			if (especialidadesElegidas.get(index).equalsIgnoreCase(especialidadABuscar)) {
+				
+				encontrado = true;
+				especialidad = especialidadesElegidas.get(index);
+			}
+			
+			
+			index++;
+		}
+	
+		return especialidad;
 	}
 }

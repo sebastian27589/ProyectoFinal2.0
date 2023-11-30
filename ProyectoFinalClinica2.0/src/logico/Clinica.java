@@ -178,7 +178,14 @@ public class Clinica {
 		misPersonas.set(index, paciente);
 	}
 	
-	private int buscarIndexEnfermedadByNombre(String nombreEnfermedad) {
+	public void actualizarMedico(Medico medico) {
+		
+		int index = buscarIndexMedicoByCode(medico.getCodeMedico());
+		
+		misPersonas.set(index, medico);
+	}
+	
+	public int buscarIndexEnfermedadByNombre(String nombreEnfermedad) {
 		int index = -1;
 		boolean encontrado = false;
 		int i = 0;
@@ -193,10 +200,10 @@ public class Clinica {
 		return index;
 	}
 	
-	private int buscarIndexPacienteByCode(String codigo) {
+	public int buscarIndexPacienteByCode(String codigo) {
 		
 		boolean encontrado = false;
-		int cont = 0, indPaciente = 0;
+		int cont = 0, indPaciente = -1;
 		
 		while (!encontrado && cont < misPersonas.size()) {
 			
@@ -208,12 +215,31 @@ public class Clinica {
 				}
 			}
 			
-
-			
 			cont++;
 		}
 		
 		return indPaciente;
+	}
+	
+	public int buscarIndexMedicoByCode(String codigo) {
+		
+		boolean encontrado = false;
+		int cont = 0, indMedico = -1;
+		
+		while (!encontrado && cont < misPersonas.size()) {
+			
+			if (misPersonas.get(cont) instanceof Medico) {
+				
+				if (((Medico) misPersonas.get(cont)).getCodeMedico().equalsIgnoreCase(codigo)) {
+					encontrado = true;
+					indMedico = cont;
+				}
+			}
+		
+			cont++;
+		}
+		
+		return indMedico;
 	}
 
 	public Vacuna buscarVacunaByCode(String codigo) {

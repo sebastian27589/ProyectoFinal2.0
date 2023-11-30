@@ -1,29 +1,34 @@
 package logico;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Medico extends Persona {
 
     private String codeMedico;
-    private String especialidad;
+    private ArrayList<String> especialidades;
+    
+	public Medico(String cedula, String nombre, Date fechaDeNacimiento, char sexo, String telefono, String direccion,
+			String codeMedico) {
+		super(cedula, nombre, fechaDeNacimiento, sexo, telefono, direccion);
+		this.codeMedico = codeMedico;
+		this.especialidades = new ArrayList<String>();
+	}
 
-    public Medico(String cedula, String nombre, Date fechaDeNacimiento, char sexo, String telefono, String direccion,
-            String codeMedico, String especialidad) {
-        super(cedula, nombre, fechaDeNacimiento, sexo, telefono, direccion);
-        this.codeMedico = codeMedico;
-        this.especialidad = especialidad;
-    }
+	public String getCodeMedico() {
+		return codeMedico;
+	}
+	
+	public void setCodeMedico(String codeMedico) {
+		this.codeMedico = codeMedico;
+	}
 
-    public String getCodeMedico() {
-        return codeMedico;
-    }
+	public ArrayList<String> getEspecialidades() {
+		return especialidades;
+	}
 
-    public String getEspecialidad() {
-        return especialidad;
-    }
-
-    public void setEspecialidad(String especialidad) {
-        this.especialidad = especialidad;
-    }
+	public void setEspecialidades(ArrayList<String> especialidades) {
+		this.especialidades = especialidades;
+	}
 
 }
