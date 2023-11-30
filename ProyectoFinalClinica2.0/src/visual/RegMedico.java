@@ -10,6 +10,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+
 import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -263,7 +265,7 @@ public class RegMedico extends JDialog {
 		cbxElegirEspecialidad.setSelectedIndex(0);
 		cbxElegirEspecialidad.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 		cbxElegirEspecialidad.setBounds(102, 11, 146, 22);
-		//AutoCompleteDecorator.decorate(cbxElegirEspecialidad);
+		AutoCompleteDecorator.decorate(cbxElegirEspecialidad);
 		panel.add(cbxElegirEspecialidad);
 		
 		JButton btnNewButton = new JButton("A\u00F1adir");
