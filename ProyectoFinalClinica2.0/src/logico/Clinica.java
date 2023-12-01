@@ -168,7 +168,6 @@ public class Clinica {
 	public void actualizarEnfermedad(Enfermedad enfermedad) {
 		int index = buscarIndexEnfermedadByNombre(enfermedad.getNombre());
 		misEnfermedades.set(index, enfermedad);
-		
 	}
 	
 	public void actualizarPaciente(Paciente paciente) {
