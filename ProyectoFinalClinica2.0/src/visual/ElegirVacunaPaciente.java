@@ -205,10 +205,12 @@ public class ElegirVacunaPaciente extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton cancelButton = new JButton("Cancelar");
+				JButton cancelButton = new JButton("Cerrar");
 				cancelButton.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 				cancelButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						
+						loadVacunas();
 						dispose();
 					}
 				});

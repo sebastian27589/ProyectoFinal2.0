@@ -53,6 +53,7 @@ public class RegPaciente extends JDialog {
 	private JComboBox cbxTipoSangre;
 	private JTextArea txtareaAlergias;
 	private JTextArea txtareaInfoRelevante;
+	public static String codePacienteRegistrado = null;
 	
 	/**
 	 * Launch the application.
@@ -64,7 +65,7 @@ public class RegPaciente extends JDialog {
 			Vacuna vac2 = new Vacuna("001", "19-Vaccine", "Pfizer");
 			pacienteDePrueba.getMisVacunas().add(vac2);
 			*/
-			RegPaciente dialog = new RegPaciente(null);
+			RegPaciente dialog = new RegPaciente(null, false);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -75,7 +76,7 @@ public class RegPaciente extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public RegPaciente(Paciente pacienteAModificar) {
+	public RegPaciente(Paciente pacienteAModificar, boolean regUnSoloPaciente) {
 		
 		paciente = pacienteAModificar;
 		
@@ -346,13 +347,22 @@ public class RegPaciente extends JDialog {
 									 cbxTipoSangre.getSelectedItem().toString(), new Float(txtAltura.getText()), new Float(txtPeso.getText()),
 									 txtareaAlergias.getText(), txtareaInfoRelevante.getText());
 							
+							codePacienteRegistrado = nuevoPaciente.getCodePaciente();
 							ElegirVacunaPaciente elegirVacunas = new ElegirVacunaPaciente(null);
 							elegirVacunas.setModal(true);
 							elegirVacunas.setVisible(true);
 							nuevoPaciente.getMisVacunas().addAll(elegirVacunas.extraerVacunasElegidas());
 							Clinica.getInstance().insertarPaciente(nuevoPaciente);
 							JOptionPane.showMessageDialog(null, "Registrado con éxito", "Registrar Paciente", JOptionPane.INFORMATION_MESSAGE);
-							clean();
+							
+							if (regUnSoloPaciente) {
+								
+								dispose();
+							}
+							else {
+								clean();
+							}
+							
 						}
 						else {
 					
@@ -365,8 +375,13 @@ public class RegPaciente extends JDialog {
 								sexoPaciente = 'F';
 							}
 							
+							paciente.setTipoDeSangre(cbxTipoSangre.getSelectedItem().toString());
+							paciente.setAltura(new Float(txtAltura.getText()));
+							paciente.setPeso(new Float(txtPeso.getText()));
 							paciente.setTelefono(txtTelefono.getText());
 							paciente.setDireccion(txtareaDireccion.getText());
+							paciente.setAlergias(txtareaAlergias.getText());
+							paciente.setInfoImportante(txtareaInfoRelevante.getText());
 							
 							ElegirVacunaPaciente elegirVacunas = new ElegirVacunaPaciente(paciente);
 							elegirVacunas.setModal(true);
@@ -388,6 +403,13 @@ public class RegPaciente extends JDialog {
 			}
 			{
 				JButton cancelButton = new JButton("Cancelar");
+				
+				if (regUnSoloPaciente) {
+					
+					setDefaultCloseOperation(0);
+					cancelButton.setEnabled(false);
+				}
+				
 				cancelButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						dispose();
@@ -447,6 +469,7 @@ public class RegPaciente extends JDialog {
 		rdbtnFemenino.setSelected(false);
 		txtCedula.setText("");
 		dateChooserNacim.setCalendar(null);
+		cbxTipoSangre.setSelectedIndex(0);
 		txtTelefono.setText("");
 		txtAltura.setText("");
 		txtPeso.setText("");
@@ -454,4 +477,10 @@ public class RegPaciente extends JDialog {
 		txtareaInfoRelevante.setText("");
 		txtareaDireccion.setText("");
 	}
+	
+	public String getCodePacienteRegistrado() {
+		
+		return codePacienteRegistrado;
+	}
+
 }

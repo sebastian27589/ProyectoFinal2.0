@@ -31,6 +31,7 @@ import java.awt.event.KeyEvent;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 public class MostrarVacuna extends JDialog {
 
@@ -40,13 +41,14 @@ public class MostrarVacuna extends JDialog {
 	private static DefaultTableModel model;
 	private static Object[] row;
 	private Vacuna selected = null;
+	private ArrayList<Vacuna> vacunasEspecificasAMostrar = new ArrayList<Vacuna>();
 	
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			MostrarVacuna dialog = new MostrarVacuna();
+			MostrarVacuna dialog = new MostrarVacuna(null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -57,12 +59,14 @@ public class MostrarVacuna extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public MostrarVacuna() {
+	public MostrarVacuna(ArrayList<Vacuna> vacunasAMostrar) {
 		
-		Vacuna vac1 = new Vacuna("000", "neumococo", "LabSpain");
-		Vacuna vac2 = new Vacuna("001", "19-Vaccine", "Pfizer");
-		Clinica.getInstance().insertarVacuna(vac1);
-		Clinica.getInstance().insertarVacuna(vac2);
+		vacunasEspecificasAMostrar = vacunasAMostrar;
+		
+		//Vacuna vac1 = new Vacuna("000", "neumococo", "LabSpain");
+		//Vacuna vac2 = new Vacuna("001", "19-Vaccine", "Pfizer");
+		//Clinica.getInstance().insertarVacuna(vac1);
+		//Clinica.getInstance().insertarVacuna(vac2);
 		
 		setResizable(false);
 		setTitle("Mostrar Vacunas");
@@ -111,6 +115,7 @@ public class MostrarVacuna extends JDialog {
 			panel_2.add(scrollPane, BorderLayout.CENTER);
 			
 			tableVacunas = new JTable(model);
+			tableVacunas.getTableHeader().setReorderingAllowed(false);
 			tableVacunas.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
@@ -191,15 +196,40 @@ public class MostrarVacuna extends JDialog {
 			}
 		}
 		
-		loadVacunas();
+		if (vacunasEspecificasAMostrar == null) {
+			
+			loadVacunas();
+		}
+		else {
+			
+			loadVacunasEspecificas();
+			lblBuscarVacuna.setVisible(false);
+			txtBuscarVacuna.setVisible(false);
+			//Deshabilitar mod y eliminar
+		}
+		
 	}
-	
+
 	public static void loadVacunas() {
 		
 		model.setRowCount(0);
 		row = new Object[model.getColumnCount()];
 		
 		for (Vacuna vacuna : Clinica.getInstance().getMisVacunas()) {
+			row[0] = vacuna.getCodeVacuna();
+			row[1] = vacuna.getNombre();
+			row[2] = vacuna.getLaboratorio(); 
+			model.addRow(row);
+		}
+		
+	}
+	
+	private void loadVacunasEspecificas() {
+		
+		model.setRowCount(0);
+		row = new Object[model.getColumnCount()];
+		
+		for (Vacuna vacuna : vacunasEspecificasAMostrar) {
 			row[0] = vacuna.getCodeVacuna();
 			row[1] = vacuna.getNombre();
 			row[2] = vacuna.getLaboratorio(); 

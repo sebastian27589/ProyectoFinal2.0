@@ -262,6 +262,29 @@ public class Clinica {
 		return vacunaABuscar;
 	}
 	
+	public Paciente buscarPacienteByCode(String codigo) {
+		
+		Paciente pacienteABuscar = null;
+		boolean encontrado = false;
+		int index = 0;
+		
+		while (!encontrado && index < misPersonas.size()) {
+			
+			if (misPersonas.get(index) instanceof Paciente) {
+				
+				if (((Paciente) misPersonas.get(index)).getCodePaciente().equalsIgnoreCase(codigo)) {
+					pacienteABuscar = (Paciente) misPersonas.get(index);
+					encontrado = true;
+				}
+				
+			}
+			
+			index++;
+		}
+		
+		return pacienteABuscar;
+	}
+	
 	public Paciente buscarPacienteByCedula(String cedula) {
 		
 		Paciente pacienteABuscar = null;
