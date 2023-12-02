@@ -184,6 +184,16 @@ public class Clinica {
 		misPersonas.set(index, medico);
 	}
 	
+	public void eliminarPaciente(Paciente pacienteAEliminar) {
+		
+		misPersonas.remove(pacienteAEliminar);
+	}
+	
+	public void eliminarMedico(Medico medicoAEliminar) {
+		
+		misPersonas.remove(medicoAEliminar);
+	}
+	
 	public int buscarIndexEnfermedadByNombre(String nombreEnfermedad) {
 		int index = -1;
 		boolean encontrado = false;
@@ -283,6 +293,29 @@ public class Clinica {
 		}
 		
 		return pacienteABuscar;
+	}
+	
+	public Medico buscarMedicoByCode(String codigo) {
+		
+		Medico medicoABuscar = null;
+		boolean encontrado = false;
+		int index = 0;
+		
+		while (!encontrado && index < misPersonas.size()) {
+			
+			if (misPersonas.get(index) instanceof Medico) {
+				
+				if (((Medico) misPersonas.get(index)).getCodeMedico().equalsIgnoreCase(codigo)) {
+					medicoABuscar  = (Medico) misPersonas.get(index);
+					encontrado = true;
+				}
+				
+			}
+			
+			index++;
+		}
+		
+		return medicoABuscar;
 	}
 	
 	public Paciente buscarPacienteByCedula(String cedula) {

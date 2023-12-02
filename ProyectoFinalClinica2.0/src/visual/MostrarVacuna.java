@@ -24,6 +24,7 @@ import java.awt.Font;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 
 import java.awt.event.KeyAdapter;
@@ -95,8 +96,14 @@ public class MostrarVacuna extends JDialog {
 				}
 			}
 			
-			public boolean isCellEditable(int row, int column) {       
-			       return false;
+			public boolean isCellEditable(int row, int column) {   
+				
+			       if (row >= 0 && column == 3) {
+			    	   return true;
+			       }
+			       else {
+			    	   return false;
+			       }
 			}
 		};
 		model.setColumnIdentifiers(header);
@@ -115,7 +122,20 @@ public class MostrarVacuna extends JDialog {
 			panel_2.add(scrollPane, BorderLayout.CENTER);
 			
 			tableVacunas = new JTable(model);
+			tableVacunas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			tableVacunas.getTableHeader().setResizingAllowed(false);
 			tableVacunas.getTableHeader().setReorderingAllowed(false);
+			DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
+			cellRenderer.setHorizontalAlignment(JLabel.CENTER);
+			
+			for (int index = 0; index < tableVacunas.getColumnCount(); index++) {
+				
+				if (index != 3) {
+					
+					tableVacunas.getColumnModel().getColumn(index).setCellRenderer(cellRenderer);
+				}	
+			}
+			
 			tableVacunas.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {

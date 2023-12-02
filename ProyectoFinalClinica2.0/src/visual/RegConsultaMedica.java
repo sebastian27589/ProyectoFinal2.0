@@ -81,11 +81,13 @@ public class RegConsultaMedica extends JDialog {
 	public static void main(String[] args) {
 		try {
 			//Paciente para probar
-			Paciente pac = new Paciente("123", "232", new Date(), 'M', "23342341", "sds", "PAC", "O", 180.1f, 200.15f, null, null);
+			//Paciente pac = new Paciente("123", "232", new Date(), 'M', "23342341", "sds", "PAC", "O", 180.1f, 200.15f, null, null);
 			//Médico y Consulta para probar el visualizar y la colocación automática del código del médico al momento de registrar
 			Medico med = new Medico("123", "Julito", new Date(), 'M', "88988987", null, "M-PRU");
 			//ConsultaMedica cons = new ConsultaMedica("cons", "pac", "doc", null, "Pila de vainas", "muy malas", new Date());
 			//cons.getAnalisis().add("Hemograma");
+			//RegConsultaMedica dialog = new RegConsultaMedica(null, med, cons);
+			
 			RegConsultaMedica dialog = new RegConsultaMedica(null, med, null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
@@ -102,6 +104,7 @@ public class RegConsultaMedica extends JDialog {
 		Enfermedad enf1 = new Enfermedad("Lepra", "Viral", "Tos", 9, true);
 		Enfermedad enf2 = new Enfermedad("SIDA", "Sanguínea", "Tos", 10, true);
 		Enfermedad enf3 = new Enfermedad("Esquizofrenia", "Psicológica", "Tos", 10, true);
+		//consMedAVisualizar.setEnfermedad(enf3);
 		
 		Clinica.getInstance().insertarEnfermedad(enf1);
 		Clinica.getInstance().insertarEnfermedad(enf2);
@@ -119,7 +122,7 @@ public class RegConsultaMedica extends JDialog {
 			setTitle("Visualizar Consulta Médica");
 		}
 		
-		// Este ArrayList se debería de llenar con un archivo (Buscar la forma)
+		// Este ArrayList se debería de llenar con un archivo o sencillamente lo hacemos aquí mismo (DISCUTIR)
 		analisis = new ArrayList<String>();
 
 		analisis.add("Hemograma");
@@ -154,10 +157,10 @@ public class RegConsultaMedica extends JDialog {
 		menuBar.setBounds(5, 0, 84, 32);
 		panelSuperiorAzul.add(menuBar);
 		
-		JMenu mnNewMenu = new JMenu("Paciente");
-		mnNewMenu.setIcon(new ImageIcon(RegConsultaMedica.class.getResource("/Imagenes/paciente.png")));
-		mnNewMenu.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
-		menuBar.add(mnNewMenu);
+		JMenu menuPaciente = new JMenu("Paciente");
+		menuPaciente.setIcon(new ImageIcon(RegConsultaMedica.class.getResource("/Imagenes/paciente.png")));
+		menuPaciente.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
+		menuBar.add(menuPaciente);
 		
 		menuItemRegPaciente = new JMenuItem("Registrar Paciente");
 		
@@ -169,7 +172,7 @@ public class RegConsultaMedica extends JDialog {
 		menuItemRegPaciente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				RegPaciente registrarPaciente = new RegPaciente(null, true);
+				RegPaciente registrarPaciente = new RegPaciente(null, true, false);
 				registrarPaciente.setModal(true);
 				registrarPaciente.setVisible(true);
 					
@@ -185,7 +188,7 @@ public class RegConsultaMedica extends JDialog {
 			}
 		});
 		menuItemRegPaciente.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
-		mnNewMenu.add(menuItemRegPaciente);
+		menuPaciente.add(menuItemRegPaciente);
 		
 		menuItemModViPaciente = new JMenuItem("Modificar/Visualizar Paciente");
 		
@@ -197,7 +200,7 @@ public class RegConsultaMedica extends JDialog {
 		menuItemModViPaciente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				RegPaciente mod_verPaciente = new RegPaciente(paciente, false);
+				RegPaciente mod_verPaciente = new RegPaciente(paciente, false, false);
 				mod_verPaciente.setModal(true);
 				mod_verPaciente.setVisible(true);
 				
@@ -206,7 +209,7 @@ public class RegConsultaMedica extends JDialog {
 			}
 		});
 		menuItemModViPaciente.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
-		mnNewMenu.add(menuItemModViPaciente);
+		menuPaciente.add(menuItemModViPaciente);
 		
 		menuItemVacunas = new JMenuItem("Vacunas");
 		
@@ -225,7 +228,7 @@ public class RegConsultaMedica extends JDialog {
 			}
 		});
 		menuItemVacunas.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
-		mnNewMenu.add(menuItemVacunas);
+		menuPaciente.add(menuItemVacunas);
 		
 		menuItemHistMed = new JMenuItem("Historial M\u00E9dico");
 		
@@ -235,7 +238,7 @@ public class RegConsultaMedica extends JDialog {
 		}
 		
 		menuItemHistMed.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
-		mnNewMenu.add(menuItemHistMed);
+		menuPaciente.add(menuItemHistMed);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBackground(new Color(240, 248, 255));
@@ -301,7 +304,7 @@ public class RegConsultaMedica extends JDialog {
 		lblCodeMedico.setBounds(425, 5, 132, 22);
 		panelDeCodigos.add(lblCodeMedico);
 		
-		txtCodeMedico = new JTextField();
+		txtCodeMedico = new JTextField();	
 		txtCodeMedico.setText(medico.getCodeMedico());
 		txtCodeMedico.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 		txtCodeMedico.setEditable(false);
@@ -427,6 +430,7 @@ public class RegConsultaMedica extends JDialog {
 		};
 		model.setColumnIdentifiers(header);
 		tableAnalisis = new JTable(model);
+		tableAnalisis.getTableHeader().setResizingAllowed(false);
 		tableAnalisis.setFont(new Font("Gill Sans MT", Font.PLAIN, 12));
 		tableAnalisis.getTableHeader().setReorderingAllowed(false);
 		scrollPane.setViewportView(tableAnalisis);
@@ -517,16 +521,16 @@ public class RegConsultaMedica extends JDialog {
 			
 			txtCodeConsulta.setText(consMed.getCodeConsMed());
 			dateChooserConsulta.setDate(consMed.getFechaConsulta());
-			txtCodeConsulta.setText(consMed.getCodePaciente());
+			txtCodePaciente.setText(consMed.getCodePaciente());
 			txtCodeMedico.setText(consMed.getCodeMedico());
 			txtareaSintomas.setText(consMed.getSintomas());
 			txtareaDiagnostico.setText(consMed.getDiagnostico());
 			cbxEnfermedad.setSelectedItem(consMed.getEnfermedad());
 			
 			tableAnalisis.setEnabled(false);
-			txtCodeConsulta.setEnabled(false);
-			txtareaSintomas.setEnabled(false);
-			txtareaDiagnostico.setEnabled(false);
+			txtCodeConsulta.setEditable(false);
+			txtareaSintomas.setEditable(false);
+			txtareaDiagnostico.setEditable(false);
 			cbxEnfermedad.setEnabled(false);
 			btnRealizar.setVisible(false);
 			cancelButton.setText("Cerrar");
@@ -539,6 +543,12 @@ public class RegConsultaMedica extends JDialog {
 		
 		activarDesactivarCampos();
 		loadAnalisis();
+		loadConsultaMedica();
+		
+		if (consMed != null) {
+			
+			menuPaciente.setEnabled(false);
+		}
 		
 	}
 	
@@ -595,21 +605,33 @@ public class RegConsultaMedica extends JDialog {
 	
 	public void activarDesactivarCampos() {
 		
-		if (paciente != null) {
+		if (paciente != null && consMed == null) {
 			
-			txtareaSintomas.setEnabled(true);
-			txtareaDiagnostico.setEnabled(true);
+			txtareaSintomas.setEditable(true);
+			txtareaDiagnostico.setEditable(true);
 			cbxEnfermedad.setEnabled(true);
 			tableAnalisis.setEnabled(true);
-			txtBuscarAnalisis.setEnabled(true);
+			txtBuscarAnalisis.setEditable(true);
 		}
 		else {
 			
-			txtareaSintomas.setEnabled(false);
-			txtareaDiagnostico.setEnabled(false);
+			txtareaSintomas.setEditable(false);
+			txtareaDiagnostico.setEditable(false);
 			cbxEnfermedad.setEnabled(false);
 			tableAnalisis.setEnabled(false);
-			txtBuscarAnalisis.setEnabled(false);
+			txtBuscarAnalisis.setEditable(false);
+		}
+		
+	}
+	
+	public void loadConsultaMedica() {
+		
+		if (consMed != null) {
+			
+			txtareaSintomas.setText(consMed.getSintomas());
+			txtareaDiagnostico.setText(consMed.getDiagnostico());
+			cbxEnfermedad.setSelectedItem(consMed.getEnfermedad().getNombre());
+			
 		}
 		
 	}

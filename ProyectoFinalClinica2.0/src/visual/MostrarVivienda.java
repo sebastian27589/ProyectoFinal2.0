@@ -8,6 +8,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -26,6 +27,7 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 
 import java.awt.event.KeyAdapter;
@@ -39,6 +41,8 @@ public class MostrarVivienda extends JDialog {
 	private Vivienda selected = null;
 	private JTable table;
 	private JTextField txtBuscar;
+	private JButton btnModificar;
+	private JButton btnEliminar;
 
 	/**
 	 * Launch the application.
@@ -63,10 +67,8 @@ public class MostrarVivienda extends JDialog {
 		Clinica.getInstance().insertarVivienda(v1);
 		Clinica.getInstance().insertarVivienda(v2);
 		
-		//jajajajajjajajajajajaaj
-		
 		setResizable(false);
-		setTitle("Mostrar Viviendas");
+		setTitle("Viviendas");
 		setBounds(100, 100, 857, 443);
 		getContentPane().setLayout(new BorderLayout());
 		setLocationRelativeTo(null);
@@ -77,27 +79,30 @@ public class MostrarVivienda extends JDialog {
 		int alpha2 = 120;
 		rayita1 = new Color(rayita1.getRed(), rayita1.getGreen(), rayita1.getBlue(), alpha);
 		rayita2 = new Color(rayita2.getRed(), rayita2.getGreen(), rayita2.getBlue(), alpha2);
-		Object[] columnNames = {"Núm. Vivienda", "Calle", "Sector", "Ciudad", "Teléfono", "Residentes"};
+		Object[] columnNames = {"#", "Calle", "Sector", "Ciudad", "Teléfono", "Residentes"};
 		
-//		Object[][] data = {
-//				{"0001", "Calle del Sol", "Santiago", "Santiago", "809-554-1124", false},
-//		};
 		model = new DefaultTableModel() {
 			
 			public Class getColumnClass(int columnIndex){
 				
-				if(columnIndex == 5) {
+				if (columnIndex == 5) {
 					return Boolean.class;
 					
-				}else{
+				}
+				else {
 					return String.class;
 				}
 				
-				//return super.getColumnClass(columnIndex);
 			}
 			
-			public boolean isCellEditable(int row, int columnIndex) {
-				return false;
+			public boolean isCellEditable(int row, int column) {
+				
+				if (row >= 0 && column == 5) {
+			    	   return true;
+				}
+			    else {
+			    	   return false;
+			    }
 			}
 		};
 		model.setColumnIdentifiers(columnNames);
@@ -105,51 +110,6 @@ public class MostrarVivienda extends JDialog {
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
-		{
-			JPanel panel_2 = new JPanel();
-			panel_2.setBackground(new Color(255, 255, 255));
-			panel_2.setBounds(35, 42, 744, 248);
-			contentPanel.add(panel_2);
-			panel_2.setLayout(new BorderLayout(0, 0));
-			
-			JScrollPane scrollPane = new JScrollPane(table);
-			panel_2.add(scrollPane, BorderLayout.CENTER);
-			
-			table = new JTable(model);
-			table.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					int rowIndex = table.getSelectedRow(), colIndex = table.getSelectedColumn();
-					if (rowIndex >= 0) {
-						selected = Clinica.getInstance().buscarViviendaByNum(table.getValueAt(rowIndex, 0).toString());
-						if (colIndex == 5) {
-							selected = Clinica.getInstance().buscarViviendaByNum(table.getValueAt(rowIndex, 0).toString());
-							System.out.println("Abrir la lista de Residentes");
-							table.setValueAt(Boolean.FALSE, rowIndex, colIndex);
-						}
-					}
-				}
-			});
-			table.setFillsViewportHeight(true);
-			scrollPane.setViewportView(table);
-		}
-		
-		JPanel panel_1 = new JPanel();
-		panel_1.setBackground(rayita2);
-		panel_1.setBounds(0, 128, 851, 91);
-		contentPanel.add(panel_1);
-		
-		JPanel panel = new JPanel();
-		panel.setBackground(rayita1);
-		panel.setBounds(0, 13, 851, 91);
-		contentPanel.add(panel);
-		
-		JLabel label = new JLabel("Buscar:");
-		label.setOpaque(true);
-		label.setHorizontalAlignment(SwingConstants.CENTER);
-		label.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
-		label.setBounds(35, 302, 55, 22);
-		contentPanel.add(label);
 		
 		txtBuscar = new JTextField();
 		txtBuscar.addKeyListener(new KeyAdapter() {
@@ -161,10 +121,76 @@ public class MostrarVivienda extends JDialog {
 				searchModel2.setRowFilter(RowFilter.regexFilter("(?i)" + txtBuscar.getText()));
 			}
 		});
+		JPanel panelContenedorTabla = new JPanel();
+		panelContenedorTabla.setBackground(new Color(255, 255, 255));
+		panelContenedorTabla.setBounds(53, 83, 744, 248);
+		contentPanel.add(panelContenedorTabla);
+		panelContenedorTabla.setLayout(new BorderLayout(0, 0));
+		
+		JScrollPane scrollPane = new JScrollPane(table);
+		panelContenedorTabla.add(scrollPane, BorderLayout.CENTER);
+		
+		table = new JTable(model);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		table.getTableHeader().setReorderingAllowed(false);
+		table.getTableHeader().setResizingAllowed(false);
+		DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
+		cellRenderer.setHorizontalAlignment(JLabel.CENTER);
+		
+		for (int index = 0; index < table.getColumnCount(); index++) {
+			
+			if (index != 5) {
+				
+				table.getColumnModel().getColumn(index).setCellRenderer(cellRenderer);
+			}
+		}
+		
+		table.getColumnModel().getColumn(0).setPreferredWidth(5);
+		table.getColumnModel().getColumn(1).setPreferredWidth(100);
+		table.getColumnModel().getColumn(4).setPreferredWidth(20);
+		table.getColumnModel().getColumn(5).setPreferredWidth(20);
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int rowIndex = table.getSelectedRow(), colIndex = table.getSelectedColumn();
+				if (rowIndex >= 0) {
+					
+					selected = Clinica.getInstance().buscarViviendaByNum(table.getValueAt(rowIndex, 0).toString());
+					
+					if (colIndex == 5) {
+						
+						selected = Clinica.getInstance().buscarViviendaByNum(table.getValueAt(rowIndex, 0).toString());
+						MostrarPaciente mostrarResidentes = new MostrarPaciente(selected.getResidentes());
+						mostrarResidentes.setModal(true);
+						mostrarResidentes.setVisible(true);
+						table.setValueAt(Boolean.FALSE, rowIndex, colIndex);
+					}
+				}
+			}
+		});
+		table.setFillsViewportHeight(true);
+		scrollPane.setViewportView(table);
 		txtBuscar.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
 		txtBuscar.setColumns(10);
-		txtBuscar.setBounds(102, 302, 307, 22);
+		txtBuscar.setBounds(118, 48, 307, 22);
 		contentPanel.add(txtBuscar);
+		
+		JLabel label = new JLabel("Buscar:");
+		label.setOpaque(true);
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		label.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
+		label.setBounds(53, 48, 55, 22);
+		contentPanel.add(label);
+		
+		JPanel panel = new JPanel();
+		panel.setBackground(rayita1);
+		panel.setBounds(0, 13, 851, 91);
+		contentPanel.add(panel);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBackground(rayita2);
+		panel_1.setBounds(0, 128, 851, 91);
+		contentPanel.add(panel_1);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -172,17 +198,23 @@ public class MostrarVivienda extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton cancelButton = new JButton("Cancelar");
+				cancelButton.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 				cancelButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						dispose();
 					}
 				});
 				{
-					JButton okButton = new JButton("Modificar");
-					buttonPane.add(okButton);
-					okButton.setActionCommand("OK");
-					getRootPane().setDefaultButton(okButton);
+					btnModificar = new JButton("Modificar");
+					btnModificar.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
+					buttonPane.add(btnModificar);
+					btnModificar.setActionCommand("OK");
+					getRootPane().setDefaultButton(btnModificar);
 				}
+				
+				btnEliminar = new JButton("Eliminar");
+				btnEliminar.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
+				buttonPane.add(btnEliminar);
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
 			}

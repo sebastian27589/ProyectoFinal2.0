@@ -54,6 +54,8 @@ public class RegPaciente extends JDialog {
 	private JTextArea txtareaAlergias;
 	private JTextArea txtareaInfoRelevante;
 	public static String codePacienteRegistrado = null;
+	private JButton btnSiguiente;
+	private JButton cancelButton;
 	
 	/**
 	 * Launch the application.
@@ -65,7 +67,7 @@ public class RegPaciente extends JDialog {
 			Vacuna vac2 = new Vacuna("001", "19-Vaccine", "Pfizer");
 			pacienteDePrueba.getMisVacunas().add(vac2);
 			*/
-			RegPaciente dialog = new RegPaciente(null, false);
+			RegPaciente dialog = new RegPaciente(null, false, false);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -76,7 +78,7 @@ public class RegPaciente extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public RegPaciente(Paciente pacienteAModificar, boolean regUnSoloPaciente) {
+	public RegPaciente(Paciente pacienteAModificar, boolean regUnSoloPaciente, boolean visualizar) {
 		
 		paciente = pacienteAModificar;
 		
@@ -327,7 +329,7 @@ public class RegPaciente extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton btnSiguiente = new JButton("Siguiente");
+				btnSiguiente = new JButton("Siguiente");
 				btnSiguiente.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						
@@ -402,7 +404,7 @@ public class RegPaciente extends JDialog {
 				getRootPane().setDefaultButton(btnSiguiente);
 			}
 			{
-				JButton cancelButton = new JButton("Cancelar");
+				cancelButton = new JButton("Cancelar");
 				
 				if (regUnSoloPaciente) {
 					
@@ -423,14 +425,34 @@ public class RegPaciente extends JDialog {
 		
 		if (paciente != null) {
 			
-			txtNombre.setEnabled(false);
+			txtNombre.setEditable(false);
 			rdbtnMasculino.setEnabled(false);
 			rdbtnFemenino.setEnabled(false);
-			txtCedula.setEnabled(false);
+			txtCedula.setEditable(false);
 			dateChooserNacim.setEnabled(false);
+			
+			if (visualizar) {
+				
+				setTitle("Datos del Paciente");
+				
+				txtTelefono.setEditable(false);
+				cbxTipoSangre.setEnabled(false);
+				txtAltura.setEditable(false);
+				txtPeso.setEditable(false);
+				txtareaAlergias.setEditable(false);
+				txtareaInfoRelevante.setEditable(false);
+				txtareaDireccion.setEditable(false);
+			}
+			
 		}
 		
 		loadPaciente();
+		
+		if (visualizar) {
+			
+			btnSiguiente.setVisible(false);
+			cancelButton.setText("Cerrar");
+		}
 		
 	}
 	
