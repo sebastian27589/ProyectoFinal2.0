@@ -50,7 +50,7 @@ public class MostrarEnfermedad extends JDialog {
 	private JButton btn_vigilanciaon;
 	private Enfermedad selected = null;
 	private JSpinner spn_peligro;
-
+	
 	/**
 	 * Launch the application.
 	 */
@@ -222,6 +222,7 @@ public class MostrarEnfermedad extends JDialog {
 		img_enfermedad.setIcon(new ImageIcon(MostrarEnfermedad.class.getResource("/Imagenes/photo_enfermedad.png")));
 		img_enfermedad.setBounds(10, 185, 102, 105);
 		PanelButtons.add(img_enfermedad);
+		
 		
 		cargarEnfermedades();
 	}
