@@ -6,6 +6,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import logico.Clinica;
@@ -25,7 +26,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.awt.event.ActionEvent;
+import java.awt.Font;
 
 public class VentanaPrincipal extends JFrame {
 
@@ -209,5 +213,34 @@ public class VentanaPrincipal extends JFrame {
 		JPanel panel = new JPanel();
 		panel.setBounds(21, 611, 1319, 46);
 		contentPane.add(panel);
+		panel.setLayout(null);
+		
+        JLabel lbl_Tiempo = new JLabel();
+        lbl_Tiempo.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
+        lbl_Tiempo.setBounds(1179, 15, 130, 14);
+
+        panel.add(lbl_Tiempo);
+        
+        JLabel lblNewLabel_1 = new JLabel(Clinica.getInstance().getUsuarioLogueado().getNombreUsuario());
+        lblNewLabel_1.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
+        lblNewLabel_1.setBounds(33, 15, 130, 14);
+        panel.add(lblNewLabel_1);
+
+        Thread hilo = new Thread(() -> {
+        	LocalDateTime fechaHora = LocalDateTime.of(2023, 1, 1, 0, 0, 0);
+            while (true) {
+                try {
+                	
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+                    lbl_Tiempo.setText(fechaHora.format(formatter));
+                    Thread.sleep(1000);
+                    fechaHora = fechaHora.plusSeconds(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        hilo.start();
 	}
 }
