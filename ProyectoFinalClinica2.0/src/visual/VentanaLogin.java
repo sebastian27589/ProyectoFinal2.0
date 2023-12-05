@@ -10,7 +10,9 @@ import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 import javax.swing.border.TitledBorder;
 
+import logico.Clinica;
 import logico.RoundedPanel;
+import logico.Usuario;
 
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -20,8 +22,16 @@ import javax.swing.JPasswordField;
 import javax.swing.ImageIcon;
 import java.awt.Toolkit;
 import java.awt.Cursor;
+import java.awt.EventQueue;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.Date;
 
 public class VentanaLogin extends JDialog {
 
@@ -33,8 +43,70 @@ public class VentanaLogin extends JDialog {
 	/**
 	 * Launch the application.
 	 */
+	
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				
+				FileInputStream fclinica;
+				FileOutputStream fclinica2;
+				ObjectInputStream fclinicaRead;
+				ObjectOutputStream fclinicaWrite;
+				
+				try {
+					
+					fclinica = new FileInputStream ("datos_clinica.dat");
+					fclinicaRead = new ObjectInputStream(fclinica);
+					Clinica temp = (Clinica)fclinicaRead.readObject();
+					Clinica.setClinica(temp);
+					fclinica.close();
+					fclinicaRead.close();
+					
+				} catch (FileNotFoundException e) {
+					
+					try {
+						
+						fclinica2 = new  FileOutputStream("datos_clinica.dat");
+						fclinicaWrite = new ObjectOutputStream(fclinica2);
+						Usuario primerUsuario = new Usuario("", "", new Date(), 'M', "", "", "Administrador", "admin", "admin");
+						Clinica.getInstance().registrarUsuario(primerUsuario);;
+						fclinicaWrite.writeObject(Clinica.getInstance());
+						fclinica2.close();
+						fclinicaWrite.close();
+						
+						
+					} catch (FileNotFoundException e1) {
+						
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+					}
+					
+				} catch (IOException e) {
+					
+					
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				try {
+					
+					VentanaLogin ventanaLogin = new VentanaLogin();
+					ventanaLogin.setVisible(true);
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+	
+	/*
 	public static void main(String[] args) {
 		try {
+			
+			Usuario admin = new Usuario("123", "", new Date(), 'M', "", "", "Admin", "admin", "admin");
+			Clinica.getInstance().insertarUsuario(admin);
 			VentanaLogin dialog = new VentanaLogin();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
@@ -42,8 +114,9 @@ public class VentanaLogin extends JDialog {
 			e.printStackTrace();
 		}
 	}
-
+	*/
 	/**
+	 * 
 	 * Create the dialog.
 	 */
 	public VentanaLogin() {
@@ -167,7 +240,15 @@ public class VentanaLogin extends JDialog {
 				String usuario = txtUsuario.getText();
 				String password = String.valueOf(passwordFieldLogin.getPassword());
 				
+				// [[BORRAR MÁS TARDE]]
 				System.out.println("Usuario: " + usuario + "\nContraseña: " + password);
+				
+				if (Clinica.getInstance().permitirInicioSesion(txtUsuario.getText(), String.valueOf(passwordFieldLogin.getPassword()))) {
+					
+					VentanaPrincipal ventanaPrincipal = new VentanaPrincipal();
+					dispose();
+					ventanaPrincipal.setVisible(true);
+				}
 				
 			}
 		});

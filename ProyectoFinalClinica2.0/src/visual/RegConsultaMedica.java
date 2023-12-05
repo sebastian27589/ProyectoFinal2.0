@@ -371,11 +371,13 @@ public class RegConsultaMedica extends JDialog {
 		int sizeListaEnfermedades = Clinica.getInstance().getMisEnfermedades().size();
 		String[] nombresEnfermedades = new String[sizeListaEnfermedades];
 		
-		for (int index = 0; index < sizeListaEnfermedades; index++) {
-			
-			nombresEnfermedades[index] = Clinica.getInstance().getMisEnfermedades().get(index).getNombre();
-		}
+		nombresEnfermedades[0] = "Ninguna";
 		
+		for (int index = 1; index < sizeListaEnfermedades; index++) {
+			
+			nombresEnfermedades[index] = Clinica.getInstance().getMisEnfermedades().get(index - 1).getNombre();
+		}
+				
 		cbxEnfermedad.setModel(new DefaultComboBoxModel(nombresEnfermedades));
 		cbxEnfermedad.setSelectedIndex(0);
 		cbxEnfermedad.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
@@ -490,9 +492,8 @@ public class RegConsultaMedica extends JDialog {
 								           txtareaDiagnostico.getText(), dateChooserConsulta.getDate());
 							
 							consMedNueva.getAnalisis().addAll(extraerAnalisisElegidos());
-							Clinica.getInstance().consultaRealizada();
+							Clinica.getInstance().insertarConsultaMedica(consMedNueva);
 							
-							//Insertar consulta en PACIENTE
 							JOptionPane.showMessageDialog(null, "Realizada con éxito", "Realizar Consulta Médica", JOptionPane.INFORMATION_MESSAGE);
 							dispose();
 						}

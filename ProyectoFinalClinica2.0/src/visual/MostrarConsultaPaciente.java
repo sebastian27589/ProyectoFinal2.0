@@ -14,6 +14,8 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableRowSorter;
 
 import logico.Clinica;
+import logico.ConsultaMedica;
+import logico.Medico;
 import logico.Paciente;
 import logico.Persona;
 import logico.Vacuna;
@@ -39,25 +41,25 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class MostrarPaciente extends JDialog {
+public class MostrarConsultaPaciente extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTable tablePacientes;
 	private JTextField txtBuscarPaciente;
 	private static DefaultTableModel model;
 	private static Object[] row;
-	private Paciente selected = null;
-	private ArrayList<Paciente> pacientesEspecificosAMostrar = new ArrayList<Paciente>();
-	private JButton btnVerHistMed;
-	private JButton btnModificar;
-	private JButton btnEliminar;
+	private ConsultaMedica selected = null;
+	private static Paciente paciente = null;
+	private ArrayList<ConsultaMedica> consultasEspecificasAMostrar = new ArrayList<ConsultaMedica>();
 	
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			MostrarPaciente dialog = new MostrarPaciente(null);
+			Paciente pac = new Paciente("", "", new Date(), 'M', "", "", "PAC1", "B+", 178.12f, 123.2f, "", "");
+			Clinica.getInstance().insertarPaciente(pac);
+			MostrarConsultaPaciente dialog = new MostrarConsultaPaciente(pac);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -68,9 +70,9 @@ public class MostrarPaciente extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public MostrarPaciente(ArrayList<Paciente> pacientesAMostrar) {
+	public MostrarConsultaPaciente(Paciente pacienteAMostrarCons) {
 		
-		pacientesEspecificosAMostrar = pacientesAMostrar;
+		paciente = Clinica.getInstance().buscarPacienteByCode(pacienteAMostrarCons.getCodePaciente());
 		
 		/*
 		Vacuna vac1 = new Vacuna("000", "neumococo", "LabSpain");
@@ -81,7 +83,7 @@ public class MostrarPaciente extends JDialog {
 		*/
 		
 		setResizable(false);
-		setTitle("Pacientes");
+		setTitle("Consultas Médicas");
 		setBounds(100, 100, 857, 443);
 		getContentPane().setLayout(new BorderLayout());
 		setLocationRelativeTo(null);
@@ -93,13 +95,13 @@ public class MostrarPaciente extends JDialog {
 		rayita1 = new Color(rayita1.getRed(), rayita1.getGreen(), rayita1.getBlue(), alpha);
 		rayita2 = new Color(rayita2.getRed(), rayita2.getGreen(), rayita2.getBlue(), alpha2);
 		
-		Object[] header = {"Código", "Cédula", "Nombre", "Sexo", "Telefono", "Ver más"};
+		Object[] header = {"Código de Consulta", "Nombre del Médico", "Fecha", "Ver detalles"};
 		
 		model = new DefaultTableModel() {
 			
 			public Class getColumnClass(int column) {
 				
-				if (column == 5) {
+				if (column == 3) {
 					return Boolean.class;
 				}
 				else {
@@ -109,7 +111,7 @@ public class MostrarPaciente extends JDialog {
 			
 			public boolean isCellEditable(int row, int column) {       
 			       
-			       if (row >= 0 && column == 5) {
+			       if (row >= 0 && column == 3) {
 			    	   return true;
 			       }
 			       else {
@@ -141,18 +143,17 @@ public class MostrarPaciente extends JDialog {
 			
 			for (int index = 0; index < tablePacientes.getColumnCount(); index++) {
 				
-				if (index != 5) {
+				if (index != 3) {
 					
 					tablePacientes.getColumnModel().getColumn(index).setCellRenderer(cellRenderer);
 				}
 			}
 			
 			tablePacientes.getColumnModel().getColumn(0).setPreferredWidth(5);
-			tablePacientes.getColumnModel().getColumn(1).setPreferredWidth(25);
-			tablePacientes.getColumnModel().getColumn(2).setPreferredWidth(100);
+			tablePacientes.getColumnModel().getColumn(1).setPreferredWidth(120);
+			tablePacientes.getColumnModel().getColumn(2).setPreferredWidth(5);
 			tablePacientes.getColumnModel().getColumn(3).setPreferredWidth(5);
-			tablePacientes.getColumnModel().getColumn(4).setPreferredWidth(25);
-			tablePacientes.getColumnModel().getColumn(5).setPreferredWidth(5);
+
 			tablePacientes.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
@@ -161,20 +162,11 @@ public class MostrarPaciente extends JDialog {
 					
 					if (rowIndex >= 0) {
 						
-						selected = Clinica.getInstance().buscarPacienteByCode(tablePacientes.getValueAt(rowIndex, 0).toString());
-						btnVerHistMed.setEnabled(true);
+						selected = Clinica.getInstance().buscarConsMedByCode(tablePacientes.getValueAt(rowIndex, 0).toString());
 						
-						if (pacientesEspecificosAMostrar == null) {
+						if (colIndex == 3) {
 							
-							btnModificar.setEnabled(true);
-							btnEliminar.setEnabled(true);
-						}
-						
-						if (colIndex == 5) {
-							
-							RegPaciente visualizarPaciente = new RegPaciente(selected, false, true);
-							visualizarPaciente.setModal(true);
-							visualizarPaciente.setVisible(true);
+							// Abrir consMed en modo visualizar
 							tablePacientes.setValueAt(Boolean.FALSE, rowIndex, colIndex);
 						}
 
@@ -222,21 +214,6 @@ public class MostrarPaciente extends JDialog {
 		txtBuscarPaciente.setBounds(118, 36, 307, 22);
 		panel.add(txtBuscarPaciente);
 		txtBuscarPaciente.setColumns(10);
-		
-		btnVerHistMed = new JButton("Historial M\u00E9dico");
-		btnVerHistMed.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				VerHistorialMedico verHistorialPaciente = new VerHistorialMedico(selected.getCodePaciente());
-				verHistorialPaciente.setModal(true);
-				verHistorialPaciente.setVisible(true);
-				
-			}
-		});
-		btnVerHistMed.setEnabled(false);
-		btnVerHistMed.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
-		btnVerHistMed.setBounds(661, 37, 136, 22);
-		panel.add(btnVerHistMed);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -250,76 +227,31 @@ public class MostrarPaciente extends JDialog {
 						dispose();
 					}
 				});
-				
-				btnModificar = new JButton("Modificar");
-				btnModificar.setEnabled(false);
-				btnModificar.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						
-						RegPaciente mod_verPaciente = new RegPaciente(selected, false, false);
-						mod_verPaciente.setModal(true);
-						mod_verPaciente.setVisible(true);
-						loadPacientes();
-						JOptionPane.showMessageDialog(null, "Modificado con éxito", "Modificar Paciente", JOptionPane.INFORMATION_MESSAGE);
-					}
-				});
-				btnModificar.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
-				buttonPane.add(btnModificar);
-				
-				btnEliminar = new JButton("Eliminar");
-				btnEliminar.setEnabled(false);
-				btnEliminar.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						
-						int Option = JOptionPane.showConfirmDialog(null, "¿Está seguro de eliminar al Paciente con código: <" + selected.getCodePaciente() + ">?", "Eliminar Paciente", JOptionPane.OK_CANCEL_OPTION);
-						
-						if (Option == JOptionPane.OK_OPTION) {
-							
-							Clinica.getInstance().eliminarPaciente(selected);
-							loadPacientes();
-							btnEliminar.setEnabled(false);
-							btnModificar.setEnabled(false);
-							btnVerHistMed.setEnabled(false);
-						}
-						
-					}
-				});
-				btnEliminar.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
-				buttonPane.add(btnEliminar);
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
 			}
 		}
 		
-		if (pacientesEspecificosAMostrar == null) {
-		
-			loadPacientes();
-		}
-		else {
-			
-			loadPacientesEspecificos();
-			lblBuscarPaciente.setVisible(false);
-			txtBuscarPaciente.setVisible(false);
-			btnModificar.setVisible(false);
-			btnEliminar.setVisible(false);
-		}
+		loadConsultasMedicas();
 		
 	}
 
-	public static void loadPacientes() {
+	public static void loadConsultasMedicas() {
 		
+		Medico medico = null;
 		model.setRowCount(0);
 		row = new Object[model.getColumnCount()];
 		
-		for (Persona persona : Clinica.getInstance().getMisPersonas()) {
+		for (ConsultaMedica consMed : Clinica.getInstance().getMisConsultasMedicas()) {
 			
-			if (persona instanceof Paciente) {
+			if (consMed.getCodePaciente().equalsIgnoreCase(paciente.getCodePaciente())) {
 				
-				row[0] = ((Paciente) persona).getCodePaciente();
-				row[1] = persona.getCedula();
-				row[2] = persona.getNombre();
-				row[3] = persona.getSexo();
-				row[4] = persona.getTelefono();
+				row[0] = consMed.getCodeConsMed();
+				
+				medico = Clinica.getInstance().buscarMedicoByCode(consMed.getCodeMedico());
+				row[1] = medico.getNombre();
+				
+				row[2] = consMed.getFechaConsulta();
 				model.addRow(row);
 			}
 			
@@ -327,24 +259,4 @@ public class MostrarPaciente extends JDialog {
 		
 	}
 	
-	private void loadPacientesEspecificos() {
-		
-		model.setRowCount(0);
-		row = new Object[model.getColumnCount()];
-		
-		for (Persona persona : pacientesEspecificosAMostrar) {
-			
-			if (persona instanceof Paciente) {
-				
-				row[0] = ((Paciente) persona).getCodePaciente();
-				row[1] = persona.getCedula();
-				row[2] = persona.getNombre();
-				row[3] = persona.getSexo();
-				row[4] = persona.getTelefono();
-				model.addRow(row);
-			}
-			
-		}
-		
-	}
 }

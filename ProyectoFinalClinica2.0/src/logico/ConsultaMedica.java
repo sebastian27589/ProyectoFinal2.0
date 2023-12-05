@@ -1,11 +1,17 @@
 package logico;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class ConsultaMedica {
+public class ConsultaMedica implements Serializable {
 
-    private String codeConsMed;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -562385869732232731L;
+	
+	private String codeConsMed;
     private String codePaciente;
     private String codeMedico;
     private Enfermedad enfermedad;

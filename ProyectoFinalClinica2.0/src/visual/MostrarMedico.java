@@ -58,7 +58,7 @@ public class MostrarMedico extends JDialog {
 	 */
 	public static void main(String[] args) {
 		try {
-			MostrarMedico dialog = new MostrarMedico(null);
+			MostrarMedico dialog = new MostrarMedico(null, false);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -69,7 +69,7 @@ public class MostrarMedico extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public MostrarMedico(ArrayList<Medico> medicosAMostrar) {
+	public MostrarMedico(ArrayList<Medico> medicosAMostrar, boolean elegirParaCrearUsuario) {
 		
 		medicosEspecificosAMostrar = medicosAMostrar;
 		
@@ -258,11 +258,19 @@ public class MostrarMedico extends JDialog {
 				btnModificar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						
-						RegMedico modificarMedico = new RegMedico(selected, false);
-						modificarMedico.setModal(true);
-						modificarMedico.setVisible(true);
-						loadMedicos();
-						JOptionPane.showMessageDialog(null, "Modificado con éxito", "Modificar Médico", JOptionPane.INFORMATION_MESSAGE);
+						if (!elegirParaCrearUsuario) {
+							
+							RegMedico modificarMedico = new RegMedico(selected, false);
+							modificarMedico.setModal(true);
+							modificarMedico.setVisible(true);
+							loadMedicos();
+							JOptionPane.showMessageDialog(null, "Modificado con éxito", "Modificar Médico", JOptionPane.INFORMATION_MESSAGE);
+						}
+						else {
+							
+							
+						}
+
 					}
 				});
 				btnModificar.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
@@ -294,7 +302,15 @@ public class MostrarMedico extends JDialog {
 		}
 		
 		if (medicosEspecificosAMostrar == null) {
-		
+			
+			if (elegirParaCrearUsuario) {
+				
+				btnCitasPendientesMed.setVisible(false);
+				btnEliminar.setVisible(false);
+				btnModificar.setText("Siguiente");
+				
+			}
+			
 			loadMedicos();
 		}
 		else {

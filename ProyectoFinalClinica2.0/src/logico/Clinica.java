@@ -1,14 +1,33 @@
 package logico;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
-public class Clinica {
+public class Clinica implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8656317760583002498L;
+	
 	private ArrayList<Vivienda> misViviendas;
 	private ArrayList<Cita> misCitas;
 	private ArrayList<Persona> misPersonas;
 	private ArrayList<Vacuna> misVacunas;
 	private ArrayList<Enfermedad> misEnfermedades;
+	private ArrayList<ConsultaMedica> misConsultasMedicas;
+	private ArrayList<HistorialMedico> misHistorialesMedicos;
+	private ArrayList<Usuario> misUsuarios;
 	public static int generadorCodePaciente = 1;
 	public static int generadorCodeMedico = 1;
 	public static int generadorCodeConsMed = 1;
@@ -16,6 +35,7 @@ public class Clinica {
 	public static int generadorCodeVacuna = 1;
 	public static int generadorNumCita = 1;
 	public static Clinica clinica = null; 
+	private static Usuario usuarioLogueado; 
 	
 	public Clinica() {
 		super();
@@ -24,6 +44,17 @@ public class Clinica {
 		this.misPersonas = new ArrayList<Persona>();
 		this.misVacunas = new ArrayList<Vacuna>();
 		this.misEnfermedades = new ArrayList<Enfermedad>();
+		this.misConsultasMedicas = new ArrayList<ConsultaMedica>();
+		this.misHistorialesMedicos = new ArrayList<HistorialMedico>();
+		this.misUsuarios = new ArrayList<Usuario>();
+	}
+	
+	public static Clinica getClinica() {
+		return clinica;
+	}
+	
+	public static void setClinica(Clinica clinica) {
+		Clinica.clinica = clinica;
 	}
 
 	public static Clinica getInstance() {
@@ -75,6 +106,30 @@ public class Clinica {
 		this.misEnfermedades = misEnfermedades;
 	}
 	
+	public ArrayList<ConsultaMedica> getMisConsultasMedicas() {
+		return misConsultasMedicas;
+	}
+
+	public void setMisConsultasMedicas(ArrayList<ConsultaMedica> misConsultasMedicas) {
+		this.misConsultasMedicas = misConsultasMedicas;
+	}
+
+	public ArrayList<HistorialMedico> getMisHistorialesMedicos() {
+		return misHistorialesMedicos;
+	}
+
+	public void setMisHistorialesMedicos(ArrayList<HistorialMedico> misHistorialesMedicos) {
+		this.misHistorialesMedicos = misHistorialesMedicos;
+	}
+	
+	public ArrayList<Usuario> getMisUsuarios() {
+		return misUsuarios;
+	}
+
+	public void setMisUsuarios(ArrayList<Usuario> misUsuarios) {
+		this.misUsuarios = misUsuarios;
+	}
+
 	public static int getGeneradorCodePaciente() {
 		return generadorCodePaciente;
 	}
@@ -122,7 +177,15 @@ public class Clinica {
 	public static void setGeneradorNumCita(int generadorNumCita) {
 		Clinica.generadorNumCita = generadorNumCita;
 	}
-
+	
+	public static Usuario getUsuarioLogueado() {
+		return usuarioLogueado;
+	}
+	
+	public static void setLoginUser(Usuario usuarioLogueado) {
+		Clinica.usuarioLogueado = usuarioLogueado;
+	}
+	
 	public void insertarVivienda(Vivienda vivienda) {
 		
 		misViviendas.add(vivienda);
@@ -163,6 +226,29 @@ public class Clinica {
 			System.out.println("Nombre: " +enfermedad.getNombre()+ ", Síntomas: " + enfermedad.getSintomas()+ ", Tipo: " +enfermedad.getTipo()+ ", Indice de peligrosidad: " +enfermedad.getIndPeligro());
 		}
 		
+	}
+	
+	public void insertarConsultaMedica(ConsultaMedica consultaMedica) {
+		
+		misConsultasMedicas.add(consultaMedica);
+		generadorCodeConsMed++;
+		// Sysout de verificación [[Borrar más tarde]]
+		System.out.println(misHistorialesMedicos.size() +" consultas médicas");
+	}
+	
+	public void insertarHistorialMedico(HistorialMedico historialMedico) {
+		
+		misHistorialesMedicos.add(historialMedico);
+		generadorCodeHistMed++;
+		// Sysout de verificación [[Borrar más tarde]]
+		System.out.println(misHistorialesMedicos.size() +" historiales médicos");
+	}
+	
+	public void insertarUsuario(Usuario usuario) {
+		
+		misUsuarios.add(usuario);
+		// Sysout de verificación [[Borrar más tarde]]
+		System.out.println(misPersonas.size()+" usuarios");
 	}
 	
 	public void actualizarEnfermedad(Enfermedad enfermedad) {
@@ -318,6 +404,26 @@ public class Clinica {
 		return medicoABuscar;
 	}
 	
+	public ConsultaMedica buscarConsMedByCode(String codigo) {
+		
+		ConsultaMedica consultaABuscar = null;
+		boolean encontrado = false;
+		int index = 0;
+		
+		while (!encontrado && index < misConsultasMedicas.size()) {
+			
+			if (misConsultasMedicas.get(index).getCodeConsMed().equalsIgnoreCase(codigo)) {
+				
+				consultaABuscar  = misConsultasMedicas.get(index);
+				encontrado = true;
+			}
+				
+			index++;
+		}
+		
+		return consultaABuscar;
+	}
+	
 	public Paciente buscarPacienteByCedula(String cedula) {
 		
 		Paciente pacienteABuscar = null;
@@ -379,10 +485,86 @@ public class Clinica {
 		
 		return enfermedadABuscar;
 	}
-
-	public void consultaRealizada() {
+	
+	public HistorialMedico buscarHistMedByCodePaciente(String codigo) {
 		
-		generadorCodeConsMed++;
+		HistorialMedico histMedABuscar = null;
+		boolean encontrado = false;
+		int index = 0;
+		
+		while (!encontrado && index < misHistorialesMedicos.size()) {
+			
+			if (misHistorialesMedicos.get(index).getPaciente().getCodePaciente().equalsIgnoreCase(codigo)) {
+				
+				histMedABuscar = misHistorialesMedicos.get(index);
+				encontrado = true;
+				
+			}
+			
+			index++;
+		}
+		
+		return histMedABuscar;
+	}
+	
+    public ArrayList<Enfermedad> enfermedadesDelPaciente(String codePaciente) {
+    	
+    	Paciente paciente = buscarPacienteByCode(codePaciente);
+    	ArrayList<Enfermedad> enfermedades = new ArrayList<Enfermedad>();
+    	
+    	if (paciente != null) {
+    		
+        	for (ConsultaMedica consulta : misConsultasMedicas) {
+    			
+        		if (consulta.getCodePaciente().equalsIgnoreCase(paciente.getCodePaciente())) {
+        			
+            		if (consulta.getEnfermedad() != null) {
+            			
+            			enfermedades.add(consulta.getEnfermedad());
+            		}
+        			
+        		}
+        
+    		}
+    		
+    	}
+    
+    	return enfermedades;
+    }
+	
+	public int edadByFechaDeNacim(Date fechaDeNacimiento, Date fechaActual) {
+		
+	    DateFormat formatter = new SimpleDateFormat("yyyyMMdd");                           
+	    int fecha1 = Integer.parseInt(formatter.format(fechaDeNacimiento));                            
+	    int fecha2 = Integer.parseInt(formatter.format(fechaActual));                          
+	    int edad = (fecha2 - fecha1) / 10000;   
+	    
+	    return edad;
+	}
+	
+	// Funcionas para login y control de usuarios
+	
+	public boolean permitirInicioSesion(String nombreUsuario, String contrasena) {
+		
+		boolean permitir = false;
+		
+		for (Usuario usuario : misUsuarios) {
+			
+			if(usuario.getNombreUsuario().equals(nombreUsuario) && usuario.getContrasena().equals(contrasena)) {
+				
+				usuarioLogueado = usuario;
+				permitir = true;
+			}
+		}
+		
+		return permitir;
+	}
+	
+	public void registrarUsuario(Usuario usuario) {
+		
+		misUsuarios.add(usuario);
+		// Sysout de verificación [[Borrar más tarde]]
+		System.out.println(misUsuarios.size()+" usuarios");
 	}
 	
 }

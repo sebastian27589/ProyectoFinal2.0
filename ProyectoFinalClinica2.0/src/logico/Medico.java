@@ -5,7 +5,12 @@ import java.util.Date;
 
 public class Medico extends Persona {
 
-    private String codeMedico;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -9003456030882977992L;
+	
+	private String codeMedico;
     private ArrayList<String> especialidades;
     
 	public Medico(String cedula, String nombre, Date fechaDeNacimiento, char sexo, String telefono, String direccion,

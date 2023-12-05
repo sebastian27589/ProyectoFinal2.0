@@ -1,22 +1,24 @@
 package logico;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class HistorialMedico {
+public class HistorialMedico implements Serializable {
 
-    private String codeHistMed;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 4349096348610847614L;
+	
+	private String codeHistMed;
     private Paciente paciente;
-    private ArrayList<ConsultaMedica> misConsultas;
     private ArrayList<Enfermedad> misEnfermedades;
-    private ArrayList<Vacuna> misVacunas;
 
     public HistorialMedico(String codeHistMed, Paciente paciente) {
         super();
         this.codeHistMed = codeHistMed;
         this.paciente = paciente;
-        this.misConsultas = new ArrayList<ConsultaMedica>();
         this.misEnfermedades = new ArrayList<Enfermedad>();
-        this.misVacunas = new ArrayList<Vacuna>();
     }
 
     public String getCodeHistMed() {
@@ -31,28 +33,12 @@ public class HistorialMedico {
         this.paciente = paciente;
     }
 
-    public ArrayList<ConsultaMedica> getMisConsultas() {
-        return misConsultas;
-    }
-
-    public void setMisConsultas(ArrayList<ConsultaMedica> misConsultas) {
-        this.misConsultas = misConsultas;
-    }
-
     public ArrayList<Enfermedad> getMisEnfermedades() {
         return misEnfermedades;
     }
 
     public void setMisEnfermedades(ArrayList<Enfermedad> misEnfermedades) {
         this.misEnfermedades = misEnfermedades;
-    }
-
-    public ArrayList<Vacuna> getMisVacunas() {
-        return misVacunas;
-    }
-
-    public void setMisVacunas(ArrayList<Vacuna> misVacunas) {
-        this.misVacunas = misVacunas;
     }
 
 }

@@ -4,7 +4,12 @@ import java.util.Date;
 
 public class Usuario extends Persona {
 
-    private String rolUsuario;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 4896148487402102437L;
+	
+	private String rolUsuario;
     private String nombreUsuario;
     private String contrasena;
 

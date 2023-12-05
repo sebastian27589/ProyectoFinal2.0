@@ -5,13 +5,17 @@ import java.util.Date;
 
 public class Paciente extends Persona {
 
-    private String codePaciente;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 3828098654321780441L;
+	
+	private String codePaciente;
     private String tipoDeSangre;
     private float altura;
     private float peso;
     private String alergias;
     private String infoImportante;
-    private ArrayList<ConsultaMedica> misConsultas;
     private ArrayList<Vacuna> misVacunas;
     
 	public Paciente(String cedula, String nombre, Date fechaDeNacimiento, char sexo, String telefono, String direccion,
@@ -23,7 +27,6 @@ public class Paciente extends Persona {
 		this.peso = peso;
 		this.alergias = alergias;
 		this.infoImportante = infoImportante;
-		this.misConsultas = new ArrayList<ConsultaMedica>();
 		this.misVacunas = new ArrayList<Vacuna>();
 	}
 
@@ -75,14 +78,6 @@ public class Paciente extends Persona {
 		this.infoImportante = infoImportante;
 	}
 	
-	public ArrayList<ConsultaMedica> getMisConsultas() {
-		return misConsultas;
-	}
-	
-	public void setMisConsultas(ArrayList<ConsultaMedica> misConsultas) {
-		this.misConsultas = misConsultas;
-	}
-	
 	public ArrayList<Vacuna> getMisVacunas() {
 		return misVacunas;
 	}
@@ -90,5 +85,5 @@ public class Paciente extends Persona {
 	public void setMisVacunas(ArrayList<Vacuna> misVacunas) {
 		this.misVacunas = misVacunas;
 	}
-
+	
 }

@@ -74,10 +74,13 @@ public class ElegirVacunaPaciente extends JDialog {
 			setTitle("Modificar Vacunas del Paciente");
 		}
 		
+		// Creación de vacunas con fines de prueba
+		/*
 		Vacuna vac1 = new Vacuna("000", "neumococo", "LabSpain");
 		Vacuna vac2 = new Vacuna("001", "19-Vaccine", "Pfizer");
 		Clinica.getInstance().insertarVacuna(vac1);
 		Clinica.getInstance().insertarVacuna(vac2);
+		*/
 		
 		setResizable(false);
 		setTitle("Mostrar Vacunas");

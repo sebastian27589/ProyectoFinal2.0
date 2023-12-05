@@ -1,10 +1,16 @@
 package logico;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Vivienda {
-
-    private ArrayList<Paciente> residentes;
+public class Vivienda implements Serializable{
+	
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6266029798483850414L;
+	
+	private ArrayList<Paciente> residentes;
     private String calle;
     private String numero;
     private String sector;
