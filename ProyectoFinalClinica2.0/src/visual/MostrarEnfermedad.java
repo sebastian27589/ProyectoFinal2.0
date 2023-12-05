@@ -2,16 +2,16 @@ package visual;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
-
 import logico.Clinica;
 import logico.Enfermedad;
+import logico.Paciente;
+import logico.Persona;
 
 import java.awt.Color;
 import java.awt.Toolkit;
@@ -19,7 +19,6 @@ import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import java.awt.SystemColor;
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
@@ -31,12 +30,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
+import javax.swing.DefaultComboBoxModel;
 
 public class MostrarEnfermedad extends JDialog {
 
@@ -50,13 +50,14 @@ public class MostrarEnfermedad extends JDialog {
 	private JButton btn_vigilanciaon;
 	private Enfermedad selected = null;
 	private JSpinner spn_peligro;
+	private ArrayList<Enfermedad> enfermedadEspecificasAMostrar = new ArrayList<Enfermedad>();
 	
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			MostrarEnfermedad dialog = new MostrarEnfermedad();
+			MostrarEnfermedad dialog = new MostrarEnfermedad(null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -67,8 +68,10 @@ public class MostrarEnfermedad extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public MostrarEnfermedad() {
-		Enfermedad prueb = new Enfermedad("Cancer", "Viral", "ESTOS SON SINTOMAS DE PRUEBA", 10, true);
+	public MostrarEnfermedad(ArrayList<Enfermedad> enfermedadMostrar) {
+		enfermedadEspecificasAMostrar = enfermedadMostrar;
+		
+		Enfermedad prueb = new Enfermedad("Cancer", "Viral", "ESTOS SON SINTOMAS DE PRUEBA", 3, true);
 		Clinica.getInstance().insertarEnfermedad(prueb);
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(MostrarEnfermedad.class.getResource("/Imagenes/icon_enfermedad.png")));
@@ -102,16 +105,19 @@ public class MostrarEnfermedad extends JDialog {
 			public void mouseClicked(MouseEvent e) {
 				int ind = table.getSelectedRow();
 				if(ind >= 0) {
-					btn_modificar.setEnabled(true);
 					selected = Clinica.getInstance().buscarEnfermedadByNombre(table.getValueAt(ind, 0).toString());
-					if(selected.isVigilada() == true) {
-						btn_vigilanciaoff.setEnabled(true);
-						btn_vigilanciaon.setEnabled(false);
-					}
 					
-					else {
-						btn_vigilanciaon.setEnabled(true);
-						btn_vigilanciaoff.setEnabled(false);
+					if(enfermedadEspecificasAMostrar == null) {
+						btn_modificar.setEnabled(true);
+						if(selected.isVigilada() == true) {
+							btn_vigilanciaoff.setEnabled(true);
+							btn_vigilanciaon.setEnabled(false);
+						}
+						
+						else {
+							btn_vigilanciaon.setEnabled(true);
+							btn_vigilanciaoff.setEnabled(false);
+						}
 					}
 				}
 			}
@@ -210,11 +216,12 @@ public class MostrarEnfermedad extends JDialog {
 				table.setRowSorter(filtro);
 			}
 		});
-		spn_peligro.setModel(new SpinnerNumberModel(new Integer(0), null, null, new Integer(1)));
+		spn_peligro.setModel(new SpinnerNumberModel(0, 0, 10, 1));
 		spn_peligro.setBounds(122, 120, 188, 25);
 		PanelButtons.add(spn_peligro);
 		
 		JComboBox cbx_tipo = new JComboBox();
+		cbx_tipo.setModel(new DefaultComboBoxModel(new String[] {"", "Alergias", "Enf. Autoinmunes", "Enf. Cardiovasculares", "Enf. de la Mujer", "Enf. de la Sangre", "Enf. Mentales", "Enf. infecciosas"}));
 		cbx_tipo.setBounds(122, 60, 188, 25);
 		PanelButtons.add(cbx_tipo);
 		
@@ -223,14 +230,20 @@ public class MostrarEnfermedad extends JDialog {
 		img_enfermedad.setBounds(10, 185, 102, 105);
 		PanelButtons.add(img_enfermedad);
 		
-		
-		cargarEnfermedades();
+		if (enfermedadEspecificasAMostrar == null) {
+			
+			cargarEnfermedades(Clinica.getInstance().getMisEnfermedades());
+		}
+		else {
+			
+			cargarEnfermedades(enfermedadEspecificasAMostrar);
+		}
 	}
 	
-	public static void cargarEnfermedades() {
+	public static void cargarEnfermedades(ArrayList<Enfermedad> mostrarEnfermedades) {
 		model.setRowCount(0);
 		row = new Object[model.getColumnCount()];
-		for (Enfermedad enf : Clinica.getInstance().getMisEnfermedades()) {
+		for (Enfermedad enf : mostrarEnfermedades) {
 			row[0] = enf.getNombre();
 			row[1] = enf.getTipo();
 			row[2] = enf.getIndPeligro();
@@ -239,4 +252,5 @@ public class MostrarEnfermedad extends JDialog {
 		}
 		
 	}
+	
 }

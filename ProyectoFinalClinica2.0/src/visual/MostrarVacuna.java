@@ -218,11 +218,11 @@ public class MostrarVacuna extends JDialog {
 		
 		if (vacunasEspecificasAMostrar == null) {
 			
-			loadVacunas();
+			loadVacunas(Clinica.getInstance().getMisVacunas());
 		}
 		else {
 			
-			loadVacunasEspecificas();
+			loadVacunas(vacunasEspecificasAMostrar);
 			lblBuscarVacuna.setVisible(false);
 			txtBuscarVacuna.setVisible(false);
 			//Deshabilitar mod y eliminar
@@ -230,12 +230,12 @@ public class MostrarVacuna extends JDialog {
 		
 	}
 
-	public static void loadVacunas() {
+	public static void loadVacunas(ArrayList<Vacuna>mostrarVacunas) {
 		
 		model.setRowCount(0);
 		row = new Object[model.getColumnCount()];
 		
-		for (Vacuna vacuna : Clinica.getInstance().getMisVacunas()) {
+		for (Vacuna vacuna : mostrarVacunas) {
 			row[0] = vacuna.getCodeVacuna();
 			row[1] = vacuna.getNombre();
 			row[2] = vacuna.getLaboratorio(); 
@@ -243,19 +243,4 @@ public class MostrarVacuna extends JDialog {
 		}
 		
 	}
-	
-	private void loadVacunasEspecificas() {
-		
-		model.setRowCount(0);
-		row = new Object[model.getColumnCount()];
-		
-		for (Vacuna vacuna : vacunasEspecificasAMostrar) {
-			row[0] = vacuna.getCodeVacuna();
-			row[1] = vacuna.getNombre();
-			row[2] = vacuna.getLaboratorio(); 
-			model.addRow(row);
-		}
-		
-	}
-	
 }
