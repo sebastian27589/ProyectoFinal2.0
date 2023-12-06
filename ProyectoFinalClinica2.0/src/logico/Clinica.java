@@ -251,6 +251,14 @@ public class Clinica implements Serializable{
 		System.out.println(misPersonas.size()+" usuarios");
 	}
 	
+	public void insertarCita(Cita cita) {
+		
+		misCitas.add(cita);
+		generadorNumCita++;
+		// Sysout de verificación [[Borrar más tarde]]
+		System.out.println(misPersonas.size()+" citas");
+	}
+	
 	public void actualizarEnfermedad(Enfermedad enfermedad) {
 		int index = buscarIndexEnfermedadByNombre(enfermedad.getNombre());
 		misEnfermedades.set(index, enfermedad);
@@ -270,6 +278,13 @@ public class Clinica implements Serializable{
 		misPersonas.set(index, medico);
 	}
 	
+	public void actualizarUsuario(Usuario usuario) {
+		
+		int index = buscarIndexUsuario(usuario.getNombreUsuario());
+		
+		misUsuarios.set(index, usuario);
+	}
+	
 	public void eliminarPaciente(Paciente pacienteAEliminar) {
 		
 		misPersonas.remove(pacienteAEliminar);
@@ -278,6 +293,11 @@ public class Clinica implements Serializable{
 	public void eliminarMedico(Medico medicoAEliminar) {
 		
 		misPersonas.remove(medicoAEliminar);
+	}
+	
+	public void eliminarUsuario(Usuario usuarioAEliminar) {
+		
+		misUsuarios.remove(usuarioAEliminar);
 	}
 	
 	public int buscarIndexEnfermedadByNombre(String nombreEnfermedad) {
@@ -335,6 +355,24 @@ public class Clinica implements Serializable{
 		}
 		
 		return indMedico;
+	}
+	
+	public int buscarIndexUsuario(String nombreUsuario) {
+		
+		boolean encontrado = false;
+		int cont = 0, indUsuario = -1;
+		
+		while (!encontrado && cont < misUsuarios.size()) {
+				
+			if (misUsuarios.get(cont).getNombreUsuario().equals(nombreUsuario)) {
+				encontrado = true;
+				indUsuario = cont;
+			}
+			
+			cont++;
+		}
+		
+		return indUsuario;
 	}
 
 	public Vacuna buscarVacunaByCode(String codigo) {
@@ -404,6 +442,25 @@ public class Clinica implements Serializable{
 		return medicoABuscar;
 	}
 	
+	public Usuario buscarUsuario(String nombreUsuario) {
+		
+		Usuario usuarioABuscar = null;
+		boolean encontrado = false;
+		int index = 0;
+		
+		while (!encontrado && index < misUsuarios.size()) {
+			
+			if (misUsuarios.get(index).getNombreUsuario().equals(nombreUsuario)) {
+				usuarioABuscar  = misUsuarios.get(index);
+				encontrado = true;
+			}
+			
+			index++;
+		}
+		
+		return usuarioABuscar;
+	}
+	
 	public ConsultaMedica buscarConsMedByCode(String codigo) {
 		
 		ConsultaMedica consultaABuscar = null;
@@ -422,6 +479,27 @@ public class Clinica implements Serializable{
 		}
 		
 		return consultaABuscar;
+	}
+	
+	public Cita buscarCitaByNum(String numCita) {
+		
+		Cita citaABuscar = null;
+		boolean encontrado = false;
+		int index = 0;
+		
+		while (!encontrado && index < misCitas.size()) {
+			
+			if (misCitas.get(index).getNumCita().equalsIgnoreCase(numCita)) {
+				
+				citaABuscar = misCitas.get(index);
+				encontrado = true;
+				
+			}
+			
+			index++;
+		}
+		
+		return citaABuscar;
 	}
 	
 	public Paciente buscarPacienteByCedula(String cedula) {
@@ -445,6 +523,29 @@ public class Clinica implements Serializable{
 		}
 		
 		return pacienteABuscar;
+	}
+	
+	public Medico buscarMedicoByCedula(String cedula) {
+		
+		Medico medicoABuscar = null;
+		boolean encontrado = false;
+		int index = 0;
+		
+		while (!encontrado && index < misPersonas.size()) {
+			
+			if (misPersonas.get(index) instanceof Medico) {
+				
+				if (misPersonas.get(index).getCedula().equalsIgnoreCase(cedula)) {
+					medicoABuscar = (Medico) misPersonas.get(index);
+					encontrado = true;
+				}
+				
+			}
+			
+			index++;
+		}
+		
+		return medicoABuscar;
 	}
 	
 	public Vivienda buscarViviendaByNum(String num) {
@@ -542,7 +643,27 @@ public class Clinica implements Serializable{
 	    return edad;
 	}
 	
-	// Funcionas para login y control de usuarios
+	// Funciones para control de Citas
+	
+	public ArrayList<Cita> citasPendientesByCodeMedico(String codeMedico) {
+		
+		ArrayList<Cita> citasPendientes = new ArrayList<Cita>();
+		
+		for (Cita cita : misCitas) {
+			
+			if (cita.getCodeMedico().equalsIgnoreCase(codeMedico)) {
+				
+				if (cita.isPendiente()) {
+					
+					citasPendientes.add(cita);
+				}
+			}
+		}
+		
+		return citasPendientes;
+	}
+	
+	// Funciones para login y control de usuarios
 	
 	public boolean permitirInicioSesion(String nombreUsuario, String contrasena) {
 		

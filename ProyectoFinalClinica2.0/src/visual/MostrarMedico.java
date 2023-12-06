@@ -52,13 +52,14 @@ public class MostrarMedico extends JDialog {
 	private JButton btnCitasPendientesMed;
 	private JButton btnModificar;
 	private JButton btnEliminar;
+	public static Medico medicoElegido = null;
 	
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			MostrarMedico dialog = new MostrarMedico(null, false);
+			MostrarMedico dialog = new MostrarMedico(null, false, false);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -69,7 +70,7 @@ public class MostrarMedico extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public MostrarMedico(ArrayList<Medico> medicosAMostrar, boolean elegirParaCrearUsuario) {
+	public MostrarMedico(ArrayList<Medico> medicosAMostrar, boolean elegirParaCrearUsuario, boolean elegirParaCita) {
 		
 		medicosEspecificosAMostrar = medicosAMostrar;
 		
@@ -229,10 +230,7 @@ public class MostrarMedico extends JDialog {
 		btnCitasPendientesMed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				/* SE DEBE DISCUTIR...
-				 * Listar todas las consultas médicas o el historial médico. Pienso que sería más lógico simplemente listar el
-				 * historial médico, y que no todos los usuarios tengan acceso a ver el historial médico de un paciente*\
-				 */
+				// MostrarCita con las citas de ese médico
 			}
 		});
 		btnCitasPendientesMed.setEnabled(false);
@@ -258,17 +256,26 @@ public class MostrarMedico extends JDialog {
 				btnModificar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						
-						if (!elegirParaCrearUsuario) {
+						if (elegirParaCrearUsuario) {
+							
+							dispose();
+							RegUsuario registrarUsuarioMedico = new RegUsuario(null, selected, false);
+							registrarUsuarioMedico.setModal(true);
+							registrarUsuarioMedico.setVisible(true);
+						}
+						else if (elegirParaCita) {
+							
+							medicoElegido = selected;
+							dispose();
+							System.out.println(medicoElegido.getNombre());
+						}
+						else {
 							
 							RegMedico modificarMedico = new RegMedico(selected, false);
 							modificarMedico.setModal(true);
 							modificarMedico.setVisible(true);
 							loadMedicos();
 							JOptionPane.showMessageDialog(null, "Modificado con éxito", "Modificar Médico", JOptionPane.INFORMATION_MESSAGE);
-						}
-						else {
-							
-							
 						}
 
 					}
@@ -308,7 +315,12 @@ public class MostrarMedico extends JDialog {
 				btnCitasPendientesMed.setVisible(false);
 				btnEliminar.setVisible(false);
 				btnModificar.setText("Siguiente");
+			}
+			else if (elegirParaCita) {
 				
+				btnCitasPendientesMed.setVisible(false);
+				btnEliminar.setVisible(false);
+				btnModificar.setText("Seleccionar");
 			}
 			
 			loadMedicos();
@@ -365,4 +377,10 @@ public class MostrarMedico extends JDialog {
 		}
 		
 	}
+	
+	public static Medico getMedicoParaCita() {
+		
+		return medicoElegido;
+	}
+	
 }

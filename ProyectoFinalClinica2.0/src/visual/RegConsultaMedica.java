@@ -224,7 +224,6 @@ public class RegConsultaMedica extends JDialog {
 				MostrarVacuna visualizarVacunasPaciente = new MostrarVacuna(paciente.getMisVacunas());
 				visualizarVacunasPaciente.setModal(true);
 				visualizarVacunasPaciente.setVisible(true);
-				
 			}
 		});
 		menuItemVacunas.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));

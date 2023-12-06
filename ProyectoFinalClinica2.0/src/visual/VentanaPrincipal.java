@@ -10,6 +10,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import logico.Clinica;
+import logico.Medico;
 
 import javax.swing.JButton;
 import java.awt.Toolkit;
@@ -28,13 +29,14 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
 
 public class VentanaPrincipal extends JFrame {
 
 	private JPanel contentPane;
-	private Dimension dim; 
+	private Dimension dim;
 
 	/**
 	 * Launch the application.
@@ -132,20 +134,20 @@ public class VentanaPrincipal extends JFrame {
 		});
 		menuRegistro.add(mntmNewMenuItem_4);
 		
-		JMenu mnNewMenu_1 = new JMenu("Recursos Humanos");
-		menuBar.add(mnNewMenu_1);
+		JMenu menuRecursosHumanos = new JMenu("Recursos Humanos");
+		menuBar.add(menuRecursosHumanos);
 		
 		JMenuItem mntmNewMenuItem_5 = new JMenuItem("M\u00E9dicos");
 		mntmNewMenuItem_5.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				MostrarMedico mostrarMedicos = new MostrarMedico(null, false);
+				MostrarMedico mostrarMedicos = new MostrarMedico(null, false, false);
 				mostrarMedicos.setModal(true);
 				mostrarMedicos.setVisible(true);
 				
 			}
 		});
-		mnNewMenu_1.add(mntmNewMenuItem_5);
+		menuRecursosHumanos.add(mntmNewMenuItem_5);
 		
 		JMenuItem mntmNewMenuItem_6 = new JMenuItem("Pacientes");
 		mntmNewMenuItem_6.addActionListener(new ActionListener() {
@@ -156,49 +158,115 @@ public class VentanaPrincipal extends JFrame {
 				mostrarPacientes.setVisible(true);
 			}
 		});
-		mnNewMenu_1.add(mntmNewMenuItem_6);
+		menuRecursosHumanos.add(mntmNewMenuItem_6);
 		
-		JMenu mnNewMenu_2 = new JMenu("Datos M\u00E9dicos");
-		menuBar.add(mnNewMenu_2);
+		JMenu menuDatosMedicos = new JMenu("Datos M\u00E9dicos");
+		menuBar.add(menuDatosMedicos);
 		
 		JMenuItem mntmNewMenuItem_7 = new JMenuItem("Enfermedades");
-		mnNewMenu_2.add(mntmNewMenuItem_7);
+		menuDatosMedicos.add(mntmNewMenuItem_7);
 		
 		JMenuItem mntmNewMenuItem_8 = new JMenuItem("Vacunas");
-		mnNewMenu_2.add(mntmNewMenuItem_8);
+		menuDatosMedicos.add(mntmNewMenuItem_8);
 		
-		JMenu mnNewMenu_3 = new JMenu("Citas");
-		menuBar.add(mnNewMenu_3);
+		JMenu menuCitas = new JMenu("Citas");
+		menuBar.add(menuCitas);
 		
-		JMenuItem mntmNewMenuItem_9 = new JMenuItem("Agendar Citas");
-		mnNewMenu_3.add(mntmNewMenuItem_9);
+		JMenuItem menuItemAgendarCita = new JMenuItem("Agendar Cita");
+		menuItemAgendarCita.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				RegCita registrarCita = new RegCita(null);
+				registrarCita.setModal(true);
+				registrarCita.setVisible(true);
+			}
+		});
+		menuCitas.add(menuItemAgendarCita);
 		
-		JMenuItem mntmNewMenuItem_10 = new JMenuItem("Mostrar Citas");
-		mnNewMenu_3.add(mntmNewMenuItem_10);
+		JMenuItem menuItemMostrarCitas = new JMenuItem("Listado de Citas");
+		menuItemMostrarCitas.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				MostrarCita mostrarCitasClinica = null;
+				
+				if (Clinica.getInstance().getUsuarioLogueado().getRolUsuario().equalsIgnoreCase("Médico")) {
+					
+					Medico medicoLogueado = Clinica.getInstance().buscarMedicoByCedula(Clinica.getInstance().getUsuarioLogueado().getCedula());
+					
+					mostrarCitasClinica = new MostrarCita(Clinica.getInstance().citasPendientesByCodeMedico(medicoLogueado.getCodeMedico()));
+				}
+				else {
+					
+					mostrarCitasClinica = new MostrarCita(null);
+				}
+
+				mostrarCitasClinica.setModal(true);
+				mostrarCitasClinica.setVisible(true);
+			}
+		});
+		menuCitas.add(menuItemMostrarCitas);
 		
-		JMenu mnNewMenu_4 = new JMenu("Consultas M\u00E9dicas");
-		menuBar.add(mnNewMenu_4);
+		JMenu menuReportes = new JMenu("Reportes");
+		if (!Clinica.getInstance().getUsuarioLogueado().getRolUsuario().equalsIgnoreCase("Administrador")) {
+			
+			menuReportes.setEnabled(false);
+		}
+		menuBar.add(menuReportes);
 		
-		JMenuItem mntmNewMenuItem_11 = new JMenuItem("Ver Citas");
-		mnNewMenu_4.add(mntmNewMenuItem_11);
+		JMenu menuGerencia = new JMenu("Gerencia");
+		if (!Clinica.getInstance().getUsuarioLogueado().getRolUsuario().equalsIgnoreCase("Administrador")) {
+			
+			menuGerencia.setEnabled(false);
+		}
+		menuBar.add(menuGerencia);
 		
-		JMenu mnNewMenu_5 = new JMenu("Reportes");
-		menuBar.add(mnNewMenu_5);
+		JMenu menuItemUsuarios = new JMenu("Usuarios");
+		menuGerencia.add(menuItemUsuarios);
 		
-		JMenu menuHerramientas = new JMenu("Herramientas");
-		menuBar.add(menuHerramientas);
+		JMenu menuCrearUsuario = new JMenu("Crear Usuario");
+		menuItemUsuarios.add(menuCrearUsuario);
 		
-		JMenu menuItemCrearUsuario = new JMenu("Crear Usuario");
-		menuHerramientas.add(menuItemCrearUsuario);
+		JMenuItem menuItemMedico = new JMenuItem("M\u00E9dico");
+		menuItemMedico.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				MostrarMedico mostrarMedicoParaCrearUser = new MostrarMedico(null, true, false);
+				mostrarMedicoParaCrearUser.setModal(true);
+				mostrarMedicoParaCrearUser.setVisible(true);
+				
+			}
+		});
+		menuCrearUsuario.add(menuItemMedico);
 		
-		JMenuItem menuItemCrearUMed = new JMenuItem("M\u00E9dico");
-		menuItemCrearUsuario.add(menuItemCrearUMed);
+		JMenuItem menuItemSecretario = new JMenuItem("Secretario");
+		menuItemSecretario.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				RegUsuario registrarUsuario = new RegUsuario(null, null, false);
+				registrarUsuario.setModal(true);
+				registrarUsuario.setVisible(true);
+				
+			}
+		});
+		menuCrearUsuario.add(menuItemSecretario);
 		
-		JMenuItem mntmNewMenuItem_13 = new JMenuItem("Secretario");
-		menuItemCrearUsuario.add(mntmNewMenuItem_13);
+		JMenuItem menuItemListaUsuarios = new JMenuItem("Listado de Usuarios");
+		menuItemListaUsuarios.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				MostrarUsuario mostrarUsuarios = new MostrarUsuario(null);
+				mostrarUsuarios.setModal(true);
+				mostrarUsuarios.setVisible(true);
+				
+			}
+		});
+		menuItemUsuarios.add(menuItemListaUsuarios);
 		
-		JMenu mnNewMenu_6 = new JMenu("Mi Perfil");
-		menuBar.add(mnNewMenu_6);
+		JMenuItem menuItemConsMeds = new JMenuItem("Consultas M\u00E9dicas");
+		menuGerencia.add(menuItemConsMeds);
+		
+		JMenuItem menuItemHistMeds = new JMenuItem("Historiales M\u00E9dicos");
+		menuGerencia.add(menuItemHistMeds);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

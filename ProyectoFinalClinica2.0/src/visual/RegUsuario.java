@@ -36,11 +36,18 @@ import logico.Usuario;
 import logico.Vacuna;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+import logico.RoundedPanel;
+import java.awt.SystemColor;
+import javax.swing.border.LineBorder;
+import javax.swing.ImageIcon;
+import java.awt.Cursor;
+import javax.swing.JPasswordField;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class RegUsuario extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
-	private JTextField txtCodePaciente;
 	private JTextField txtNombre;
 	private JTextField txtCedula;
 	private JTextField txtTelefono;
@@ -54,6 +61,10 @@ public class RegUsuario extends JDialog {
 	private JButton btnSiguiente;
 	private JButton cancelButton;
 	private JTextField txtUsuario;
+	private JTextField txtContrasena;
+	private JPasswordField passwordFieldUsuario;
+	private JLabel lblIconVerContra;
+	private JLabel lblIconOcultarContra;
 	
 	/**
 	 * Launch the application.
@@ -97,7 +108,7 @@ public class RegUsuario extends JDialog {
 		}
 		
 		setResizable(false);
-		setBounds(100, 100, 606, 395);
+		setBounds(100, 100, 606, 369);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(new Color(218, 221, 216));
@@ -108,18 +119,9 @@ public class RegUsuario extends JDialog {
 			JPanel panelContenedor1 = new JPanel();
 			panelContenedor1.setOpaque(false);
 			panelContenedor1.setBackground(new Color(218, 221, 216));
-			panelContenedor1.setBounds(0, 11, 787, 116);
+			panelContenedor1.setBounds(0, 11, 600, 116);
 			contentPanel.add(panelContenedor1);
 			panelContenedor1.setLayout(null);
-			
-			JLabel lblCodePaciente = new JLabel("C\u00F3digo:");
-			lblCodePaciente.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
-			lblCodePaciente.setOpaque(true);
-			lblCodePaciente.setHorizontalAlignment(SwingConstants.CENTER);
-			lblCodePaciente.setForeground(new Color(0, 0, 0));
-			lblCodePaciente.setBackground(new Color(255, 255, 255));
-			lblCodePaciente.setBounds(23, 21, 72, 22);
-			panelContenedor1.add(lblCodePaciente);
 			{
 				JLabel lblNombre = new JLabel("Nombre:");
 				lblNombre.setOpaque(true);
@@ -131,15 +133,8 @@ public class RegUsuario extends JDialog {
 				panelContenedor1.add(lblNombre);
 			}
 			
-			txtCodePaciente = new JTextField();
-			txtCodePaciente.setEditable(false);
-			txtCodePaciente.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
-			txtCodePaciente.setBounds(105, 21, 62, 22);
-			panelContenedor1.add(txtCodePaciente);
-			txtCodePaciente.setColumns(10);
-			txtCodePaciente.setText("P-"+Clinica.getInstance().getGeneradorCodePaciente());
-			
 			txtNombre = new JTextField();
+			txtNombre.setBorder(null);
 			txtNombre.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 			txtNombre.setColumns(10);
 			txtNombre.setBounds(105, 54, 176, 22);
@@ -151,13 +146,13 @@ public class RegUsuario extends JDialog {
 			lblCédula.setForeground(Color.BLACK);
 			lblCédula.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 			lblCédula.setBackground(Color.WHITE);
-			lblCédula.setBounds(309, 21, 72, 22);
+			lblCédula.setBounds(23, 21, 72, 22);
 			panelContenedor1.add(lblCédula);
 			
 			txtCedula = new JTextField();
 			txtCedula.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 			txtCedula.setColumns(10);
-			txtCedula.setBounds(391, 21, 176, 22);
+			txtCedula.setBounds(105, 21, 176, 22);
 			panelContenedor1.add(txtCedula);
 			
 			JLabel lblFechaNacim = new JLabel("F. de nac:");
@@ -166,11 +161,11 @@ public class RegUsuario extends JDialog {
 			lblFechaNacim.setForeground(Color.BLACK);
 			lblFechaNacim.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 			lblFechaNacim.setBackground(Color.WHITE);
-			lblFechaNacim.setBounds(309, 54, 72, 22);
+			lblFechaNacim.setBounds(309, 21, 72, 22);
 			panelContenedor1.add(lblFechaNacim);
 			
 			dateChooserNacim = new JDateChooser();
-			dateChooserNacim.setBounds(391, 54, 176, 22);
+			dateChooserNacim.setBounds(391, 21, 176, 22);
 			panelContenedor1.add(dateChooserNacim);
 			
 			JLabel lblSexo = new JLabel("Sexo:");
@@ -205,7 +200,7 @@ public class RegUsuario extends JDialog {
 			rdbtnFemenino.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 			
 			JLabel lblTelefono = new JLabel("Telefono:");
-			lblTelefono.setBounds(309, 87, 72, 22);
+			lblTelefono.setBounds(309, 54, 72, 22);
 			panelContenedor1.add(lblTelefono);
 			lblTelefono.setOpaque(true);
 			lblTelefono.setHorizontalAlignment(SwingConstants.CENTER);
@@ -214,7 +209,8 @@ public class RegUsuario extends JDialog {
 			lblTelefono.setBackground(Color.WHITE);
 			
 			txtTelefono = new JTextField();
-			txtTelefono.setBounds(391, 87, 176, 22);
+			txtTelefono.setBorder(null);
+			txtTelefono.setBounds(391, 54, 176, 22);
 			panelContenedor1.add(txtTelefono);
 			txtTelefono.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 			txtTelefono.setColumns(10);
@@ -222,24 +218,77 @@ public class RegUsuario extends JDialog {
 		
 		JPanel panelVerde = new JPanel();
 		panelVerde.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panelVerde.setBackground(new Color(107, 170, 117, 60));
-		panelVerde.setBounds(0, 21, 787, 112);
+		panelVerde.setBackground(new Color(105, 116, 124, 120));
+		panelVerde.setBounds(0, 21, 600, 112);
 		contentPanel.add(panelVerde);
 		
 		JPanel panelGris = new JPanel();
 		panelGris.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panelGris.setBackground(new Color(105, 116, 124, 120));
-		panelGris.setBounds(0, 145, 787, 121);
+		panelGris.setBackground(new Color(173, 216, 230));
+		panelGris.setBounds(0, 145, 380, 82);
 		contentPanel.add(panelGris);
 		panelGris.setLayout(null);
 		
+		lblIconOcultarContra = new JLabel("");
+		lblIconOcultarContra.setBorder(null);
+		lblIconOcultarContra.setIconTextGap(0);
+		lblIconOcultarContra.setVisible(false);
+		lblIconOcultarContra.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				lblIconOcultarContra.setVisible(false);
+				lblIconVerContra.setVisible(true);
+				txtContrasena.setVisible(false);
+				passwordFieldUsuario.setText(txtContrasena.getText());
+				passwordFieldUsuario.setVisible(true);
+			}
+		});
+		lblIconOcultarContra.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		lblIconOcultarContra.setIcon(new ImageIcon(RegUsuario.class.getResource("/Imagenes/iconOcultarContrasena.png")));
+		lblIconOcultarContra.setBounds(323, 47, 16, 16);
+		panelGris.add(lblIconOcultarContra);
+		
+		lblIconVerContra = new JLabel("");
+		lblIconVerContra.setBounds(323, 47, 16, 16);
+		panelGris.add(lblIconVerContra);
+		lblIconVerContra.setForeground(Color.WHITE);
+		lblIconVerContra.setBorder(null);
+		lblIconVerContra.setIconTextGap(0);
+		lblIconVerContra.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				lblIconVerContra.setVisible(false);
+				lblIconOcultarContra.setVisible(true);
+				passwordFieldUsuario.setVisible(false);
+				txtContrasena.setText(String.valueOf(passwordFieldUsuario.getPassword()));
+				txtContrasena.setVisible(true);
+			}
+		});
+		lblIconVerContra.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		lblIconVerContra.setIcon(new ImageIcon(RegUsuario.class.getResource("/Imagenes/iconVerContrasena.png")));
+		
+		passwordFieldUsuario = new JPasswordField();
+		passwordFieldUsuario.setBorder(null);
+		passwordFieldUsuario.setBounds(137, 45, 176, 22);
+		panelGris.add(passwordFieldUsuario);
+		
 		JLabel lblUsuario = new JLabel("Usuario:");
+		lblUsuario.setOpaque(true);
 		lblUsuario.setHorizontalAlignment(SwingConstants.CENTER);
 		lblUsuario.setForeground(Color.BLACK);
 		lblUsuario.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 		lblUsuario.setBackground(Color.WHITE);
-		lblUsuario.setBounds(31, 11, 72, 22);
+		lblUsuario.setBounds(23, 11, 103, 22);
 		panelGris.add(lblUsuario);
+		
+		txtUsuario = new JTextField();
+		txtUsuario.setBorder(null);
+		txtUsuario.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
+		txtUsuario.setColumns(10);
+		txtUsuario.setBounds(137, 11, 176, 22);
+		panelGris.add(txtUsuario);
 		
 		JLabel lblContrasena = new JLabel("Contrase\u00F1a:");
 		lblContrasena.setOpaque(true);
@@ -247,26 +296,20 @@ public class RegUsuario extends JDialog {
 		lblContrasena.setForeground(Color.BLACK);
 		lblContrasena.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 		lblContrasena.setBackground(Color.WHITE);
-		lblContrasena.setBounds(105, 49, 89, 22);
+		lblContrasena.setBounds(23, 45, 103, 22);
 		panelGris.add(lblContrasena);
 		
-		JLabel lblConfirmContra = new JLabel("Confirmar contrase\u00F1a:");
-		lblConfirmContra.setOpaque(true);
-		lblConfirmContra.setHorizontalAlignment(SwingConstants.CENTER);
-		lblConfirmContra.setForeground(Color.BLACK);
-		lblConfirmContra.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
-		lblConfirmContra.setBackground(Color.WHITE);
-		lblConfirmContra.setBounds(105, 82, 153, 22);
-		panelGris.add(lblConfirmContra);
+		txtContrasena = new JTextField();
+		txtContrasena.setVisible(false);
+		txtContrasena.setBorder(null);
+		txtContrasena.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
+		txtContrasena.setColumns(10);
+		txtContrasena.setBounds(137, 45, 176, 22);
+		panelGris.add(txtContrasena);
 		
-		txtUsuario = new JTextField();
-		txtUsuario.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
-		txtUsuario.setColumns(10);
-		txtUsuario.setBounds(31, 29, 176, 22);
-		panelGris.add(txtUsuario);
-		
-		JLabel lblNewLabel = new JLabel("Hacer espacio para \u00EDcono o imagen de fondo");
-		lblNewLabel.setBounds(153, 301, 323, 14);
+		JLabel lblNewLabel = new JLabel("Imagen");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setBounds(414, 144, 153, 114);
 		contentPanel.add(lblNewLabel);
 		{
 			JPanel buttonPane = new JPanel();
@@ -278,31 +321,21 @@ public class RegUsuario extends JDialog {
 				btnSiguiente.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						
-						if (usuario == null) {
+						String contrasena;
+						
+						if (lblIconVerContra.isVisible()) {
 							
-							if (medico == null) {
-								
-								if (rdbtnMasculino.isSelected()) {
-									
-									sexoUsuario = 'M';
-								}
-								else {
-									
-									sexoUsuario = 'F';
-								}
-								
-								//Usuario nuevoUsuario = new Usuario(txtCedula.getText(), txtNombre.getText(), dateChooserNacim.getDate(),
-										// sexoUsuario, txtTelefono.getText(), "Secretario", );
-								
-							}
-							
-							
-							
-							
-							
+							contrasena = String.valueOf(passwordFieldUsuario.getPassword());
 						}
 						else {
-					
+							
+							contrasena = txtContrasena.getText();
+						}
+						
+						if (usuario == null) {
+							
+							Usuario nuevoUsuario;
+							
 							if (rdbtnMasculino.isSelected()) {
 								
 								sexoUsuario = 'M';
@@ -312,6 +345,43 @@ public class RegUsuario extends JDialog {
 								sexoUsuario = 'F';
 							}
 							
+							if (medico != null) {
+								
+
+								
+								nuevoUsuario = new Usuario(txtCedula.getText(), txtNombre.getText(), dateChooserNacim.getDate(),
+										           sexoUsuario, txtTelefono.getText(), medico.getDireccion(), "Médico", txtUsuario.getText(),
+										           contrasena);
+								
+
+								
+							}
+							else {
+								
+								nuevoUsuario = new Usuario(txtCedula.getText(), txtNombre.getText(), dateChooserNacim.getDate(),
+								           sexoUsuario, txtTelefono.getText(), null, "Secretario", txtUsuario.getText(),
+								           contrasena);
+								
+							}
+							
+							
+							Clinica.getInstance().insertarUsuario(nuevoUsuario);
+							JOptionPane.showMessageDialog(null, "Registrado con éxito", "Registrar Usuario", JOptionPane.INFORMATION_MESSAGE);
+							dispose();
+							
+						}
+						else {
+							
+							usuario.setNombreUsuario(txtUsuario.getText());
+							usuario.setContrasena(contrasena);
+							
+							if (usuario.getRolUsuario().equalsIgnoreCase("Secretario")) {
+								
+								usuario.setTelefono(txtTelefono.getText());
+							}
+							
+							Clinica.getInstance().actualizarUsuario(usuario);
+							dispose();
 						}
 						
 					}
@@ -335,15 +405,80 @@ public class RegUsuario extends JDialog {
 			}
 		}
 		
-		
+		if (usuario != null || medico != null) {
+			
+			txtCedula.setEditable(false);
+			txtNombre.setEditable(false);
+			rdbtnMasculino.setEnabled(false);
+			rdbtnFemenino.setEnabled(false);
+			dateChooserNacim.setEnabled(false);
+			txtTelefono.setEditable(false);
+			
+			if (usuario != null && usuario.getRolUsuario().equalsIgnoreCase("Secretario")) {
+				
+				txtTelefono.setEditable(true);
+			}
+			
+			if (visualizar) {
 
-
+				txtTelefono.setEditable(false);
+				btnSiguiente.setVisible(false);
+				cancelButton.setText("Cerrar");
+			}
+			
+		}
 		
+		loadDatosMedico();
+		loadUsuarioAModificar();
 
 	}
 	
 
+	private void loadUsuarioAModificar() {
+		
+		if (usuario != null) {
+			
+			txtCedula.setText(usuario.getCedula());
+			txtNombre.setText(usuario.getNombre());
+			
+			if (usuario.getSexo() == 'M') {
+				
+				rdbtnMasculino.setSelected(true);
+			}
+			else {
+				
+				rdbtnFemenino.setSelected(true);
+			}
+			
+			dateChooserNacim.setDate(usuario.getFechaDeNacimiento());
+			txtTelefono.setText(usuario.getTelefono());
+			txtUsuario.setText(usuario.getNombreUsuario());
+			passwordFieldUsuario.setText(usuario.getContrasena());
+		}
+		
+	}
 	
+	private void loadDatosMedico() {
+		
+		if (medico != null) {
+			
+			txtCedula.setText(medico.getCedula());
+			txtNombre.setText(medico.getNombre());
+			
+			if (medico.getSexo() == 'M') {
+				
+				rdbtnMasculino.setSelected(true);
+			}
+			else {
+				
+				rdbtnFemenino.setSelected(true);
+			}
+			
+			dateChooserNacim.setDate(medico.getFechaDeNacimiento());
+			txtTelefono.setText(medico.getTelefono());
+		}
+		
+	}
 
 	
 	public String getCodePacienteRegistrado() {
