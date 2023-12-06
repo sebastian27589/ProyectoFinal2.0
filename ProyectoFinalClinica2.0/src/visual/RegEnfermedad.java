@@ -31,6 +31,7 @@ import javax.swing.border.TitledBorder;
 
 import logico.Clinica;
 import logico.Enfermedad;
+import javax.swing.JCheckBox;
 
 public class RegEnfermedad extends JDialog {
 
@@ -42,6 +43,7 @@ public class RegEnfermedad extends JDialog {
 	private JComboBox cbxTipo;
 	private JSpinner spnMortalidad;
 	private JLabel lblSiemprePreocupndonos;
+	private JCheckBox chbxVigilancia;
 
 	/**
 	 * Launch the application.
@@ -106,13 +108,13 @@ public class RegEnfermedad extends JDialog {
 		lblNewLabel.setOpaque(true);
 		lblNewLabel.setBackground(new Color(255, 255, 255));
 		lblNewLabel.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
-		lblNewLabel.setBounds(38, 23, 70, 22);
+		lblNewLabel.setBounds(38, 23, 70, 25);
 		panel.add(lblNewLabel);
 		
 		txtNombre = new JTextField();
 		txtNombre.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		txtNombre.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
-		txtNombre.setBounds(114, 23, 233, 22);
+		txtNombre.setBounds(114, 23, 233, 25);
 		panel.add(txtNombre);
 		txtNombre.setColumns(10);
 		
@@ -121,14 +123,14 @@ public class RegEnfermedad extends JDialog {
 		lblTipo.setBackground(new Color(255, 255, 255));
 		lblTipo.setOpaque(true);
 		lblTipo.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
-		lblTipo.setBounds(398, 23, 50, 22);
+		lblTipo.setBounds(398, 23, 50, 25);
 		panel.add(lblTipo);
 		
 		cbxTipo = new JComboBox();
 		cbxTipo.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		cbxTipo.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
-		cbxTipo.setModel(new DefaultComboBoxModel(new String[] {"Virus", "Viroide", "Hongo", "Par\u00E1sito", "Bacteria", ""}));
-		cbxTipo.setBounds(454, 23, 205, 22);
+		cbxTipo.setModel(new DefaultComboBoxModel(new String[] {"Alergia", "Enf. Autoinmune", "Enf. Cardiovascular", "Enf. de la Mujer", "Enf. de la Sangre", "Enf. Mentales", "Enf. infecciosa"}));
+		cbxTipo.setBounds(493, 23, 205, 25);
 		panel.add(cbxTipo);
 		
 		JPanel panel_1 = new JPanel();
@@ -149,7 +151,7 @@ public class RegEnfermedad extends JDialog {
 		txtSintoma.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		txtSintoma.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
 		txtSintoma.setColumns(10);
-		txtSintoma.setBounds(114, 13, 327, 44);
+		txtSintoma.setBounds(114, 10, 233, 50);
 		panel_1.add(txtSintoma);
 		
 		JLabel lblMortalidad = new JLabel(" Mortalidad:");
@@ -157,15 +159,22 @@ public class RegEnfermedad extends JDialog {
 		lblMortalidad.setBackground(new Color(255, 255, 255));
 		lblMortalidad.setOpaque(true);
 		lblMortalidad.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
-		lblMortalidad.setBounds(532, 23, 80, 22);
+		lblMortalidad.setBounds(398, 10, 80, 22);
 		panel_1.add(lblMortalidad);
 		
 		spnMortalidad = new JSpinner();
 		spnMortalidad.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		spnMortalidad.setModel(new SpinnerNumberModel(1, 1, 10, 1));
 		spnMortalidad.setFont(new Font("Gill Sans MT", Font.PLAIN, 12));
-		spnMortalidad.setBounds(618, 23, 41, 22);
+		spnMortalidad.setBounds(493, 10, 41, 22);
 		panel_1.add(spnMortalidad);
+		
+		chbxVigilancia = new JCheckBox("Bajo Vigilancia");
+		chbxVigilancia.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		chbxVigilancia.setBackground(new Color(255, 255, 255));
+		chbxVigilancia.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
+		chbxVigilancia.setBounds(398, 38, 136, 22);
+		panel_1.add(chbxVigilancia);
 		
 		JPanel panel_2 = new JPanel();
 		panel_2.setBackground(rayita1);
@@ -233,6 +242,9 @@ public class RegEnfermedad extends JDialog {
 				JButton btnRegistrar = new JButton("Registrar");
 				if (enfermedad != null) {
 					btnRegistrar.setText("Modificar");
+					if(mod == false) {
+						btnRegistrar.setEnabled(false);
+					}
 				}
 				btnRegistrar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
@@ -278,6 +290,15 @@ public class RegEnfermedad extends JDialog {
 				btnCancelar.setActionCommand("Cancel");
 				buttonPane.add(btnCancelar);
 			}
+			
+			if(enfermedad != null && mod == false) {
+				txtNombre.setEditable(false);
+				cbxTipo.setEnabled(false);
+				txtSintoma.setEditable(false);
+				spnMortalidad.setEnabled(false);
+				chbxVigilancia.setEnabled(false);
+				cargarEnfermedad(enfermedad);
+			}
 		}
 	}
 
@@ -287,5 +308,25 @@ public class RegEnfermedad extends JDialog {
 		txtSintoma.setText("");
 		cbxTipo.setSelectedIndex(0);
 		spnMortalidad.setValue(new Integer(1));
+	}
+	
+	public void cargarEnfermedad(Enfermedad enfermedad) {
+		txtNombre.setText(enfermedad.getNombre());
+		txtSintoma.setText(enfermedad.getSintomas());
+		boolean encontrado = false;
+		int ind = 0;
+		while(ind <= cbxTipo.getItemCount() && encontrado == false) {
+			if(cbxTipo.getItemAt(ind).toString().equalsIgnoreCase(enfermedad.getTipo())) {
+				cbxTipo.setSelectedIndex(ind);
+				encontrado = true;
+			}
+			ind++;
+		}
+		spnMortalidad.setValue(enfermedad.getIndPeligro());
+		if(enfermedad.isVigilada() == true) {
+			chbxVigilancia.setSelected(true);
+		}else {
+			chbxVigilancia.setSelected(false);
+		}
 	}
 }
