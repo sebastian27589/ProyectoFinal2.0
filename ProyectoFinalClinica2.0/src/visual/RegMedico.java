@@ -31,6 +31,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JRadioButton;
 import com.toedter.calendar.JDateChooser;
 
+import exception.ValidarCampo;
 import logico.Clinica;
 import logico.Medico;
 import logico.Vacuna;
@@ -43,6 +44,7 @@ import java.awt.event.MouseEvent;
 public class RegMedico extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
+	private String nombre, cedula, telefono;
 	private JTextField txtCodeMedico;
 	private JTextField txtNombre;
 	private JTextField txtCedula;
@@ -52,6 +54,7 @@ public class RegMedico extends JDialog {
 	private JRadioButton rdbtnFemenino;
 	private JTextArea txtareaDireccion;
 	private String selected = null;
+	private Date fechaNacimiento;
 	private static Medico medico = null;
 	private char sexoMedico;
 	private JTable tableEspecialidades;
@@ -353,44 +356,66 @@ public class RegMedico extends JDialog {
 				btnRegistrar = new JButton("Registrar");
 				btnRegistrar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						try {
+							if (medico == null) {
+								
+								if (rdbtnMasculino.isSelected()) {
+									
+									sexoMedico = 'M';
+								}
+								else {
+									
+									sexoMedico = 'F';
+								}
+								
+								nombre = txtNombre.getText();
+								cedula = txtCedula.getText();
+								telefono = txtTelefono.getText();
+								fechaNacimiento = dateChooserNacim.getDate();
+								
+								if (nombre.isEmpty() || cedula.isEmpty() || telefono.isEmpty()) {
+									throw new ValidarCampo("Debe llenar los campos obligatorios.");
+								}
+								
+								if (fechaNacimiento == null) {
+									throw new ValidarCampo("No ha seleccionado una fecha de nacimiento.");
+								}
+								
+								if (especialidadesElegidas.isEmpty()) {
+									throw new ValidarCampo("El médico debe tener al menos 1 especialidad.");
+								}
+								
+								Medico medicoNuevo = new Medico(txtCedula.getText(), txtNombre.getText(), dateChooserNacim.getDate(), sexoMedico,
+									                            txtTelefono.getText(), txtareaDireccion.getText(), txtCodeMedico.getText());
+								medicoNuevo.getEspecialidades().addAll(especialidadesElegidas);
+								
+								Clinica.getInstance().insertarMedico(medicoNuevo);
+								JOptionPane.showMessageDialog(null, "Registrado con éxito", "Registrar Médico", JOptionPane.INFORMATION_MESSAGE);
+								clean();
+							}
+							else {
 						
-						if (medico == null) {
-							
-							if (rdbtnMasculino.isSelected()) {
+								if (rdbtnMasculino.isSelected()) {
+									
+									sexoMedico = 'M';
+								}
+								else {
+									
+									sexoMedico = 'F';
+								}
 								
-								sexoMedico = 'M';
-							}
-							else {
+								medico.setTelefono(txtTelefono.getText());
+								medico.setDireccion(txtareaDireccion.getText());
+								medico.getEspecialidades().clear();
+								medico.getEspecialidades().addAll(especialidadesElegidas);
 								
-								sexoMedico = 'F';
+								Clinica.getInstance().actualizarMedico(medico);
+								dispose();
 							}
-							
-							Medico medicoNuevo = new Medico(txtCedula.getText(), txtNombre.getText(), dateChooserNacim.getDate(), sexoMedico,
-								                            txtTelefono.getText(), txtareaDireccion.getText(), txtCodeMedico.getText());
-							medicoNuevo.getEspecialidades().addAll(especialidadesElegidas);
-							
-							Clinica.getInstance().insertarMedico(medicoNuevo);
-							JOptionPane.showMessageDialog(null, "Registrado con éxito", "Registrar Médico", JOptionPane.INFORMATION_MESSAGE);
-							clean();
-						}
-						else {
-					
-							if (rdbtnMasculino.isSelected()) {
-								
-								sexoMedico = 'M';
-							}
-							else {
-								
-								sexoMedico = 'F';
-							}
-							
-							medico.setTelefono(txtTelefono.getText());
-							medico.setDireccion(txtareaDireccion.getText());
-							medico.getEspecialidades().clear();
-							medico.getEspecialidades().addAll(especialidadesElegidas);
-							
-							Clinica.getInstance().actualizarMedico(medico);
-							dispose();
+						} catch (ValidarCampo e2) {
+							JOptionPane.showMessageDialog(null, e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+							e2.printStackTrace();
+							txtNombre.grabFocus();
 						}
 						
 					}

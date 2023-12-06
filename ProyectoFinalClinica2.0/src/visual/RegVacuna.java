@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.table.DefaultTableModel;
 
+import exception.ValidarCampo;
 import logico.Clinica;
 import logico.Enfermedad;
 import logico.Vacuna;
@@ -290,33 +291,38 @@ public class RegVacuna extends JDialog {
 				}
 				btnRegistrar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						
-						if (vacuna == null) {
-							
-							nombre = txtNombre.getText();
-							lab = txtLab.getText();
-							
-							if (!nombre.isEmpty() && !lab.isEmpty()) {
+						try {
+							if (vacuna == null) 
+							{
 								
-								if (!enfermedadesAAgregar.isEmpty()) {
-									
-									Vacuna nuevaVacuna = new Vacuna(txtCodigo.getText(), txtNombre.getText(), txtLab.getText());
-									nuevaVacuna.getEnfermedadesQueTrata().addAll(enfermedadesAAgregar);
-									Clinica.getInstance().insertarVacuna(nuevaVacuna);
-									JOptionPane.showMessageDialog(null, "Vacuna registrada.", "Registro de Vacunas", JOptionPane.INFORMATION_MESSAGE);
-									clean();
-								} else {
-									JOptionPane.showMessageDialog(null, "Debes asignar al menos una enfermedad.", "Error", JOptionPane.ERROR_MESSAGE);
+								nombre = txtNombre.getText();
+								lab = txtLab.getText();
+								
+								if (nombre.isEmpty() || lab.isEmpty()) {
+									throw new ValidarCampo("Debe llenar los campos obligatorios.");
 								}
+									
+								if (enfermedadesAAgregar.isEmpty()) {
+									throw new ValidarCampo("La vacuna debe tratar al menos una enfermedad.");
+								}
+										
+								Vacuna nuevaVacuna = new Vacuna(txtCodigo.getText(), txtNombre.getText(), txtLab.getText());
+								nuevaVacuna.getEnfermedadesQueTrata().addAll(enfermedadesAAgregar);
+								Clinica.getInstance().insertarVacuna(nuevaVacuna);
+								JOptionPane.showMessageDialog(null, "Vacuna registrada.", "Registro de Vacunas", JOptionPane.INFORMATION_MESSAGE);
+								clean();
 							} else {
-								JOptionPane.showMessageDialog(null, "Debe llenar los campos.", "Error", JOptionPane.ERROR_MESSAGE);
+								vacuna.setNombre(txtNombre.getText());
+								vacuna.setLaboratorio(txtLab.getText());
+								//Clinica.getInstance().actualizarVacuna();
+								dispose();
 							}
-						} else {
-							vacuna.setNombre(txtNombre.getText());
-							vacuna.setLaboratorio(txtLab.getText());
-							//Clinica.getInstance().actualizarVacuna();
-							dispose();
+						} catch (ValidarCampo e2) {
+							JOptionPane.showMessageDialog(null, e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+							e2.printStackTrace();
+							txtNombre.grabFocus();
 						}
+
 					}
 				});
 				btnRegistrar.setActionCommand("OK");

@@ -29,6 +29,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JRadioButton;
 import com.toedter.calendar.JDateChooser;
 
+import exception.ValidarCampo;
 import logico.Clinica;
 import logico.Paciente;
 import logico.Vacuna;
@@ -38,6 +39,9 @@ import javax.swing.DefaultComboBoxModel;
 public class RegPaciente extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
+	private String nombre, cedula, telefono;
+	private float peso, altura;
+	private Date fechaNacimiento;
 	private JTextField txtCodePaciente;
 	private JTextField txtNombre;
 	private JTextField txtCedula;
@@ -333,65 +337,98 @@ public class RegPaciente extends JDialog {
 				btnSiguiente.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						
-						if (paciente == null) {
-							
-							if (rdbtnMasculino.isSelected()) {
+						try {
+							if (paciente == null) {
 								
-								sexoPaciente = 'M';
+								if (rdbtnMasculino.isSelected()) {
+									
+									sexoPaciente = 'M';
+								}
+								else {
+									
+									sexoPaciente = 'F';
+								}
+								
+								nombre = txtNombre.getText();
+								cedula = txtCedula.getText();
+								telefono = txtTelefono.getText();
+								fechaNacimiento = dateChooserNacim.getDate();
+//								peso = Float.parseFloat(txtPeso.getText());
+//								altura = Float.parseFloat(txtAltura.getText());
+								
+								if (nombre.isEmpty() || cedula.isEmpty() || telefono.isEmpty()) {
+									throw new ValidarCampo("Debe llenar los campos obligatorios.");
+								}
+								
+								if (fechaNacimiento == null) {
+									throw new ValidarCampo("No ha seleccionado una fecha de nacimiento.");
+								}
+								
+								if (cbxTipoSangre.getSelectedIndex() == 0) {
+									throw new ValidarCampo("No ha seleccionado un tipo de sangre.");
+								}
+								
+//								if (peso <= 0 || altura <= 0) {
+//									throw new ValidarCampo("Las entradas del peso o la altura no pueden ser negativas.");
+//								}
+								
+								if (!rdbtnMasculino.isSelected() && !rdbtnFemenino.isSelected()) {
+									throw new ValidarCampo("Debe seleccionar un sexo.");
+								}
+								
+								Paciente nuevoPaciente = new Paciente(txtCedula.getText(), txtNombre.getText(), dateChooserNacim.getDate(),
+										 sexoPaciente, txtTelefono.getText(), txtareaDireccion.getText(), txtCodePaciente.getText(),
+										 cbxTipoSangre.getSelectedItem().toString(), new Float(txtAltura.getText()), new Float(txtPeso.getText()),
+										 txtareaAlergias.getText(), txtareaInfoRelevante.getText());
+								
+								codePacienteRegistrado = nuevoPaciente.getCodePaciente();
+								ElegirVacunaPaciente elegirVacunas = new ElegirVacunaPaciente(null);
+								elegirVacunas.setModal(true);
+								elegirVacunas.setVisible(true);
+								nuevoPaciente.getMisVacunas().addAll(elegirVacunas.extraerVacunasElegidas());
+								Clinica.getInstance().insertarPaciente(nuevoPaciente);
+								JOptionPane.showMessageDialog(null, "Registrado con éxito", "Registrar Paciente", JOptionPane.INFORMATION_MESSAGE);
+								
+								if (regUnSoloPaciente) {
+									
+									dispose();
+								}
+								else {
+									clean();
+								}
+								
 							}
 							else {
+						
+								if (rdbtnMasculino.isSelected()) {
+									
+									sexoPaciente = 'M';
+								}
+								else {
+									
+									sexoPaciente = 'F';
+								}
 								
-								sexoPaciente = 'F';
-							}
-							
-							Paciente nuevoPaciente = new Paciente(txtCedula.getText(), txtNombre.getText(), dateChooserNacim.getDate(),
-									 sexoPaciente, txtTelefono.getText(), txtareaDireccion.getText(), txtCodePaciente.getText(),
-									 cbxTipoSangre.getSelectedItem().toString(), new Float(txtAltura.getText()), new Float(txtPeso.getText()),
-									 txtareaAlergias.getText(), txtareaInfoRelevante.getText());
-							
-							codePacienteRegistrado = nuevoPaciente.getCodePaciente();
-							ElegirVacunaPaciente elegirVacunas = new ElegirVacunaPaciente(null);
-							elegirVacunas.setModal(true);
-							elegirVacunas.setVisible(true);
-							nuevoPaciente.getMisVacunas().addAll(elegirVacunas.extraerVacunasElegidas());
-							Clinica.getInstance().insertarPaciente(nuevoPaciente);
-							JOptionPane.showMessageDialog(null, "Registrado con éxito", "Registrar Paciente", JOptionPane.INFORMATION_MESSAGE);
-							
-							if (regUnSoloPaciente) {
+								paciente.setTipoDeSangre(cbxTipoSangre.getSelectedItem().toString());
+								paciente.setAltura(new Float(txtAltura.getText()));
+								paciente.setPeso(new Float(txtPeso.getText()));
+								paciente.setTelefono(txtTelefono.getText());
+								paciente.setDireccion(txtareaDireccion.getText());
+								paciente.setAlergias(txtareaAlergias.getText());
+								paciente.setInfoImportante(txtareaInfoRelevante.getText());
 								
+								ElegirVacunaPaciente elegirVacunas = new ElegirVacunaPaciente(paciente);
+								elegirVacunas.setModal(true);
+								elegirVacunas.setVisible(true);
+								paciente.getMisVacunas().clear();
+								paciente.getMisVacunas().addAll(elegirVacunas.extraerVacunasElegidas());							
+								Clinica.getInstance().actualizarPaciente(paciente);
 								dispose();
 							}
-							else {
-								clean();
-							}
-							
-						}
-						else {
-					
-							if (rdbtnMasculino.isSelected()) {
-								
-								sexoPaciente = 'M';
-							}
-							else {
-								
-								sexoPaciente = 'F';
-							}
-							
-							paciente.setTipoDeSangre(cbxTipoSangre.getSelectedItem().toString());
-							paciente.setAltura(new Float(txtAltura.getText()));
-							paciente.setPeso(new Float(txtPeso.getText()));
-							paciente.setTelefono(txtTelefono.getText());
-							paciente.setDireccion(txtareaDireccion.getText());
-							paciente.setAlergias(txtareaAlergias.getText());
-							paciente.setInfoImportante(txtareaInfoRelevante.getText());
-							
-							ElegirVacunaPaciente elegirVacunas = new ElegirVacunaPaciente(paciente);
-							elegirVacunas.setModal(true);
-							elegirVacunas.setVisible(true);
-							paciente.getMisVacunas().clear();
-							paciente.getMisVacunas().addAll(elegirVacunas.extraerVacunasElegidas());							
-							Clinica.getInstance().actualizarPaciente(paciente);
-							dispose();
+						} catch (ValidarCampo e2) {
+							JOptionPane.showMessageDialog(null, e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+							e2.printStackTrace();
+							txtNombre.grabFocus();
 						}
 						
 					}

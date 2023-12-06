@@ -29,6 +29,7 @@ import java.awt.Component;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 
+import exception.ValidarCampo;
 import logico.Clinica;
 import logico.Enfermedad;
 import javax.swing.JCheckBox;
@@ -248,42 +249,57 @@ public class RegEnfermedad extends JDialog {
 				}
 				btnRegistrar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						// Si es nueva enfermedad, se hace el proceso normal.
-						if (enfermedad == null) {
+						try {
+								// Si es una nueva enfermedad, se hace el proceso normal.
+								if (enfermedad == null) {
+								boolean vigilancia;
+								if(chbxVigilancia.isSelected()) {
+									vigilancia = true;
+								}else {
+									vigilancia = false;
+								}
+								nombre = txtNombre.getText();
+								sintomas = txtSintoma.getText();
+								
+								// Validar que la nueva enfermedad no esté vacía
+								if (nombre.isEmpty() || sintomas.isEmpty()) {
+									throw new ValidarCampo("Debe llenar los campos obligatorios.");
+								}
+									Enfermedad nuevaEnfermedad = new Enfermedad(txtNombre.getText(), cbxTipo.getSelectedItem().toString(), txtSintoma.getText(),new Integer(spnMortalidad.getValue().toString()), vigilancia);
+									Clinica.getInstance().insertarEnfermedad(nuevaEnfermedad);
+									JOptionPane.showMessageDialog(null, "Enfermedad registrada con éxito.", "Registro de enfermedad", JOptionPane.INFORMATION_MESSAGE);
+									clean();
+								//} else
+									//JOptionPane.showMessageDialog(null, "Debe llenar los campos.", "Error", JOptionPane.ERROR_MESSAGE);
 							
-							boolean vigilancia;
-							if(chbxVigilancia.isSelected()) {
-								vigilancia = true;
-							}else {
-								vigilancia = false;
+							// Si ya es una enfermedad seleccionada, se modifica.
+							} else if (enfermedad != null && mod == true){
+								enfermedad.setNombre(txtNombre.getText());
+								enfermedad.setSintomas(txtSintoma.getText());
+								enfermedad.setTipo(cbxTipo.getSelectedItem().toString());
+								enfermedad.setIndPeligro(new Integer(spnMortalidad.getValue().toString()));
+								if(chbxVigilancia.isSelected()) {
+									enfermedad.setVigilada(true);
+								}else {
+									enfermedad.setVigilada(false);
+								}
+								Clinica.getInstance().actualizarEnfermedad(enfermedad);
+								JOptionPane.showMessageDialog(null, "Enfermedad modificada con éxito.", "Modificación de Enfermedad", JOptionPane.INFORMATION_MESSAGE);
+								dispose();
 							}
-							nombre = txtNombre.getText();
-							sintomas = txtSintoma.getText();
-							
-							// Validar que la nueva enfermedad no esté vacía
-							if (!nombre.isEmpty() && !sintomas.isEmpty()) {
-								Enfermedad nuevaEnfermedad = new Enfermedad(txtNombre.getText(), cbxTipo.getSelectedItem().toString(), txtSintoma.getText(),new Integer(spnMortalidad.getValue().toString()), vigilancia);
-								Clinica.getInstance().insertarEnfermedad(nuevaEnfermedad);
-								JOptionPane.showMessageDialog(null, "Enfermedad registrada con éxito.", "Registro de enfermedad", JOptionPane.INFORMATION_MESSAGE);
-								clean();
-							} else
-								JOptionPane.showMessageDialog(null, "Debe llenar los campos.", "Error", JOptionPane.ERROR_MESSAGE);
+								
+						// Para el validador de campo
+						} catch (ValidarCampo ex) {
+							JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+							ex.printStackTrace();
+							txtNombre.grabFocus();
+						} 
 						
-						// Si ya es una enfermedad seleccionada, se modifica.
-						} else if (enfermedad != null && mod == true){
-							enfermedad.setNombre(txtNombre.getText());
-							enfermedad.setSintomas(txtSintoma.getText());
-							enfermedad.setTipo(cbxTipo.getSelectedItem().toString());
-							enfermedad.setIndPeligro(new Integer(spnMortalidad.getValue().toString()));
-							if(chbxVigilancia.isSelected()) {
-								enfermedad.setVigilada(true);
-							}else {
-								enfermedad.setVigilada(false);
-							}
-							Clinica.getInstance().actualizarEnfermedad(enfermedad);
-							JOptionPane.showMessageDialog(null, "Enfermedad modificada con éxito.", "Modificación de Enfermedad", JOptionPane.INFORMATION_MESSAGE);
-							dispose();
-						}
+						// Para que no se muestren todos esos errores en la consola 
+//						catch (Exception e2) {
+//							e2.printStackTrace();
+//							txtNombre.grabFocus();
+//						}
 					}
 				});
 				btnRegistrar.setActionCommand("OK");
