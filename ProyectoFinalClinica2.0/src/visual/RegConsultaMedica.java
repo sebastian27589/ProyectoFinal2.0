@@ -71,9 +71,9 @@ public class RegConsultaMedica extends JDialog {
 	private JComboBox cbxEnfermedad;
 	private JTextField txtBuscarAnalisis;
 	private JMenuItem menuItemModViPaciente;
-	private JMenuItem menuItemVacunas;
 	private JMenuItem menuItemHistMed;
 	private JMenuItem menuItemRegPaciente;
+	public static boolean consultaRealizada = false;
 
 	/**
 	 * Launch the application.
@@ -100,16 +100,6 @@ public class RegConsultaMedica extends JDialog {
 	 * Create the dialog.
 	 */
 	public RegConsultaMedica(Paciente pacienteAConsultar, Medico medicoConsultor, ConsultaMedica consMedAVisualizar) {
-		
-		Enfermedad enf1 = new Enfermedad("Lepra", "Viral", "Tos", 9, true);
-		Enfermedad enf2 = new Enfermedad("SIDA", "Sanguínea", "Tos", 10, true);
-		Enfermedad enf3 = new Enfermedad("Esquizofrenia", "Psicológica", "Tos", 10, true);
-		//consMedAVisualizar.setEnfermedad(enf3);
-		
-		Clinica.getInstance().insertarEnfermedad(enf1);
-		Clinica.getInstance().insertarEnfermedad(enf2);
-		Clinica.getInstance().insertarEnfermedad(enf3);
-		Clinica.getInstance().insertarPaciente(pacienteAConsultar);
 		
 		paciente = pacienteAConsultar;
 		medico = medicoConsultor;
@@ -181,10 +171,8 @@ public class RegConsultaMedica extends JDialog {
 				activarDesactivarCampos();
 				menuItemRegPaciente.setEnabled(false);
 				menuItemModViPaciente.setEnabled(true);
-				menuItemVacunas.setEnabled(true);
 				menuItemHistMed.setEnabled(true);
 				btnRealizar.setEnabled(true);
-				
 			}
 		});
 		menuItemRegPaciente.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
@@ -211,25 +199,22 @@ public class RegConsultaMedica extends JDialog {
 		menuItemModViPaciente.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 		menuPaciente.add(menuItemModViPaciente);
 		
-		menuItemVacunas = new JMenuItem("Vacunas");
-		
 		if (menuItemRegPaciente.isEnabled()) {
 			
-			menuItemVacunas.setEnabled(false);
+		
 		}
 		
-		menuItemVacunas.addActionListener(new ActionListener() {
+		menuItemHistMed = new JMenuItem("Historial M\u00E9dico");
+		menuItemHistMed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				MostrarVacuna visualizarVacunasPaciente = new MostrarVacuna(paciente.getMisVacunas());
-				visualizarVacunasPaciente.setModal(true);
-				visualizarVacunasPaciente.setVisible(true);
+				VerHistorialMedico visualizarHistMed = new VerHistorialMedico(paciente.getCodePaciente());
+				visualizarHistMed.setModal(true);
+				visualizarHistMed.setVisible(true);
+				
+				
 			}
 		});
-		menuItemVacunas.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
-		menuPaciente.add(menuItemVacunas);
-		
-		menuItemHistMed = new JMenuItem("Historial M\u00E9dico");
 		
 		if (menuItemRegPaciente.isEnabled()) {
 			
@@ -367,7 +352,7 @@ public class RegConsultaMedica extends JDialog {
 		
 		cbxEnfermedad = new JComboBox();
 		
-		int sizeListaEnfermedades = Clinica.getInstance().getMisEnfermedades().size();
+		int sizeListaEnfermedades = Clinica.getInstance().getMisEnfermedades().size() + 1;
 		String[] nombresEnfermedades = new String[sizeListaEnfermedades];
 		
 		nombresEnfermedades[0] = "Ninguna";
@@ -494,6 +479,8 @@ public class RegConsultaMedica extends JDialog {
 							Clinica.getInstance().insertarConsultaMedica(consMedNueva);
 							
 							JOptionPane.showMessageDialog(null, "Realizada con éxito", "Realizar Consulta Médica", JOptionPane.INFORMATION_MESSAGE);
+							
+							consultaRealizada = true;
 							dispose();
 						}
 						
@@ -508,6 +495,7 @@ public class RegConsultaMedica extends JDialog {
 				cancelButton = new JButton("Cancelar");
 				cancelButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						consultaRealizada = false;
 						dispose();
 					}
 				});
@@ -634,6 +622,10 @@ public class RegConsultaMedica extends JDialog {
 			
 		}
 		
+	}
+
+	public static boolean isConsultaRealizada() {
+		return consultaRealizada;
 	}
 	
 }

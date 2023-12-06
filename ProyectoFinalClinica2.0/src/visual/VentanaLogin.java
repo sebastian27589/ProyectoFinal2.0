@@ -39,6 +39,9 @@ public class VentanaLogin extends JDialog {
 	private JTextField txtUsuario;
 	private JPasswordField passwordFieldLogin;
 	private JLabel lblTextBotonLogin;
+	private JTextField txtContrasena;
+	private JLabel lblIconOcultarContra;
+	private JLabel lblIconVerContra;
 
 	/**
 	 * Launch the application.
@@ -146,6 +149,45 @@ public class VentanaLogin extends JDialog {
 		panelContenedor.add(contenedorCampos);
 		contenedorCampos.setLayout(null);
 		
+		lblIconOcultarContra = new JLabel("");
+		lblIconOcultarContra.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				lblIconOcultarContra.setVisible(false);
+				lblIconVerContra.setVisible(true);
+				txtContrasena.setVisible(false);
+				passwordFieldLogin.setText(txtContrasena.getText());
+				passwordFieldLogin.setVisible(true);
+			}
+		});
+		
+		
+		lblIconOcultarContra.setVisible(false);
+		
+		lblIconVerContra = new JLabel("");
+		lblIconVerContra.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				lblIconVerContra.setVisible(false);
+				lblIconOcultarContra.setVisible(true);
+				passwordFieldLogin.setVisible(false);
+				txtContrasena.setText(String.valueOf(passwordFieldLogin.getPassword()));
+				txtContrasena.setVisible(true);
+			}
+		});
+		
+		
+		lblIconVerContra.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		lblIconVerContra.setIcon(new ImageIcon(VentanaLogin.class.getResource("/Imagenes/iconVerContrasena.png")));
+		lblIconVerContra.setBounds(204, 238, 16, 16);
+		contenedorCampos.add(lblIconVerContra);
+		lblIconOcultarContra.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		lblIconOcultarContra.setIcon(new ImageIcon(VentanaLogin.class.getResource("/Imagenes/iconOcultarContrasena.png")));
+		lblIconOcultarContra.setBounds(204, 238, 16, 16);
+		contenedorCampos.add(lblIconOcultarContra);
+		
 		JLabel lblEncabezado = new JLabel("\u00A1Bienvenido!");
 		lblEncabezado.setForeground(new Color(81, 137, 252));
 		lblEncabezado.setFont(new Font("Gill Sans MT", Font.BOLD, 30));
@@ -197,6 +239,14 @@ public class VentanaLogin extends JDialog {
 		passwordFieldLogin.setBounds(10, 0, 126, 22);
 		roundedPanelContrasena.add(passwordFieldLogin);
 		
+		txtContrasena = new JTextField();
+		txtContrasena.setBounds(10, 0, 126, 22);
+		roundedPanelContrasena.add(txtContrasena);
+		txtContrasena.setOpaque(false);
+		txtContrasena.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
+		txtContrasena.setColumns(10);
+		txtContrasena.setBorder(null);
+		
 		JLabel lblIconUsuario = new JLabel("");
 		lblIconUsuario.setIcon(new ImageIcon(VentanaLogin.class.getResource("/Imagenes/iconUsuario.png")));
 		lblIconUsuario.setBounds(178, 150, 16, 16);
@@ -206,20 +256,6 @@ public class VentanaLogin extends JDialog {
 		lblIconContrasena.setIcon(new ImageIcon(VentanaLogin.class.getResource("/Imagenes/iconContrasena.png")));
 		lblIconContrasena.setBounds(178, 211, 16, 16);
 		contenedorCampos.add(lblIconContrasena);
-		
-		JLabel lblIconVerContra = new JLabel("");
-		lblIconVerContra.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				
-				
-				
-			}
-		});
-		lblIconVerContra.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		lblIconVerContra.setIcon(new ImageIcon(VentanaLogin.class.getResource("/Imagenes/iconVerContrasena.png")));
-		lblIconVerContra.setBounds(204, 238, 16, 16);
-		contenedorCampos.add(lblIconVerContra);
 		
 		RoundedPanel panelBotonLogin = new RoundedPanel();
 		panelBotonLogin.addMouseListener(new MouseAdapter() {

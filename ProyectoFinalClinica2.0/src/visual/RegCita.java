@@ -24,6 +24,7 @@ import javax.swing.JTextArea;
 
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.awt.event.ActionEvent;
 import javax.swing.JRadioButton;
@@ -250,6 +251,7 @@ public class RegCita extends JDialog {
 		panelGris.add(lblNumCita);
 		
 		txtNumCita = new JTextField();
+		txtNumCita.setText(String.valueOf(Clinica.getInstance().getGeneradorNumCita()));
 		txtNumCita.setBorder(null);
 		txtNumCita.setEditable(false);
 		txtNumCita.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
@@ -258,6 +260,13 @@ public class RegCita extends JDialog {
 		panelGris.add(txtNumCita);
 		
 		dateChooserCita = new JDateChooser();
+		dateChooserCita.getCalendarButton().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				medico = null;
+				cbxHoraCita.setModel(new DefaultComboBoxModel<>());
+			}
+		});
 		dateChooserCita.setBorder(null);
 		dateChooserCita.setBounds(105, 44, 90, 22);
 		panelGris.add(dateChooserCita);
@@ -306,7 +315,7 @@ public class RegCita extends JDialog {
 				}
 				else {
 					
-					JOptionPane.showMessageDialog(null, "Primero, debe elegir la fecha de la cita", "Advertencia", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Favor elegir la fecha de la cita", "Advertencia", JOptionPane.INFORMATION_MESSAGE);
 				}
 				
 			}
@@ -340,6 +349,8 @@ public class RegCita extends JDialog {
 								                  cbxHoraCita.getSelectedItem().toString());
 						
 						Clinica.getInstance().insertarCita(nuevaCita);
+						cbxHoraCita.setEnabled(false);
+						cbxHoraCita.setModel(new DefaultComboBoxModel<>());
 						JOptionPane.showMessageDialog(null, "Cita agendada con éxito", "Agendar Cita", JOptionPane.INFORMATION_MESSAGE);
 						clean();
 					}
@@ -389,7 +400,7 @@ public class RegCita extends JDialog {
 		
 		for (Cita cita : Clinica.getInstance().citasPendientesByCodeMedico(medico.getCodeMedico())) {
 			
-			if (cita.getFechaDeCita().compareTo(dateChooserCita.getDate()) == 0) {
+			if (fechasIguales(cita.getFechaDeCita(), dateChooserCita.getDate())) {
 				
 				if (cita.isPendiente()) {
 					
@@ -414,6 +425,24 @@ public class RegCita extends JDialog {
 		}
 				
 		cbxHoraCita.setModel(new DefaultComboBoxModel(itemsHorasDisponibles));
+	}
+	
+	public boolean fechasIguales(Date fecha1, Date fecha2) {
+		
+		Calendar calendarFecha1 = Calendar.getInstance();
+		Calendar calendarFecha2 = Calendar.getInstance();
+		calendarFecha1.setTime(fecha1);
+		calendarFecha2.setTime(fecha2);
+		boolean sonIguales = false;
+		
+		if (calendarFecha1.get(Calendar.YEAR) == calendarFecha2.get(Calendar.YEAR) &&
+			calendarFecha1.get(Calendar.MONTH) == calendarFecha2.get(Calendar.MONTH) &&
+			calendarFecha1.get(Calendar.DAY_OF_MONTH) == calendarFecha2.get(Calendar.DAY_OF_MONTH) ) {
+			
+			sonIguales = true;
+		}
+		
+		return sonIguales;
 	}
 	
 }

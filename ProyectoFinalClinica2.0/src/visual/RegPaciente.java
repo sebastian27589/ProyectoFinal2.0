@@ -180,6 +180,7 @@ public class RegPaciente extends JDialog {
 			lblSexo.setBackground(Color.WHITE);
 			
 			rdbtnMasculino = new JRadioButton("M");
+			rdbtnMasculino.setSelected(true);
 			rdbtnMasculino.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					

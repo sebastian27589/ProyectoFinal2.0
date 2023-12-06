@@ -11,10 +11,12 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
+import javax.swing.text.DateFormatter;
 
 import logico.Cita;
 import logico.Clinica;
 import logico.Medico;
+import logico.Paciente;
 import logico.Vacuna;
 
 import java.awt.Color;
@@ -34,12 +36,15 @@ import java.awt.event.KeyEvent;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class MostrarCita extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
-	private JTable tableVacunas;
+	private JTable tableCitas;
 	private JTextField txtBuscarVacuna;
 	private static DefaultTableModel model;
 	private static Object[] row;
@@ -82,7 +87,13 @@ public class MostrarCita extends JDialog {
 		
 		Object[] header = {"No. Cita", "Nombre del Médico", "Nombre de la Persona", "Fecha", "Hora"};
 		
-		model = new DefaultTableModel();
+		model = new DefaultTableModel() {
+			
+			public boolean isCellEditable(int row, int column) {       
+			       
+			       return false;
+			}
+		};
 		model.setColumnIdentifiers(header);
 		contentPanel.setBackground(backgroundColor);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -95,44 +106,44 @@ public class MostrarCita extends JDialog {
 			contentPanel.add(panel_2);
 			panel_2.setLayout(new BorderLayout(0, 0));
 			
-			JScrollPane scrollPane = new JScrollPane(tableVacunas);
+			JScrollPane scrollPane = new JScrollPane(tableCitas);
 			panel_2.add(scrollPane, BorderLayout.CENTER);
 			
-			tableVacunas = new JTable(model);
-			tableVacunas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			tableVacunas.getTableHeader().setResizingAllowed(false);
-			tableVacunas.getTableHeader().setReorderingAllowed(false);
+			tableCitas = new JTable(model);
+			tableCitas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			tableCitas.getTableHeader().setResizingAllowed(false);
+			tableCitas.getTableHeader().setReorderingAllowed(false);
 			DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
 			cellRenderer.setHorizontalAlignment(JLabel.CENTER);
 			
-			for (int index = 0; index < tableVacunas.getColumnCount(); index++) {
+			for (int index = 0; index < tableCitas.getColumnCount(); index++) {
 				
-				tableVacunas.getColumnModel().getColumn(index).setCellRenderer(cellRenderer);
+				tableCitas.getColumnModel().getColumn(index).setCellRenderer(cellRenderer);
 			}
 			
-			tableVacunas.getColumnModel().getColumn(0).setPreferredWidth(5);
-			tableVacunas.getColumnModel().getColumn(1).setPreferredWidth(100);
-			tableVacunas.getColumnModel().getColumn(2).setPreferredWidth(100);
-			tableVacunas.getColumnModel().getColumn(3).setPreferredWidth(5);
-			tableVacunas.getColumnModel().getColumn(4).setPreferredWidth(5);
+			tableCitas.getColumnModel().getColumn(0).setPreferredWidth(5);
+			tableCitas.getColumnModel().getColumn(1).setPreferredWidth(100);
+			tableCitas.getColumnModel().getColumn(2).setPreferredWidth(100);
+			tableCitas.getColumnModel().getColumn(3).setPreferredWidth(5);
+			tableCitas.getColumnModel().getColumn(4).setPreferredWidth(5);
 			
-			tableVacunas.addMouseListener(new MouseAdapter() {
+			tableCitas.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					
-					int rowIndex = tableVacunas.getSelectedRow(), colIndex = tableVacunas.getSelectedColumn();
+					int rowIndex = tableCitas.getSelectedRow();
 					
 					if (rowIndex >= 0) {
 						
-						selected = Clinica.getInstance().buscarCitaByNum(tableVacunas.getValueAt(rowIndex, 0).toString());
+						selected = Clinica.getInstance().buscarCitaByNum(tableCitas.getValueAt(rowIndex, 0).toString());
 						btnConsultar.setEnabled(true);
 					}
 					
 				}
 			});
-			tableVacunas.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
-			tableVacunas.setFillsViewportHeight(true);
-			scrollPane.setViewportView(tableVacunas);
+			tableCitas.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
+			tableCitas.setFillsViewportHeight(true);
+			scrollPane.setViewportView(tableCitas);
 		}
 		
 		JPanel panel_1 = new JPanel();
@@ -159,9 +170,9 @@ public class MostrarCita extends JDialog {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				
-				DefaultTableModel searchModel1 = (DefaultTableModel) tableVacunas.getModel();
+				DefaultTableModel searchModel1 = (DefaultTableModel) tableCitas.getModel();
 				TableRowSorter<DefaultTableModel> searchModel2 = new TableRowSorter<DefaultTableModel>(searchModel1);
-				tableVacunas.setRowSorter(searchModel2);
+				tableCitas.setRowSorter(searchModel2);
 				searchModel2.setRowFilter(RowFilter.regexFilter("(?i)" + txtBuscarVacuna.getText()));
 			}
 		});
@@ -171,9 +182,28 @@ public class MostrarCita extends JDialog {
 		txtBuscarVacuna.setColumns(10);
 		
 		btnConsultar = new JButton("Consultar");
+		btnConsultar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				Paciente paciente = Clinica.getInstance().buscarPacienteByCedula(selected.getCliente().getCedula());
+				Medico medico = Clinica.getInstance().buscarMedicoByCedula(Clinica.getUsuarioLogueado().getCedula());
+				RegConsultaMedica realizarConsulta = new RegConsultaMedica(paciente, medico, null);
+				realizarConsulta.setModal(true);
+				realizarConsulta.setVisible(true);
+				
+				if (realizarConsulta.isConsultaRealizada()) {
+					
+					citasEspecificasAMostrar.remove(selected);
+					selected.setPendiente(false);
+					Clinica.getInstance().actualizarCita(selected);
+					loadCitas(citasEspecificasAMostrar);
+					btnConsultar.setEnabled(false);
+				}
+			}
+		});
 		btnConsultar.setEnabled(false);
 		btnConsultar.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
-		btnConsultar.setBounds(708, 36, 89, 23);
+		btnConsultar.setBounds(693, 36, 104, 23);
 		panel.add(btnConsultar);
 		{
 			JPanel buttonPane = new JPanel();
@@ -181,7 +211,7 @@ public class MostrarCita extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton cancelButton = new JButton("Cancelar");
+				JButton cancelButton = new JButton("Cerrar");
 				cancelButton.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 				cancelButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
@@ -207,20 +237,30 @@ public class MostrarCita extends JDialog {
 
 	public static void loadCitas(ArrayList<Cita> mostrarCitas) {
 		
+		String formato = "dd/MM/yyyy";
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(formato);
 		Medico medicoDeCita = null;
 		model.setRowCount(0);
 		row = new Object[model.getColumnCount()];
 		
 		for (Cita cita : mostrarCitas) {
-			row[0] = cita.getNumCita();
 			
-			medicoDeCita = Clinica.getInstance().buscarMedicoByCode(cita.getCodeMedico());
+			if (cita.isPendiente()) {
+				
+				row[0] = cita.getNumCita();
+				
+				medicoDeCita = Clinica.getInstance().buscarMedicoByCode(cita.getCodeMedico());
+				
+				row[1] = medicoDeCita.getNombre();
+				row[2] = cita.getCliente().getNombre();
+				
+				String fechaConFormato = simpleDateFormat.format(cita.getFechaDeCita());
+				row[3] = fechaConFormato;
+				
+				row[4] = cita.getHoraCita(); 
+				model.addRow(row);
+			}
 			
-			row[1] = medicoDeCita.getNombre();
-			row[2] = cita.getCliente().getNombre();
-			row[3] = cita.getFechaDeCita();
-			row[4] = cita.getHoraCita(); 
-			model.addRow(row);
 		}
 		
 	}

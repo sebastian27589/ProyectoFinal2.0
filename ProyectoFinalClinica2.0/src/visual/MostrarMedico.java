@@ -247,6 +247,8 @@ public class MostrarMedico extends JDialog {
 				cancelButton.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 				cancelButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						
+						medicoElegido = null;
 						dispose();
 					}
 				});

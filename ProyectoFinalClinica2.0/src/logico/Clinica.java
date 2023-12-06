@@ -62,7 +62,7 @@ public class Clinica implements Serializable{
 		if (clinica == null) {
 			clinica = new Clinica();
 		}
-		
+				
 		return clinica;
 	}
 	
@@ -285,6 +285,13 @@ public class Clinica implements Serializable{
 		misUsuarios.set(index, usuario);
 	}
 	
+	public void actualizarCita(Cita cita) {
+		
+		int index = buscarIndexCitaByNum(cita.getNumCita());
+		
+		misCitas.set(index, cita);
+	}
+	
 	public void eliminarPaciente(Paciente pacienteAEliminar) {
 		
 		misPersonas.remove(pacienteAEliminar);
@@ -373,6 +380,24 @@ public class Clinica implements Serializable{
 		}
 		
 		return indUsuario;
+	}
+	
+	public int buscarIndexCitaByNum(String numCita) {
+		
+		boolean encontrado = false;
+		int cont = 0, indCita = -1;
+		
+		while (!encontrado && cont < misCitas.size()) {
+				
+			if (misCitas.get(cont).getNumCita().equals(numCita)) {
+				encontrado = true;
+				indCita = cont;
+			}
+			
+			cont++;
+		}
+		
+		return indCita;
 	}
 
 	public Vacuna buscarVacunaByCode(String codigo) {
@@ -484,15 +509,15 @@ public class Clinica implements Serializable{
 	public Cita buscarCitaByNum(String numCita) {
 		
 		Cita citaABuscar = null;
-		boolean encontrado = false;
+		boolean encontrada = false;
 		int index = 0;
 		
-		while (!encontrado && index < misCitas.size()) {
+		while (!encontrada && index < misCitas.size()) {
 			
 			if (misCitas.get(index).getNumCita().equalsIgnoreCase(numCita)) {
 				
 				citaABuscar = misCitas.get(index);
-				encontrado = true;
+				encontrada = true;
 				
 			}
 			
