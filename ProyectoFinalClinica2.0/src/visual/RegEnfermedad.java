@@ -252,7 +252,7 @@ public class RegEnfermedad extends JDialog {
 								JOptionPane.showMessageDialog(null, "Debe llenar los campos.", "Error", JOptionPane.ERROR_MESSAGE);
 						
 						// Si ya es una enfermedad seleccionada, se modifica.
-						} else if (enfermedad != null){
+						} else if (enfermedad != null && mod == true){
 							enfermedad.setNombre(txtNombre.getText());
 							enfermedad.setSintomas(txtSintoma.getText());
 							enfermedad.setTipo(cbxTipo.getSelectedItem().toString());
@@ -287,6 +287,5 @@ public class RegEnfermedad extends JDialog {
 		txtSintoma.setText("");
 		cbxTipo.setSelectedIndex(0);
 		spnMortalidad.setValue(new Integer(1));
-		
 	}
 }

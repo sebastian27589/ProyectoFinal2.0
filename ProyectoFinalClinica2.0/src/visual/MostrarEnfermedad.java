@@ -1,26 +1,26 @@
 package visual;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import logico.Clinica;
 import logico.Enfermedad;
-import logico.Paciente;
-import logico.Persona;
 
 import java.awt.Color;
 import java.awt.Toolkit;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import java.awt.Font;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.RowFilter.ComparisonType;
 import javax.swing.SwingConstants;
@@ -74,7 +74,7 @@ public class MostrarEnfermedad extends JDialog {
 		enfermedadEspecificasAMostrar = enfermedadMostrar;
 		
 		Enfermedad prueb = new Enfermedad("Cancer", "Alergia", "ESTOS SON SINTOMAS DE PRUEBA", 3, true);
-		Enfermedad prueb2 = new Enfermedad("Gripe", "Alergia", "ESTOS SON SINTOMAS DE PRUEBA", 2, true);
+		Enfermedad prueb2 = new Enfermedad("Gripe", "Alergia", "ESTOS SON SINTOMAS DE PRUEBA", 2, false);
 		Enfermedad prueb3 = new Enfermedad("Troro", "Enf. Infecciosa", "ESTOS SON SINTOMAS DE PRUEBA", 6, true);
 		Clinica.getInstance().insertarEnfermedad(prueb);
 		Clinica.getInstance().insertarEnfermedad(prueb2);
@@ -102,14 +102,49 @@ public class MostrarEnfermedad extends JDialog {
 		PanelTabla.add(scrollPane, BorderLayout.CENTER);
 		
 		String[] header = {"Nombre","Tipo","Peligrosidad","Mostrar Más"};
-		model = new DefaultTableModel();
+		model = new DefaultTableModel() {
+			
+			public Class getColumnClass(int column) {
+				
+				if (column == 3) {
+					return Boolean.class;
+				}
+				else {
+					return String.class;
+				}
+			}
+			
+			public boolean isCellEditable(int row, int column) {       
+			       
+			       if (row >= 0 && column == 3) {
+			    	   return true;
+			       }
+			       else {
+			    	   return false;
+			       }
+			}
+		};
 		model.setColumnIdentifiers(header);
 		table = new JTable();
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		table.getTableHeader().setResizingAllowed(false);
 		table.getTableHeader().setReorderingAllowed(false);
+		DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
+		cellRenderer.setHorizontalAlignment(JLabel.CENTER);
+		
+		for (int index = 0; index < table.getColumnCount(); index++) {
+			
+			if (index != 3) {
+				
+				table.getColumnModel().getColumn(index).setCellRenderer(cellRenderer);
+			}
+		}
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				int ind = table.getSelectedRow();
+				int ind2 = table.getSelectedColumn();
+				
 				if(ind >= 0) {
 					selected = Clinica.getInstance().buscarEnfermedadByNombre(table.getValueAt(ind, 0).toString());
 					
@@ -125,9 +160,19 @@ public class MostrarEnfermedad extends JDialog {
 							btn_vigilanciaoff.setEnabled(false);
 						}
 					}
+					
+					if (ind2 == 3) {
+						RegEnfermedad verEnfermedad = new RegEnfermedad(selected, false);
+						verEnfermedad.setModal(true);
+						verEnfermedad.setVisible(true);
+						table.setValueAt(Boolean.FALSE, ind, ind2);
+					}
+					
 				}
 			}
 		});
+		table.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
+		table.setFillsViewportHeight(true);
 		table.setModel(model);
 		scrollPane.setViewportView(table);
 		
@@ -159,6 +204,23 @@ public class MostrarEnfermedad extends JDialog {
 		PanelButtons.add(lbl_Peligro);
 		
 		btn_modificar = new JButton("Modificar");
+		btn_modificar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(selected != null) {
+					RegEnfermedad mod_verEnfermedad = new RegEnfermedad(selected, true);
+					mod_verEnfermedad.setModal(true);
+					mod_verEnfermedad.setVisible(true);
+					if (enfermedadEspecificasAMostrar == null) {
+						
+						cargarEnfermedades(Clinica.getInstance().getMisEnfermedades());
+					}
+					else {
+						
+						cargarEnfermedades(enfermedadEspecificasAMostrar);
+					}
+				}
+			}
+		});
 		btn_modificar.setEnabled(false);
 		btn_modificar.setBounds(122, 271, 90, 23);
 		PanelButtons.add(btn_modificar);
@@ -221,7 +283,7 @@ public class MostrarEnfermedad extends JDialog {
 				table.setRowSorter(filtroNum);
 			}
 		});
-		spn_peligro.setModel(new SpinnerNumberModel(0, 0, 10, 1));
+		spn_peligro.setModel(new SpinnerNumberModel(1, 1, 10, 1));
 		spn_peligro.setBounds(122, 120, 188, 25);
 		PanelButtons.add(spn_peligro);
 		
