@@ -118,6 +118,13 @@ public class VentanaPrincipal extends JFrame {
 		menuRegistro.add(mntmNewMenuItem_1);
 		
 		JMenuItem mntmNewMenuItem_2 = new JMenuItem("Registrar Enfermedad");
+		mntmNewMenuItem_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				RegEnfermedad regNuevaEnfermedad = new RegEnfermedad(null,false);
+				regNuevaEnfermedad.setModal(true);
+				regNuevaEnfermedad.setVisible(true);
+			}
+		});
 		menuRegistro.add(mntmNewMenuItem_2);
 		
 		JMenuItem mntmNewMenuItem_3 = new JMenuItem("Registrar Vacunas");
@@ -164,6 +171,13 @@ public class VentanaPrincipal extends JFrame {
 		menuBar.add(menuDatosMedicos);
 		
 		JMenuItem mntmNewMenuItem_7 = new JMenuItem("Enfermedades");
+		mntmNewMenuItem_7.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				MostrarEnfermedad mostEnfermedad = new MostrarEnfermedad(null);
+				mostEnfermedad.setModal(true);
+				mostEnfermedad.setVisible(true);
+			}
+		});
 		menuDatosMedicos.add(mntmNewMenuItem_7);
 		
 		JMenuItem mntmNewMenuItem_8 = new JMenuItem("Vacunas");

@@ -251,12 +251,18 @@ public class RegEnfermedad extends JDialog {
 						// Si es nueva enfermedad, se hace el proceso normal.
 						if (enfermedad == null) {
 							
+							boolean vigilancia;
+							if(chbxVigilancia.isSelected()) {
+								vigilancia = true;
+							}else {
+								vigilancia = false;
+							}
 							nombre = txtNombre.getText();
 							sintomas = txtSintoma.getText();
 							
 							// Validar que la nueva enfermedad no esté vacía
 							if (!nombre.isEmpty() && !sintomas.isEmpty()) {
-								Enfermedad nuevaEnfermedad = new Enfermedad(txtNombre.getText(), cbxTipo.getSelectedItem().toString(), txtSintoma.getText(),new Integer(spnMortalidad.getValue().toString()), false);
+								Enfermedad nuevaEnfermedad = new Enfermedad(txtNombre.getText(), cbxTipo.getSelectedItem().toString(), txtSintoma.getText(),new Integer(spnMortalidad.getValue().toString()), vigilancia);
 								Clinica.getInstance().insertarEnfermedad(nuevaEnfermedad);
 								JOptionPane.showMessageDialog(null, "Enfermedad registrada con éxito.", "Registro de enfermedad", JOptionPane.INFORMATION_MESSAGE);
 								clean();

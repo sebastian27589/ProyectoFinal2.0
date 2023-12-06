@@ -73,13 +73,6 @@ public class MostrarEnfermedad extends JDialog {
 	public MostrarEnfermedad(ArrayList<Enfermedad> enfermedadMostrar) {
 		enfermedadEspecificasAMostrar = enfermedadMostrar;
 		
-		Enfermedad prueb = new Enfermedad("Cancer", "Alergia", "ESTOS SON SINTOMAS DE PRUEBA", 3, true);
-		Enfermedad prueb2 = new Enfermedad("Gripe", "Alergia", "ESTOS SON SINTOMAS DE PRUEBA", 2, false);
-		Enfermedad prueb3 = new Enfermedad("Troro", "Enf. Infecciosa", "ESTOS SON SINTOMAS DE PRUEBA", 6, true);
-		Clinica.getInstance().insertarEnfermedad(prueb);
-		Clinica.getInstance().insertarEnfermedad(prueb2);
-		Clinica.getInstance().insertarEnfermedad(prueb3);
-		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(MostrarEnfermedad.class.getResource("/Imagenes/icon_enfermedad.png")));
 		setTitle("Enfermedades");
 		setResizable(false);
