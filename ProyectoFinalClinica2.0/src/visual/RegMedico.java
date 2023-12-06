@@ -23,21 +23,17 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
-
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Date;
 import java.awt.event.ActionEvent;
 import javax.swing.JRadioButton;
 import com.toedter.calendar.JDateChooser;
-
 import exception.ValidarCampo;
 import logico.Clinica;
 import logico.Medico;
-import logico.Vacuna;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JScrollBar;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
