@@ -269,9 +269,13 @@ public class RegEnfermedad extends JDialog {
 							enfermedad.setSintomas(txtSintoma.getText());
 							enfermedad.setTipo(cbxTipo.getSelectedItem().toString());
 							enfermedad.setIndPeligro(new Integer(spnMortalidad.getValue().toString()));
-							enfermedad.setVigilada(false);
+							if(chbxVigilancia.isSelected()) {
+								enfermedad.setVigilada(true);
+							}else {
+								enfermedad.setVigilada(false);
+							}
 							Clinica.getInstance().actualizarEnfermedad(enfermedad);
-							//MostrarEnfermedad.loadEnfermedades();
+							JOptionPane.showMessageDialog(null, "Enfermedad modificada con éxito.", "Modificación de Enfermedad", JOptionPane.INFORMATION_MESSAGE);
 							dispose();
 						}
 					}
@@ -291,13 +295,15 @@ public class RegEnfermedad extends JDialog {
 				buttonPane.add(btnCancelar);
 			}
 			
-			if(enfermedad != null && mod == false) {
-				txtNombre.setEditable(false);
-				cbxTipo.setEnabled(false);
-				txtSintoma.setEditable(false);
-				spnMortalidad.setEnabled(false);
-				chbxVigilancia.setEnabled(false);
+			if(enfermedad != null) {
 				cargarEnfermedad(enfermedad);
+				txtNombre.setEditable(false);
+				if(mod == false) {
+					cbxTipo.setEnabled(false);
+					txtSintoma.setEditable(false);
+					spnMortalidad.setEnabled(false);
+					chbxVigilancia.setEnabled(false);
+				}
 			}
 		}
 	}
