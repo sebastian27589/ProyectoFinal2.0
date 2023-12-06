@@ -37,6 +37,8 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.DefaultComboBoxModel;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
 public class MostrarEnfermedad extends JDialog {
 
@@ -71,8 +73,12 @@ public class MostrarEnfermedad extends JDialog {
 	public MostrarEnfermedad(ArrayList<Enfermedad> enfermedadMostrar) {
 		enfermedadEspecificasAMostrar = enfermedadMostrar;
 		
-		Enfermedad prueb = new Enfermedad("Cancer", "Viral", "ESTOS SON SINTOMAS DE PRUEBA", 3, true);
+		Enfermedad prueb = new Enfermedad("Cancer", "Alergia", "ESTOS SON SINTOMAS DE PRUEBA", 3, true);
+		Enfermedad prueb2 = new Enfermedad("Gripe", "Alergia", "ESTOS SON SINTOMAS DE PRUEBA", 2, true);
+		Enfermedad prueb3 = new Enfermedad("Troro", "Enf. Infecciosa", "ESTOS SON SINTOMAS DE PRUEBA", 6, true);
 		Clinica.getInstance().insertarEnfermedad(prueb);
+		Clinica.getInstance().insertarEnfermedad(prueb2);
+		Clinica.getInstance().insertarEnfermedad(prueb3);
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(MostrarEnfermedad.class.getResource("/Imagenes/icon_enfermedad.png")));
 		setTitle("Enfermedades");
@@ -196,9 +202,9 @@ public class MostrarEnfermedad extends JDialog {
 		txt_nombre.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				TableRowSorter<DefaultTableModel> filtro = new TableRowSorter<DefaultTableModel>(model);
-				filtro.setRowFilter(RowFilter.regexFilter("(?i)" + txt_nombre.getText()));
-				table.setRowSorter(filtro);
+				TableRowSorter<DefaultTableModel> filtroTxt = new TableRowSorter<DefaultTableModel>(model);
+				filtroTxt.setRowFilter(RowFilter.regexFilter("(?i)" + txt_nombre.getText()));
+				table.setRowSorter(filtroTxt);
 			}
 		});
 		txt_nombre.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
@@ -210,10 +216,9 @@ public class MostrarEnfermedad extends JDialog {
 		spn_peligro.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				int numFiltPeligrosidad = new Integer(spn_peligro.getValue().toString());
-				TableRowSorter<DefaultTableModel> filtro = new TableRowSorter<DefaultTableModel>(model); 
-				RowFilter<DefaultTableModel, Integer> filtroNumero = RowFilter.numberFilter(ComparisonType.AFTER, numFiltPeligrosidad-1, 2);
-				filtro.setRowFilter(filtroNumero);
-				table.setRowSorter(filtro);
+				TableRowSorter<DefaultTableModel> filtroNum = new TableRowSorter<DefaultTableModel>(model); 
+				filtroNum.setRowFilter(RowFilter.numberFilter(ComparisonType.AFTER, numFiltPeligrosidad-1, 2));
+				table.setRowSorter(filtroNum);
 			}
 		});
 		spn_peligro.setModel(new SpinnerNumberModel(0, 0, 10, 1));
@@ -221,7 +226,14 @@ public class MostrarEnfermedad extends JDialog {
 		PanelButtons.add(spn_peligro);
 		
 		JComboBox cbx_tipo = new JComboBox();
-		cbx_tipo.setModel(new DefaultComboBoxModel(new String[] {"", "Alergias", "Enf. Autoinmunes", "Enf. Cardiovasculares", "Enf. de la Mujer", "Enf. de la Sangre", "Enf. Mentales", "Enf. infecciosas"}));
+		cbx_tipo.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				TableRowSorter<DefaultTableModel> filtroTipo = new TableRowSorter<DefaultTableModel>(model);
+				filtroTipo.setRowFilter(RowFilter.regexFilter("(?i)" + cbx_tipo.getSelectedItem().toString()));
+				table.setRowSorter(filtroTipo);
+			}
+		});
+		cbx_tipo.setModel(new DefaultComboBoxModel(new String[] {"", "Alergia", "Enf. Autoinmune", "Enf. Cardiovascular", "Enf. de la Mujer", "Enf. de la Sangre", "Enf. Mentales", "Enf. infecciosa"}));
 		cbx_tipo.setBounds(122, 60, 188, 25);
 		PanelButtons.add(cbx_tipo);
 		
