@@ -88,7 +88,6 @@ public class VentanaLogin extends JDialog {
 					
 					
 				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				
