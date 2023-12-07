@@ -68,7 +68,7 @@ public class VentanaPrincipal extends JFrame {
 				ObjectOutputStream fclinicaWrite;
 				try {
 					
-					fclinica2 = new FileOutputStream("datos_clinica.dat");
+					fclinica2 = new FileOutputStream("clinica.dat");
 					fclinicaWrite = new ObjectOutputStream(fclinica2);
 					fclinicaWrite.writeObject(Clinica.getInstance());
 					

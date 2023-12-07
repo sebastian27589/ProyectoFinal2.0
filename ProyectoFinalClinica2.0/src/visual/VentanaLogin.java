@@ -58,7 +58,7 @@ public class VentanaLogin extends JDialog {
 				
 				try {
 					
-					fclinica = new FileInputStream ("datos_clinica.dat");
+					fclinica = new FileInputStream ("clinica.dat");
 					fclinicaRead = new ObjectInputStream(fclinica);
 					Clinica temp = (Clinica)fclinicaRead.readObject();
 					Clinica.setClinica(temp);
@@ -69,7 +69,7 @@ public class VentanaLogin extends JDialog {
 					
 					try {
 						
-						fclinica2 = new  FileOutputStream("datos_clinica.dat");
+						fclinica2 = new  FileOutputStream("clinica.dat");
 						fclinicaWrite = new ObjectOutputStream(fclinica2);
 						Usuario primerUsuario = new Usuario("", "", new Date(), 'M', "", "", "Administrador", "admin", "admin");
 						Clinica.getInstance().registrarUsuario(primerUsuario);;
