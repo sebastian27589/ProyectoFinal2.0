@@ -66,6 +66,8 @@ public class GenerarReporte extends JDialog {
 	private JRadioButton rdbtnABpositivo;
 	private JRadioButton rdbtnABnegativo;
 	private JPanel panelSangres;
+	private JTextField txtPromedio;
+	private JLabel lblProm;
 
 	/**
 	 * Launch the application.
@@ -208,6 +210,7 @@ public class GenerarReporte extends JDialog {
 					
 					tipoDeSangre = obtenerTipoDeSangre();
 					cargarPacientesPorTipoDeSangre(Clinica.getInstance().getMisPersonas(), tipoDeSangre);
+					//calcularYMostrarPromedio();
 				} else if (rdbtnCiudad.isSelected()) {
 					
 					//cargarPacientesPorCiudad(Clinica.getInstance().getMisPersonas());
@@ -240,6 +243,8 @@ public class GenerarReporte extends JDialog {
 				panelTipoSangre.setVisible(false);
 				panelCiudad.setVisible(true);
 				panelSangres.setVisible(false);
+				txtPromedio.setVisible(false);
+				lblProm.setVisible(false);
 				table.setModel(model3);
 			}
 		});
@@ -259,6 +264,8 @@ public class GenerarReporte extends JDialog {
 				panelTipoSangre.setVisible(true);
 				panelCiudad.setVisible(false);
 				panelSangres.setVisible(true);
+				txtPromedio.setVisible(true);
+				lblProm.setVisible(true);
 				table.setModel(model2);
 			}
 		});
@@ -286,6 +293,8 @@ public class GenerarReporte extends JDialog {
 				panelTipoSangre.setVisible(false);
 				panelCiudad.setVisible(false);
 				panelSangres.setVisible(false);
+				txtPromedio.setVisible(false);
+				lblProm.setVisible(false);
 				table.setModel(model1);
 			}
 		});
@@ -490,6 +499,19 @@ public class GenerarReporte extends JDialog {
 		rdbtnABnegativo.setBounds(108, 115, 61, 25);
 		panelSangres.add(rdbtnABnegativo);
 		
+		lblProm = new JLabel("Promedio:");
+		lblProm.setVisible(false);
+		lblProm.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
+		lblProm.setBounds(53, 525, 71, 16);
+		contentPanel.add(lblProm);
+		
+		txtPromedio = new JTextField();
+		txtPromedio.setVisible(false);
+		txtPromedio.setEditable(false);
+		txtPromedio.setBounds(123, 521, 66, 22);
+		contentPanel.add(txtPromedio);
+		txtPromedio.setColumns(10);
+		
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -510,6 +532,22 @@ public class GenerarReporte extends JDialog {
 		
 		
 	}
+
+//	public void calcularYMostrarPromedio() {
+//		int suma = 0;
+//	    int rowCount = table.getRowCount();
+//
+//	    for (int i = 0; i < rowCount; i++) {
+//	    	int valor = (int) table.getValueAt(i, 0);
+//	        suma += valor;
+//	    }
+//
+//	    float prom = (float) suma / rowCount;
+//	    txtPromedio.setText(String.format("Promedio: %.2f", prom));
+//		
+//	}
+
+
 
 	public String obtenerTipoDeSangre() {
 	    if (rdbtnOpositivo.isSelected()) {
