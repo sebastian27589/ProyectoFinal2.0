@@ -687,10 +687,14 @@ public class Clinica implements Serializable{
 			
 			if (consulta.getCodePaciente().equalsIgnoreCase(codePaciente)) {
 				
-				if (consulta.getEnfermedad().isVigilada()) {
+				if (consulta.getEnfermedad() != null) {
 					
-					consultasPrioritarias.add(consulta);
+					if (consulta.getEnfermedad().isVigilada()) {
+						
+						consultasPrioritarias.add(consulta);
+					}
 				}
+				
 			}
 		
 		}

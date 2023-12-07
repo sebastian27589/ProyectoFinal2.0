@@ -95,19 +95,8 @@ public class VentanaPrincipal extends JFrame {
 		JMenu menuRegistro = new JMenu("Registro");
 		menuBar.add(menuRegistro);
 		
-		JMenuItem mntmNewMenuItem = new JMenuItem("Registrar M\u00E9dico");
-		mntmNewMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				RegMedico registrarMedico = new RegMedico(null, false);
-				registrarMedico.setModal(true);
-				registrarMedico.setVisible(true);
-			}
-		});
-		menuRegistro.add(mntmNewMenuItem);
-		
-		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Registrar Paciente");
-		mntmNewMenuItem_1.addActionListener(new ActionListener() {
+		JMenuItem menuItemRegPaciente = new JMenuItem("Registrar Paciente");
+		menuItemRegPaciente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
 				RegPaciente registrarPaciente = new RegPaciente(null, false, false);
@@ -115,23 +104,35 @@ public class VentanaPrincipal extends JFrame {
 				registrarPaciente.setVisible(true);
 			}
 		});
-		menuRegistro.add(mntmNewMenuItem_1);
+		menuRegistro.add(menuItemRegPaciente);
 		
-		JMenuItem mntmNewMenuItem_2 = new JMenuItem("Registrar Enfermedad");
-		mntmNewMenuItem_2.addActionListener(new ActionListener() {
+		JMenuItem menuItemRegEnfermedad = new JMenuItem("Registrar Enfermedad");
+		menuItemRegEnfermedad.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				RegEnfermedad regNuevaEnfermedad = new RegEnfermedad(null,false);
 				regNuevaEnfermedad.setModal(true);
 				regNuevaEnfermedad.setVisible(true);
 			}
 		});
-		menuRegistro.add(mntmNewMenuItem_2);
 		
-		JMenuItem mntmNewMenuItem_3 = new JMenuItem("Registrar Vacunas");
-		menuRegistro.add(mntmNewMenuItem_3);
+		JMenuItem menuItemRegMedico = new JMenuItem("Registrar M\u00E9dico");
 		
-		JMenuItem mntmNewMenuItem_4 = new JMenuItem("Registrar Vivienda");
-		mntmNewMenuItem_4.addActionListener(new ActionListener() {
+		menuItemRegMedico.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				RegMedico registrarMedico = new RegMedico(null, false);
+				registrarMedico.setModal(true);
+				registrarMedico.setVisible(true);
+			}
+		});
+		menuRegistro.add(menuItemRegMedico);
+		menuRegistro.add(menuItemRegEnfermedad);
+		
+		JMenuItem menuItemRegVacunas = new JMenuItem("Registrar Vacunas");
+		menuRegistro.add(menuItemRegVacunas);
+		
+		JMenuItem menuItemRegVivienda = new JMenuItem("Registrar Vivienda");
+		menuItemRegVivienda.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
 				RegVivienda registrarVivienda = new RegVivienda(null, false);
@@ -139,9 +140,23 @@ public class VentanaPrincipal extends JFrame {
 				registrarVivienda.setVisible(true);
 			}
 		});
-		menuRegistro.add(mntmNewMenuItem_4);
+		menuRegistro.add(menuItemRegVivienda);
 		
+		if (Clinica.getInstance().getUsuarioLogueado().getRolUsuario().equalsIgnoreCase("Secretario") ||
+			Clinica.getInstance().getUsuarioLogueado().getRolUsuario().equalsIgnoreCase("Médico")) {
+				
+			menuItemRegMedico.setEnabled(false);
+			menuItemRegVacunas.setEnabled(false);
+			menuItemRegEnfermedad.setEnabled(false);
+			menuItemRegVivienda.setEnabled(false);
+		}
 		JMenu menuRecursosHumanos = new JMenu("Recursos Humanos");
+		if (Clinica.getInstance().getUsuarioLogueado().getRolUsuario().equalsIgnoreCase("Secretario") ||
+		    Clinica.getInstance().getUsuarioLogueado().getRolUsuario().equalsIgnoreCase("Médico")) {
+			
+			menuRecursosHumanos.setEnabled(false);
+		}
+		
 		menuBar.add(menuRecursosHumanos);
 		
 		JMenuItem mntmNewMenuItem_5 = new JMenuItem("M\u00E9dicos");
@@ -151,7 +166,6 @@ public class VentanaPrincipal extends JFrame {
 				MostrarMedico mostrarMedicos = new MostrarMedico(null, false, false);
 				mostrarMedicos.setModal(true);
 				mostrarMedicos.setVisible(true);
-				
 			}
 		});
 		menuRecursosHumanos.add(mntmNewMenuItem_5);
@@ -168,11 +182,17 @@ public class VentanaPrincipal extends JFrame {
 		menuRecursosHumanos.add(mntmNewMenuItem_6);
 		
 		JMenu menuDatosMedicos = new JMenu("Datos M\u00E9dicos");
+		if (Clinica.getInstance().getUsuarioLogueado().getRolUsuario().equalsIgnoreCase("Secretario")) {
+				
+			menuDatosMedicos.setEnabled(false);
+		}
+		
 		menuBar.add(menuDatosMedicos);
 		
 		JMenuItem mntmNewMenuItem_7 = new JMenuItem("Enfermedades");
 		mntmNewMenuItem_7.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 				MostrarEnfermedad mostEnfermedad = new MostrarEnfermedad(null);
 				mostEnfermedad.setModal(true);
 				mostEnfermedad.setVisible(true);
@@ -180,8 +200,16 @@ public class VentanaPrincipal extends JFrame {
 		});
 		menuDatosMedicos.add(mntmNewMenuItem_7);
 		
-		JMenuItem mntmNewMenuItem_8 = new JMenuItem("Vacunas");
-		menuDatosMedicos.add(mntmNewMenuItem_8);
+		JMenuItem menuItemVacunas = new JMenuItem("Vacunas");
+		menuItemVacunas.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				MostrarVacuna mostrarVacunas = new MostrarVacuna(null);
+				mostrarVacunas.setModal(true);
+				mostrarVacunas.setVisible(true);
+			}
+		});
+		menuDatosMedicos.add(menuItemVacunas);
 		
 		JMenu menuCitas = new JMenu("Citas");
 		menuBar.add(menuCitas);
@@ -274,7 +302,6 @@ public class VentanaPrincipal extends JFrame {
 				MostrarUsuario mostrarUsuarios = new MostrarUsuario(null);
 				mostrarUsuarios.setModal(true);
 				mostrarUsuarios.setVisible(true);
-				
 			}
 		});
 		menuItemUsuarios.add(menuItemListaUsuarios);
