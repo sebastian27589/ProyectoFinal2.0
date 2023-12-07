@@ -337,7 +337,7 @@ public class VerHistorialMedico extends JDialog {
 	
 	private void loadHistorialMedico() {
 		
-		txtNombrePaciente.setText(histMed.getPaciente().getCodePaciente());
+		txtNombrePaciente.setText(histMed.getPaciente().getNombre());
 		txtEdad.setText(String.valueOf(Clinica.getInstance().edadByFechaDeNacim(histMed.getPaciente().getFechaDeNacimiento(), new Date())));
 		cbxTipoSangre.setSelectedItem(histMed.getPaciente().getTipoDeSangre());
 		txtAltura.setText(String.valueOf(histMed.getPaciente().getAltura()));
