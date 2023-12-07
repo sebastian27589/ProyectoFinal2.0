@@ -258,7 +258,7 @@ public class VentanaPrincipal extends JFrame {
 		JMenuItem mntmNewMenuItem_9 = new JMenuItem("Abrir Reportes");
 		mntmNewMenuItem_9.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				GenerarReporte nuevoReporte = new GenerarReporte(null, null, null);
+				GenerarReporte nuevoReporte = new GenerarReporte();
 				nuevoReporte.setModal(true);
 				nuevoReporte.setVisible(true);
 			}

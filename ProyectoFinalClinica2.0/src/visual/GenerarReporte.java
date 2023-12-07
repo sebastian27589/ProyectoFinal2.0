@@ -10,10 +10,13 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.awt.event.ActionEvent;
 import java.awt.SystemColor;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.AbstractButton;
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import java.awt.Font;
 import javax.swing.border.SoftBevelBorder;
@@ -35,14 +38,14 @@ import javax.swing.JTextField;
 import javax.swing.JRadioButton;
 import javax.swing.JTextPane;
 import javax.swing.border.EtchedBorder;
+import javax.swing.UIManager;
 
 public class GenerarReporte extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
-	private ArrayList<Paciente> pacientesEspecificosMostrar = new ArrayList<Paciente>();
-	private ArrayList<Medico> medicosEspecificosMostrar = new ArrayList<Medico>();
-	private ArrayList<HistorialMedico> historialesMedicosMostrar = new ArrayList<HistorialMedico>();
-	//private ArrayList<Paciente>	pacientesEnVigilancia = new ArrayList<Paciente>();
+	private ArrayList<Paciente>	pacientesEnVigilancia = new ArrayList<Paciente>();
+	private ArrayList<Paciente>	pacientesActivos = new ArrayList<Paciente>();
+	private String tipoDeSangre;
 	private static DefaultTableModel model1;
 	private static DefaultTableModel model2;
 	private static DefaultTableModel model3;
@@ -54,13 +57,22 @@ public class GenerarReporte extends JDialog {
 	private JPanel panelCiudad;
 	private JPanel panelTipoSangre;
 	private JPanel panelVigilado1;
+	private JRadioButton rdbtnOpositivo;
+	private JRadioButton rdbtnOnegativo;
+	private JRadioButton rdbtnApositivo;
+	private JRadioButton rdbtnAnegativo;
+	private JRadioButton rdbtnBpositivo;
+	private JRadioButton rdbtnBnegativo;
+	private JRadioButton rdbtnABpositivo;
+	private JRadioButton rdbtnABnegativo;
+	private JPanel panelSangres;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			GenerarReporte dialog = new GenerarReporte(null, null, null);
+			GenerarReporte dialog = new GenerarReporte();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -73,12 +85,9 @@ public class GenerarReporte extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public GenerarReporte(ArrayList<Paciente> pacientesAMostrar, ArrayList<Medico> medicosAMostrar, ArrayList<HistorialMedico> historialMedicosAMostrar) {
+	public GenerarReporte() {
 		
-		pacientesEspecificosMostrar = pacientesAMostrar;
-		medicosEspecificosMostrar = medicosAMostrar;
-		historialesMedicosMostrar = historialMedicosAMostrar;
-		
+
 		Object[] titulo1 = {"Nombre", "Cedula", "Enfermedad"};
 		Object[] titulo2 = {"Nombre", "Cedula", "Tipo de Sangre"};
 		Object[] titulo3 = {"Nombre", "Cedula", "Ciudad"};
@@ -191,15 +200,14 @@ public class GenerarReporte extends JDialog {
 				
 				if (rdbtnVigia.isSelected()) {
 					
-					ArrayList<Paciente> pacientesEnVigilancia = Clinica.getInstance().obtenerPacientesEnVigilancia();
+					pacientesEnVigilancia = Clinica.getInstance().obtenerPacientesEnVigilancia();
 					
-					//cargarPacientesPorTipoDeSangre(Clinica.getInstance().getMisPersonas());
 					cargarPacientesVigilados(pacientesEnVigilancia, Clinica.getInstance().getMisHistorialesMedicos());
+					System.out.println("Cantidad de pacientes en vigilancia: " + pacientesEnVigilancia.size());
 				} else if (rdbtnTipoSangre.isSelected()) {
 					
-					//pacientesEnVigilancia = Clinica.getInstance().obtenerPacientesEnVigilancia();
-					//cargarPacientesPorTipoDeSangre(Clinica.getInstance().getMisPersonas());
-					//cargarPacientesPorTipoDeSangre(pacientesEnVigilancia);
+					tipoDeSangre = obtenerTipoDeSangre();
+					cargarPacientesPorTipoDeSangre(Clinica.getInstance().getMisPersonas(), tipoDeSangre);
 				} else if (rdbtnCiudad.isSelected()) {
 					
 					//cargarPacientesPorCiudad(Clinica.getInstance().getMisPersonas());
@@ -207,6 +215,7 @@ public class GenerarReporte extends JDialog {
 				
 				//actualizarTabla();
 			}
+
 		});
 		btnCargar.setEnabled(false);
 		btnCargar.setBackground(new Color(255, 255, 255));
@@ -219,9 +228,18 @@ public class GenerarReporte extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				rdbtnVigia.setSelected(false);
 				rdbtnTipoSangre.setSelected(false);
+				rdbtnOpositivo.setSelected(false);
+				rdbtnOnegativo.setSelected(false);
+				rdbtnApositivo.setSelected(false);
+				rdbtnAnegativo.setSelected(false);
+				rdbtnBpositivo.setSelected(false);
+				rdbtnBnegativo.setSelected(false);
+				rdbtnABpositivo.setSelected(false);
+				rdbtnABnegativo.setSelected(false);
 				panelVigilado1.setVisible(false);
 				panelTipoSangre.setVisible(false);
 				panelCiudad.setVisible(true);
+				panelSangres.setVisible(false);
 				table.setModel(model3);
 			}
 		});
@@ -233,11 +251,14 @@ public class GenerarReporte extends JDialog {
 		rdbtnTipoSangre = new JRadioButton("Tipo de sangre");
 		rdbtnTipoSangre.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				btnCargar.setEnabled(true);
+				btnImprimir.setEnabled(true);
 				rdbtnVigia.setSelected(false);
 				rdbtnCiudad.setSelected(false);
 				panelVigilado1.setVisible(false);
 				panelTipoSangre.setVisible(true);
 				panelCiudad.setVisible(false);
+				panelSangres.setVisible(true);
 				table.setModel(model2);
 			}
 		});
@@ -251,11 +272,20 @@ public class GenerarReporte extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				rdbtnCiudad.setSelected(false);
 				rdbtnTipoSangre.setSelected(false);
+				rdbtnOpositivo.setSelected(false);
+				rdbtnOnegativo.setSelected(false);
+				rdbtnApositivo.setSelected(false);
+				rdbtnAnegativo.setSelected(false);
+				rdbtnBpositivo.setSelected(false);
+				rdbtnBnegativo.setSelected(false);
+				rdbtnABpositivo.setSelected(false);
+				rdbtnABnegativo.setSelected(false);
 				btnCargar.setEnabled(true);
 				btnImprimir.setEnabled(true);
 				panelVigilado1.setVisible(true);
 				panelTipoSangre.setVisible(false);
 				panelCiudad.setVisible(false);
+				panelSangres.setVisible(false);
 				table.setModel(model1);
 			}
 		});
@@ -316,6 +346,150 @@ public class GenerarReporte extends JDialog {
 		panel_4.setBackground(new Color(176, 196, 222));
 		panel_4.setBounds(113, 109, 959, 10);
 		contentPanel.add(panel_4);
+		
+		panelSangres = new JPanel();
+		panelSangres.setVisible(false);
+		panelSangres.setBackground(new Color(255, 255, 255));
+		panelSangres.setBounds(12, 353, 177, 155);
+		contentPanel.add(panelSangres);
+		panelSangres.setLayout(null);
+		
+		rdbtnOpositivo = new JRadioButton("O+");
+		rdbtnOpositivo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rdbtnOnegativo.setSelected(false);
+				rdbtnApositivo.setSelected(false);
+				rdbtnAnegativo.setSelected(false);
+				rdbtnBpositivo.setSelected(false);
+				rdbtnBnegativo.setSelected(false);
+				rdbtnABpositivo.setSelected(false);
+				rdbtnABnegativo.setSelected(false);
+			}
+		});
+		rdbtnOpositivo.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
+		rdbtnOpositivo.setBackground(Color.WHITE);
+		rdbtnOpositivo.setBounds(8, 9, 61, 25);
+		panelSangres.add(rdbtnOpositivo);
+		
+		rdbtnOnegativo = new JRadioButton("O-");
+		rdbtnOnegativo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rdbtnOpositivo.setSelected(false);
+				rdbtnApositivo.setSelected(false);
+				rdbtnAnegativo.setSelected(false);
+				rdbtnBpositivo.setSelected(false);
+				rdbtnBnegativo.setSelected(false);
+				rdbtnABpositivo.setSelected(false);
+				rdbtnABnegativo.setSelected(false);
+			}
+		});
+		rdbtnOnegativo.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
+		rdbtnOnegativo.setBackground(Color.WHITE);
+		rdbtnOnegativo.setBounds(8, 44, 61, 25);
+		panelSangres.add(rdbtnOnegativo);
+		
+		rdbtnApositivo = new JRadioButton("A+");
+		rdbtnApositivo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rdbtnOpositivo.setSelected(false);
+				rdbtnOnegativo.setSelected(false);
+				rdbtnAnegativo.setSelected(false);
+				rdbtnBpositivo.setSelected(false);
+				rdbtnBnegativo.setSelected(false);
+				rdbtnABpositivo.setSelected(false);
+				rdbtnABnegativo.setSelected(false);
+			}
+		});
+		rdbtnApositivo.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
+		rdbtnApositivo.setBackground(Color.WHITE);
+		rdbtnApositivo.setBounds(8, 80, 61, 25);
+		panelSangres.add(rdbtnApositivo);
+		
+		rdbtnAnegativo = new JRadioButton("A-");
+		rdbtnAnegativo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rdbtnOpositivo.setSelected(false);
+				rdbtnOnegativo.setSelected(false);
+				rdbtnApositivo.setSelected(false);
+				rdbtnBpositivo.setSelected(false);
+				rdbtnBnegativo.setSelected(false);
+				rdbtnABpositivo.setSelected(false);
+				rdbtnABnegativo.setSelected(false);
+			}
+		});
+		rdbtnAnegativo.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
+		rdbtnAnegativo.setBackground(Color.WHITE);
+		rdbtnAnegativo.setBounds(8, 115, 61, 25);
+		panelSangres.add(rdbtnAnegativo);
+		
+		rdbtnBpositivo = new JRadioButton("B+");
+		rdbtnBpositivo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rdbtnOpositivo.setSelected(false);
+				rdbtnOnegativo.setSelected(false);
+				rdbtnApositivo.setSelected(false);
+				rdbtnAnegativo.setSelected(false);
+				rdbtnBnegativo.setSelected(false);
+				rdbtnABpositivo.setSelected(false);
+				rdbtnABnegativo.setSelected(false);
+			}
+		});
+		rdbtnBpositivo.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
+		rdbtnBpositivo.setBackground(Color.WHITE);
+		rdbtnBpositivo.setBounds(108, 9, 61, 25);
+		panelSangres.add(rdbtnBpositivo);
+		
+		rdbtnBnegativo = new JRadioButton("B-");
+		rdbtnBnegativo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rdbtnOpositivo.setSelected(false);
+				rdbtnOnegativo.setSelected(false);
+				rdbtnApositivo.setSelected(false);
+				rdbtnBpositivo.setSelected(false);
+				rdbtnAnegativo.setSelected(false);
+				rdbtnABpositivo.setSelected(false);
+				rdbtnABnegativo.setSelected(false);
+			}
+		});
+		rdbtnBnegativo.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
+		rdbtnBnegativo.setBackground(Color.WHITE);
+		rdbtnBnegativo.setBounds(108, 44, 61, 25);
+		panelSangres.add(rdbtnBnegativo);
+		
+		rdbtnABpositivo = new JRadioButton("AB+");
+		rdbtnABpositivo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rdbtnOpositivo.setSelected(false);
+				rdbtnOnegativo.setSelected(false);
+				rdbtnApositivo.setSelected(false);
+				rdbtnBpositivo.setSelected(false);
+				rdbtnAnegativo.setSelected(false);
+				rdbtnBnegativo.setSelected(false);
+				rdbtnABnegativo.setSelected(false);
+			}
+		});
+		rdbtnABpositivo.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
+		rdbtnABpositivo.setBackground(Color.WHITE);
+		rdbtnABpositivo.setBounds(108, 80, 61, 25);
+		panelSangres.add(rdbtnABpositivo);
+		
+		rdbtnABnegativo = new JRadioButton("AB-");
+		rdbtnABnegativo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rdbtnOpositivo.setSelected(false);
+				rdbtnOnegativo.setSelected(false);
+				rdbtnApositivo.setSelected(false);
+				rdbtnBpositivo.setSelected(false);
+				rdbtnBnegativo.setSelected(false);
+				rdbtnABpositivo.setSelected(false);
+				rdbtnAnegativo.setSelected(false);
+			}
+		});
+		rdbtnABnegativo.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
+		rdbtnABnegativo.setBackground(Color.WHITE);
+		rdbtnABnegativo.setBounds(108, 115, 61, 25);
+		panelSangres.add(rdbtnABnegativo);
+		
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -333,7 +507,33 @@ public class GenerarReporte extends JDialog {
 				buttonPane.add(cancelButton);
 			}
 		}
+		
+		
 	}
+
+	public String obtenerTipoDeSangre() {
+	    if (rdbtnOpositivo.isSelected()) {
+	        return "O+";
+	    } else if (rdbtnOnegativo.isSelected()) {
+	        return "O-";
+	    } else if (rdbtnApositivo.isSelected()) {
+	        return "A+";
+	    } else if (rdbtnAnegativo.isSelected()) {
+	        return "A-";
+	    } else if (rdbtnBpositivo.isSelected()) {
+	        return "B+";
+	    } else if (rdbtnBnegativo.isSelected()) {
+	        return "B-";
+	    } else if (rdbtnABpositivo.isSelected()) {
+	        return "AB+";
+	    } else if (rdbtnABnegativo.isSelected()) {
+	        return "AB-";
+	    } else {
+	        // Manejar el caso en que no se ha seleccionado ningún tipo de sangre
+	        return "";
+	    }
+	}
+
 
 
 	// Tabla 1: P. Vigiladas
@@ -356,8 +556,29 @@ public class GenerarReporte extends JDialog {
 
 			model1.addRow(row);
 		}
+		model1.fireTableDataChanged();
 	}
-
-
-
+	
+	// Tabla 2: Tipo de sangre
+	public void cargarPacientesPorTipoDeSangre(ArrayList<Persona> misPersonas, String tipoDeSangre) {
+	    model2.setRowCount(0);
+	    row = new Object[model2.getColumnCount()];
+	    
+	    int i = 0;
+	    while (i < misPersonas.size()) {
+	    	if (misPersonas.get(i) instanceof Paciente) {
+		        if (((Paciente) misPersonas.get(i)).getTipoDeSangre().equalsIgnoreCase(tipoDeSangre)) {
+		            row[0] = ((Paciente) misPersonas.get(i)).getNombre();
+		            row[1] = ((Paciente) misPersonas.get(i)).getCedula();
+		            row[2] = ((Paciente) misPersonas.get(i)).getTipoDeSangre();
+		    
+		            model2.addRow(row);
+		        }
+		        
+		    }
+		    i++;
+		    model2.fireTableDataChanged();
+		}
+		
+	}
 }
