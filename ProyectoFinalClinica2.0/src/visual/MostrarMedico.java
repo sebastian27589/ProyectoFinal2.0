@@ -231,6 +231,9 @@ public class MostrarMedico extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				
 				// MostrarCita con las citas de ese médico
+				MostrarCita mostrarCita = new MostrarCita(Clinica.getInstance().citasPendientesByCodeMedico(selected.getCodeMedico()));
+				mostrarCita.setModal(true);
+				mostrarCita.setVisible(true);
 			}
 		});
 		btnCitasPendientesMed.setEnabled(false);

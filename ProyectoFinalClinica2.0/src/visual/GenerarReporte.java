@@ -16,6 +16,7 @@ import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
 import java.awt.Font;
 import javax.swing.border.SoftBevelBorder;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.border.BevelBorder;
 import java.awt.Toolkit;
 import javax.swing.JScrollPane;
@@ -27,10 +28,15 @@ import javax.swing.JTextPane;
 public class GenerarReporte extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
+	private static DefaultTableModel model;
+	private static Object[] row;
 	private JTable table;
 	private JRadioButton rdbtnCiudad;
 	private JRadioButton rdbtnTipoSangre;
 	private JRadioButton rdbtnVigia;
+	private JPanel panelCiudad;
+	private JPanel panelTipoSangre;
+	private JPanel panelVigilado1;
 
 	/**
 	 * Launch the application.
@@ -51,6 +57,24 @@ public class GenerarReporte extends JDialog {
 	 * Create the dialog.
 	 */
 	public GenerarReporte() {
+		
+		Object[] titulo1 = {"Nombre", "Cedula", "Enfermedad"};
+		Object[] titulo2 = {"Nombre", "Cedula", "Tipo de Sangre"};
+		Object[] titulo3 = {"Nombre", "Cedula", "Ciudad"};
+		
+		model = new DefaultTableModel() {
+			
+			public boolean isCellEditable(int row, int column) {       
+			       
+			       if (row >= 0 && column == 2) {
+			    	   return true;
+			       }
+			       else {
+			    	   return false;
+			       }
+			}
+		};
+		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GenerarReporte.class.getResource("/Imagenes/report (1).png")));
 		setTitle("Reportes de Salud");
 		setResizable(false);
@@ -76,8 +100,34 @@ public class GenerarReporte extends JDialog {
 			}
 		});
 		
-		JPanel panelVigilado1 = new JPanel();
+		panelVigilado1 = new JPanel();
 		panelVigilado1.setVisible(false);
+		
+		panelTipoSangre = new JPanel();
+		panelTipoSangre.setBackground(Color.WHITE);
+		panelTipoSangre.setVisible(false);
+		
+		panelCiudad = new JPanel();
+		panelCiudad.setVisible(false);
+		panelCiudad.setBackground(Color.WHITE);
+		panelCiudad.setBounds(48, 219, 348, 103);
+		contentPanel.add(panelCiudad);
+		panelCiudad.setLayout(null);
+		
+		JTextPane txtpnCreaUnReporte = new JTextPane();
+		txtpnCreaUnReporte.setText("Crea un reporte con una lista de personas de una ciudad en espec\u00EDfico.");
+		txtpnCreaUnReporte.setFont(new Font("Times New Roman", Font.ITALIC, 18));
+		txtpnCreaUnReporte.setBounds(12, 13, 324, 95);
+		panelCiudad.add(txtpnCreaUnReporte);
+		panelTipoSangre.setBounds(48, 219, 348, 104);
+		contentPanel.add(panelTipoSangre);
+		panelTipoSangre.setLayout(null);
+		
+		JTextPane txtpnMuestraUnReporte = new JTextPane();
+		txtpnMuestraUnReporte.setText("Muestra un reporte de los pacientes con el tipo de sangre que se seleccione.");
+		txtpnMuestraUnReporte.setFont(new Font("Times New Roman", Font.ITALIC, 18));
+		txtpnMuestraUnReporte.setBounds(12, 13, 324, 95);
+		panelTipoSangre.add(txtpnMuestraUnReporte);
 		panelVigilado1.setBackground(new Color(255, 255, 255));
 		panelVigilado1.setBounds(48, 219, 348, 104);
 		contentPanel.add(panelVigilado1);
@@ -86,7 +136,7 @@ public class GenerarReporte extends JDialog {
 		JTextPane txtpnDsdadadadsa = new JTextPane();
 		txtpnDsdadadadsa.setEditable(false);
 		txtpnDsdadadadsa.setFont(new Font("Times New Roman", Font.ITALIC, 18));
-		txtpnDsdadadadsa.setText("Muestra una recopilaci\u00F3n de los pacientes que padezcan de una enfermedad actualmente en  vigilancia.");
+		txtpnDsdadadadsa.setText("Muestra una recopilaci\u00F3n de los pacientes que padezcan de una enfermedad actualmente en vigilancia.");
 		txtpnDsdadadadsa.setBounds(12, 13, 324, 95);
 		panelVigilado1.add(txtpnDsdadadadsa);
 		btnImprimir.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
@@ -108,6 +158,8 @@ public class GenerarReporte extends JDialog {
 				rdbtnVigia.setSelected(false);
 				rdbtnTipoSangre.setSelected(false);
 				panelVigilado1.setVisible(false);
+				panelTipoSangre.setVisible(false);
+				panelCiudad.setVisible(true);
 			}
 		});
 		rdbtnCiudad.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
@@ -121,6 +173,8 @@ public class GenerarReporte extends JDialog {
 				rdbtnVigia.setSelected(false);
 				rdbtnCiudad.setSelected(false);
 				panelVigilado1.setVisible(false);
+				panelTipoSangre.setVisible(true);
+				panelCiudad.setVisible(false);
 			}
 		});
 		rdbtnTipoSangre.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
@@ -136,6 +190,8 @@ public class GenerarReporte extends JDialog {
 				btnCargar.setEnabled(true);
 				btnImprimir.setEnabled(true);
 				panelVigilado1.setVisible(true);
+				panelTipoSangre.setVisible(false);
+				panelCiudad.setVisible(false);
 			}
 		});
 		rdbtnVigia.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
@@ -195,17 +251,6 @@ public class GenerarReporte extends JDialog {
 		panel_4.setBackground(new Color(176, 196, 222));
 		panel_4.setBounds(113, 109, 959, 10);
 		contentPanel.add(panel_4);
-		
-		JTextPane textPane = new JTextPane();
-		textPane.setText("Muestra una recopilaci\u00F3n de los pacientes que padezcan de una enfermedad actualmente en  vigilancia.");
-		textPane.setFont(new Font("Times New Roman", Font.ITALIC, 18));
-		textPane.setEditable(false);
-		textPane.setBounds(72, 371, 324, 95);
-		contentPanel.add(textPane);
-		
-		JPanel panelTipoSangre = new JPanel();
-		panelTipoSangre.setBounds(23, 126, 78, 45);
-		contentPanel.add(panelTipoSangre);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));

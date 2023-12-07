@@ -227,6 +227,9 @@ public class VentanaPrincipal extends JFrame {
 		}
 		menuBar.add(menuReportes);
 		
+		JMenuItem mntmNewMenuItem_9 = new JMenuItem("Abrir Reportes");
+		menuReportes.add(mntmNewMenuItem_9);
+		
 		JMenu menuGerencia = new JMenu("Gerencia");
 		if (!Clinica.getInstance().getUsuarioLogueado().getRolUsuario().equalsIgnoreCase("Administrador")) {
 			
@@ -275,12 +278,6 @@ public class VentanaPrincipal extends JFrame {
 			}
 		});
 		menuItemUsuarios.add(menuItemListaUsuarios);
-		
-		JMenuItem menuItemConsMeds = new JMenuItem("Consultas M\u00E9dicas");
-		menuGerencia.add(menuItemConsMeds);
-		
-		JMenuItem menuItemHistMeds = new JMenuItem("Historiales M\u00E9dicos");
-		menuGerencia.add(menuItemHistMeds);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
