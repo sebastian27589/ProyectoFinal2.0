@@ -324,10 +324,6 @@ public class RegPaciente extends JDialog {
 		txtareaInfoRelevante.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 		txtareaInfoRelevante.setBounds(105, 66, 276, 38);
 		panelGris.add(txtareaInfoRelevante);
-		
-		JLabel lblNewLabel = new JLabel("Hacer espacio para \u00EDcono o imagen de fondo");
-		lblNewLabel.setBounds(153, 301, 323, 14);
-		contentPanel.add(lblNewLabel);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -335,6 +331,7 @@ public class RegPaciente extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				btnSiguiente = new JButton("Siguiente");
+				btnSiguiente.setBackground(Color.WHITE);
 				btnSiguiente.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						
@@ -445,6 +442,7 @@ public class RegPaciente extends JDialog {
 			}
 			{
 				cancelButton = new JButton("Cancelar");
+				cancelButton.setBackground(Color.WHITE);
 				
 				if (regUnSoloPaciente) {
 					

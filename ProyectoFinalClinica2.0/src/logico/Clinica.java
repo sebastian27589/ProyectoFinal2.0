@@ -1,9 +1,5 @@
 package logico;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -37,6 +33,28 @@ public class Clinica implements Serializable{
 	public static Clinica clinica = null; 
 	private static Usuario usuarioLogueado; 
 	
+	private void writeObject(ObjectOutputStream out) throws IOException {
+        out.writeInt(generadorCodePaciente);
+        out.writeInt(generadorCodeMedico);
+        out.writeInt(generadorCodeConsMed);
+        out.writeInt(generadorCodeHistMed);
+        out.writeInt(generadorCodeVacuna);
+        out.writeInt(generadorNumCita);
+
+        out.defaultWriteObject();
+    }
+	
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        generadorCodePaciente = in.readInt();
+        generadorCodeMedico = in.readInt();
+        generadorCodeConsMed = in.readInt();
+        generadorCodeHistMed = in.readInt();
+        generadorCodeVacuna = in.readInt();
+        generadorNumCita = in.readInt();
+
+        in.defaultReadObject();
+    }
+
 	public Clinica() {
 		super();
 		this.misViviendas = new ArrayList<Vivienda>();
