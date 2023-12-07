@@ -111,7 +111,7 @@ public class RegUsuario extends JDialog {
 		}
 		
 		setResizable(false);
-		setBounds(100, 100, 606, 369);
+		setBounds(100, 100, 606, 331);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(new Color(218, 221, 216));
@@ -311,9 +311,10 @@ public class RegUsuario extends JDialog {
 		txtContrasena.setBounds(137, 45, 176, 22);
 		panelGris.add(txtContrasena);
 		
-		JLabel lblNewLabel = new JLabel("Imagen");
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setIcon(new ImageIcon(RegUsuario.class.getResource("/Imagenes/usuario_registrar_img.png")));
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setBounds(414, 144, 153, 114);
+		lblNewLabel.setBounds(456, 144, 100, 100);
 		contentPanel.add(lblNewLabel);
 		{
 			JPanel buttonPane = new JPanel();

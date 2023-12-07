@@ -31,6 +31,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.UIManager;
+import javax.swing.ImageIcon;
 
 public class RegVivienda extends JDialog {
 
@@ -247,9 +248,10 @@ public class RegVivienda extends JDialog {
 		panelContenedor2.add(btnAsignar);
 		btnAsignar.setEnabled(false);
 		
-		JLabel lblNewLabel = new JLabel("Imagen");
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setIcon(new ImageIcon(RegVivienda.class.getResource("/Imagenes/reg_vivienda_img.png")));
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setBounds(432, 14, 113, 93);
+		lblNewLabel.setBounds(418, 14, 100, 100);
 		panelContenedor2.add(lblNewLabel);
 		{
 			JPanel buttonPane = new JPanel();
