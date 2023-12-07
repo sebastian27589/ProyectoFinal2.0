@@ -48,6 +48,7 @@ import java.text.NumberFormat;
 import javax.swing.JSlider;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+import javax.swing.ImageIcon;
 
 public class RegCita extends JDialog {
 
@@ -123,7 +124,7 @@ public class RegCita extends JDialog {
 		
 		
 		setResizable(false);
-		setBounds(100, 100, 604, 395);
+		setBounds(100, 100, 604, 353);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(new Color(218, 221, 216));
@@ -328,6 +329,11 @@ public class RegCita extends JDialog {
 		btnAsignarMedico.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 		btnAsignarMedico.setBounds(205, 75, 115, 23);
 		panelGris.add(btnAsignarMedico);
+		
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setIcon(new ImageIcon(RegCita.class.getResource("/Imagenes/registrar_cita_img.png")));
+		lblNewLabel.setBounds(422, 157, 100, 100);
+		contentPanel.add(lblNewLabel);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
