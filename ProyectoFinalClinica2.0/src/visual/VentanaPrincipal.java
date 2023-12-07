@@ -134,9 +134,9 @@ public class VentanaPrincipal extends JFrame {
 		JMenuItem menuItemRegVacunas = new JMenuItem("Registrar Vacunas");
 		menuItemRegVacunas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				RegVacuna nuevaVacuna = new RegVacuna(null);
-//				nuevaVacuna.setModal(true);
-//				nuevaVacuna.setVisible(true);
+				RegVacuna nuevaVacuna = new RegVacuna(null);
+				nuevaVacuna.setModal(true);
+				nuevaVacuna.setVisible(true);
 			}
 		});
 		menuRegistro.add(menuItemRegVacunas);
