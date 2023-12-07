@@ -9,6 +9,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.SystemColor;
 import javax.swing.JLabel;
@@ -17,6 +18,10 @@ import javax.swing.ImageIcon;
 import java.awt.Font;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.table.DefaultTableModel;
+
+import logico.Medico;
+import logico.Paciente;
+
 import javax.swing.border.BevelBorder;
 import java.awt.Toolkit;
 import javax.swing.JScrollPane;
@@ -28,6 +33,8 @@ import javax.swing.JTextPane;
 public class GenerarReporte extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
+	private ArrayList<Paciente> pacientesEspecificasMostrar = new ArrayList<Paciente>();
+	private ArrayList<Medico> medicosEspecificosMostrar = new ArrayList<Medico>();
 	private static DefaultTableModel model;
 	private static Object[] row;
 	private JTable table;
@@ -43,7 +50,7 @@ public class GenerarReporte extends JDialog {
 	 */
 	public static void main(String[] args) {
 		try {
-			GenerarReporte dialog = new GenerarReporte();
+			GenerarReporte dialog = new GenerarReporte(null, null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -56,7 +63,7 @@ public class GenerarReporte extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public GenerarReporte() {
+	public GenerarReporte(ArrayList<Paciente> personasAMostrar, ArrayList<Medico> medicosAMostrar) {
 		
 		Object[] titulo1 = {"Nombre", "Cedula", "Enfermedad"};
 		Object[] titulo2 = {"Nombre", "Cedula", "Tipo de Sangre"};
