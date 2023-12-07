@@ -77,7 +77,7 @@ public class MostrarCita extends JDialog {
 		
 		setResizable(false);
 		setTitle("Citas");
-		setBounds(100, 100, 857, 550);
+		setBounds(100, 100, 857, 474);
 		getContentPane().setLayout(new BorderLayout());
 		setLocationRelativeTo(null);
 		Color backgroundColor = new Color(0xDADDD8);
@@ -210,22 +210,6 @@ public class MostrarCita extends JDialog {
 		btnConsultar.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 		btnConsultar.setBounds(693, 36, 104, 23);
 		panel.add(btnConsultar);
-		
-		JPanel panel_2 = new JPanel();
-		panel_2.setLayout(null);
-		panel_2.setBackground(new Color(255, 248, 220));
-		panel_2.setBounds(0, 362, 851, 113);
-		contentPanel.add(panel_2);
-		
-		JLabel label = new JLabel("");
-		label.setIcon(new ImageIcon(MostrarCita.class.getResource("/Imagenes/pngegg (9).png")));
-		label.setBounds(710, 10, 129, 110);
-		panel_2.add(label);
-		
-		JLabel lblNewLabel = new JLabel("");
-		lblNewLabel.setIcon(new ImageIcon(MostrarCita.class.getResource("/Imagenes/pngegg (10).png")));
-		lblNewLabel.setBounds(50, 0, 391, 110);
-		panel_2.add(lblNewLabel);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -233,7 +217,7 @@ public class MostrarCita extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton cancelButton = new JButton("Cerrar");
-				cancelButton.setBackground(new Color(255, 255, 255));
+				cancelButton.setBackground(Color.WHITE);
 				cancelButton.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 				cancelButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {

@@ -391,9 +391,7 @@ public class RegUsuario extends JDialog {
 									nuevoUsuario = new Usuario(txtCedula.getText(), txtNombre.getText(), dateChooserNacim.getDate(),
 											           sexoUsuario, txtTelefono.getText(), medico.getDireccion(), "Médico", txtUsuario.getText(),
 											           contrasena);
-									
-
-									
+								
 								}
 								else {
 									
