@@ -243,8 +243,6 @@ public class GenerarReporte extends JDialog {
 				panelTipoSangre.setVisible(false);
 				panelCiudad.setVisible(true);
 				panelSangres.setVisible(false);
-				txtPromedio.setVisible(false);
-				lblProm.setVisible(false);
 				table.setModel(model3);
 			}
 		});
@@ -264,8 +262,6 @@ public class GenerarReporte extends JDialog {
 				panelTipoSangre.setVisible(true);
 				panelCiudad.setVisible(false);
 				panelSangres.setVisible(true);
-				txtPromedio.setVisible(true);
-				lblProm.setVisible(true);
 				table.setModel(model2);
 			}
 		});
@@ -293,8 +289,6 @@ public class GenerarReporte extends JDialog {
 				panelTipoSangre.setVisible(false);
 				panelCiudad.setVisible(false);
 				panelSangres.setVisible(false);
-				txtPromedio.setVisible(false);
-				lblProm.setVisible(false);
 				table.setModel(model1);
 			}
 		});
