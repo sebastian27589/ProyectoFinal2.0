@@ -10,6 +10,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
+import exception.ValidarCampo;
 import logico.Clinica;
 import logico.Paciente;
 import logico.Vivienda;
@@ -34,6 +35,7 @@ import javax.swing.UIManager;
 public class RegVivienda extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
+	private String calle, sector, ciudad, telefono, nombre;
 	private JTextField txtCalle;
 	private JTextField txtSector;
 	private JTextField txtCiudad;
@@ -89,6 +91,7 @@ public class RegVivienda extends JDialog {
 		contentPanel.setBackground(new Color(218, 221, 216));
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
+		setLocationRelativeTo(null);
 		contentPanel.setLayout(null);
 		{
 			JPanel panelContenedor1 = new JPanel();
@@ -258,14 +261,31 @@ public class RegVivienda extends JDialog {
 				btnRegistrar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						
-						if (vivienda == null) {
+						try {
 							
-							Vivienda nuevaVivienda = new Vivienda(txtCalle.getText(), spnNumero.getValue().toString(), txtSector.getText(), txtCiudad.getText(), txtTelefono.getText());
-							nuevaVivienda.getResidentes().addAll(residentesAAgregar);
-							Clinica.getInstance().insertarVivienda(nuevaVivienda);
-							JOptionPane.showMessageDialog(null, "Registrada con éxito", "Registrar Vivienda", JOptionPane.INFORMATION_MESSAGE);
-							clean();
+							nombre = txtNombre.getText();
+							calle = txtCalle.getText();
+							telefono = txtTelefono.getText();
+							ciudad = txtCiudad.getText();
+							sector = txtSector.getText();
 							
+							if (nombre.isEmpty() || calle.isEmpty() || telefono.isEmpty() || ciudad.isEmpty() || sector.isEmpty()) {
+								throw new ValidarCampo("Debe llenar los campos obligatorios.");
+							}
+							
+							if (vivienda == null) {
+								
+								Vivienda nuevaVivienda = new Vivienda(txtCalle.getText(), spnNumero.getValue().toString(), txtSector.getText(), txtCiudad.getText(), txtTelefono.getText());
+								nuevaVivienda.getResidentes().addAll(residentesAAgregar);
+								Clinica.getInstance().insertarVivienda(nuevaVivienda);
+								JOptionPane.showMessageDialog(null, "Registrada con éxito", "Registrar Vivienda", JOptionPane.INFORMATION_MESSAGE);
+								clean();
+								
+							}
+						} catch (ValidarCampo e2) {
+							JOptionPane.showMessageDialog(null, e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+							e2.printStackTrace();
+							txtNombre.grabFocus();
 						}
 						
 					}

@@ -46,12 +46,16 @@ import javax.swing.JTable;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import com.toedter.calendar.JDateChooser;
+
+import exception.ValidarCampo;
+
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class RegConsultaMedica extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
+	private String sintoma, diagnostico;
 	private JTextField txtCodeConsulta;
 	private JTextField txtCodeMedico;
 	private JTextField txtCodePaciente;
@@ -462,28 +466,40 @@ public class RegConsultaMedica extends JDialog {
 				btnRealizar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						
-						if (consMed == null) {
+						try {
 							
-							Enfermedad enfermedadElegida = null;
+							sintoma = txtareaSintomas.getText();
+							diagnostico = txtareaDiagnostico.getText();
 							
-							if (!cbxEnfermedad.getSelectedItem().toString().equalsIgnoreCase("Ninguna")) {
-								
-								enfermedadElegida = Clinica.getInstance().buscarEnfermedadByNombre(cbxEnfermedad.getSelectedItem().toString());
+							if (sintoma.isEmpty() || diagnostico.isEmpty()) {
+								throw new ValidarCampo("Debe llenar los campos obligatorios.");
 							}
-							
-							ConsultaMedica consMedNueva = new ConsultaMedica(txtCodeConsulta.getText(), txtCodePaciente.getText(),
-								           txtCodeMedico.getText(), enfermedadElegida, txtareaSintomas.getText(),
-								           txtareaDiagnostico.getText(), dateChooserConsulta.getDate());
-							
-							consMedNueva.getAnalisis().addAll(extraerAnalisisElegidos());
-							Clinica.getInstance().insertarConsultaMedica(consMedNueva);
-							
-							JOptionPane.showMessageDialog(null, "Realizada con éxito", "Realizar Consulta Médica", JOptionPane.INFORMATION_MESSAGE);
-							
-							consultaRealizada = true;
-							dispose();
+							if (consMed == null) {
+								
+								Enfermedad enfermedadElegida = null;
+								
+								if (!cbxEnfermedad.getSelectedItem().toString().equalsIgnoreCase("Ninguna")) {
+									
+									enfermedadElegida = Clinica.getInstance().buscarEnfermedadByNombre(cbxEnfermedad.getSelectedItem().toString());
+								}
+								
+								ConsultaMedica consMedNueva = new ConsultaMedica(txtCodeConsulta.getText(), txtCodePaciente.getText(),
+									           txtCodeMedico.getText(), enfermedadElegida, txtareaSintomas.getText(),
+									           txtareaDiagnostico.getText(), dateChooserConsulta.getDate());
+								
+								consMedNueva.getAnalisis().addAll(extraerAnalisisElegidos());
+								Clinica.getInstance().insertarConsultaMedica(consMedNueva);
+								
+								JOptionPane.showMessageDialog(null, "Realizada con éxito", "Realizar Consulta Médica", JOptionPane.INFORMATION_MESSAGE);
+								
+								consultaRealizada = true;
+								dispose();
+							}
+						} catch (ValidarCampo e2) {
+							JOptionPane.showMessageDialog(null, e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+							e2.printStackTrace();
+							txtareaSintomas.grabFocus();
 						}
-						
 					}
 				});
 				btnRealizar.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));

@@ -354,8 +354,8 @@ public class RegPaciente extends JDialog {
 								cedula = txtCedula.getText();
 								telefono = txtTelefono.getText();
 								fechaNacimiento = dateChooserNacim.getDate();
-//								peso = Float.parseFloat(txtPeso.getText());
-//								altura = Float.parseFloat(txtAltura.getText());
+								peso = Float.parseFloat(txtPeso.getText());
+								altura = Float.parseFloat(txtAltura.getText());
 								
 								if (nombre.isEmpty() || cedula.isEmpty() || telefono.isEmpty()) {
 									throw new ValidarCampo("Debe llenar los campos obligatorios.");
@@ -369,9 +369,9 @@ public class RegPaciente extends JDialog {
 									throw new ValidarCampo("No ha seleccionado un tipo de sangre.");
 								}
 								
-//								if (peso <= 0 || altura <= 0) {
-//									throw new ValidarCampo("Las entradas del peso o la altura no pueden ser negativas.");
-//								}
+								if (peso <= 0 || altura <= 0) {
+									throw new ValidarCampo("Las entradas del peso o la altura no pueden ser negativas.");
+								} 
 								
 								if (!rdbtnMasculino.isSelected() && !rdbtnFemenino.isSelected()) {
 									throw new ValidarCampo("Debe seleccionar un sexo.");
@@ -430,6 +430,10 @@ public class RegPaciente extends JDialog {
 							JOptionPane.showMessageDialog(null, e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 							e2.printStackTrace();
 							txtNombre.grabFocus();
+						}
+						catch (NumberFormatException e3) {
+							JOptionPane.showMessageDialog(null, "Ingrese datos válidos para la altura y el peso.", "Error", JOptionPane.ERROR_MESSAGE);
+							txtPeso.grabFocus();
 						}
 						
 					}

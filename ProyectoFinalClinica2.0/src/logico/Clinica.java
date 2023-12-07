@@ -612,6 +612,17 @@ public class Clinica implements Serializable{
 		return enfermedadABuscar;
 	}
 	
+	public boolean validarUsuario(String userNombre) {
+		
+		for (Usuario usuario : misUsuarios) {
+			if (usuario.getNombreUsuario().equalsIgnoreCase(userNombre)) {
+				return true;
+			}
+			
+		}
+		return false;
+	}
+	
 	public HistorialMedico buscarHistMedByCodePaciente(String codigo) {
 		
 		HistorialMedico histMedABuscar = null;
@@ -712,5 +723,7 @@ public class Clinica implements Serializable{
 		// Sysout de verificación [[Borrar más tarde]]
 		System.out.println(misUsuarios.size()+" usuarios");
 	}
+
+
 	
 }

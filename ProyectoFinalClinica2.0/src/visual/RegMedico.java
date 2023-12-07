@@ -382,6 +382,10 @@ public class RegMedico extends JDialog {
 									throw new ValidarCampo("El médico debe tener al menos 1 especialidad.");
 								}
 								
+								if (!rdbtnMasculino.isSelected() && !rdbtnFemenino.isSelected()) {
+									throw new ValidarCampo("Debe seleccionar un sexo.");
+								}
+								
 								Medico medicoNuevo = new Medico(txtCedula.getText(), txtNombre.getText(), dateChooserNacim.getDate(), sexoMedico,
 									                            txtTelefono.getText(), txtareaDireccion.getText(), txtCodeMedico.getText());
 								medicoNuevo.getEspecialidades().addAll(especialidadesElegidas);

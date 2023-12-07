@@ -29,6 +29,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JRadioButton;
 import com.toedter.calendar.JDateChooser;
 
+import exception.ValidarCampo;
 import logico.Clinica;
 import logico.Medico;
 import logico.Paciente;
@@ -48,6 +49,8 @@ import java.awt.event.MouseEvent;
 public class RegUsuario extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
+	private String nombre, cedula, telefono, user;
+	private Date fechaNacimiento;
 	private JTextField txtNombre;
 	private JTextField txtCedula;
 	private JTextField txtTelefono;
@@ -320,70 +323,98 @@ public class RegUsuario extends JDialog {
 				btnSiguiente = new JButton("Registrar");
 				btnSiguiente.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						
-						String contrasena;
-						
-						if (lblIconVerContra.isVisible()) {
+						try {
 							
-							contrasena = String.valueOf(passwordFieldUsuario.getPassword());
-						}
-						else {
+							String contrasena;
 							
-							contrasena = txtContrasena.getText();
-						}
-						
-						if (usuario == null) {
-							
-							Usuario nuevoUsuario;
-							
-							if (rdbtnMasculino.isSelected()) {
+							if (lblIconVerContra.isVisible()) {
 								
-								sexoUsuario = 'M';
+								contrasena = String.valueOf(passwordFieldUsuario.getPassword());
 							}
 							else {
 								
-								sexoUsuario = 'F';
+								contrasena = txtContrasena.getText();
 							}
 							
-							if (medico != null) {
+							if (usuario == null) {
 								
+								Usuario nuevoUsuario;
+								
+								if (rdbtnMasculino.isSelected()) {
+									
+									sexoUsuario = 'M';
+								}
+								else {
+									
+									sexoUsuario = 'F';
+								}
+								
+								cedula = txtCedula.getText();
+								nombre = txtNombre.getText();
+								telefono = txtTelefono.getText();
+								fechaNacimiento = dateChooserNacim.getDate();
+								user = txtUsuario.getText();
+								
+								if (cedula.isEmpty() || nombre.isEmpty() || telefono.isEmpty()) {
+									throw new ValidarCampo("Debe llenar los campos obligatorios.");
+								}
+								
+								if (fechaNacimiento == null) {
+									throw new ValidarCampo("No ha seleccionado una fecha de nacimiento.");
+								}
+								
+								if (!rdbtnMasculino.isSelected() && !rdbtnFemenino.isSelected()) {
+									throw new ValidarCampo("Debe seleccionar un sexo.");
+								}
+								
+								if (Clinica.getInstance().validarUsuario(user)) {
+									throw new ValidarCampo("Este nombre de usuario ya está en uso.");
+								}
+								
+								
+								if (medico != null) {
+									
+									
+									
+									nuevoUsuario = new Usuario(txtCedula.getText(), txtNombre.getText(), dateChooserNacim.getDate(),
+											           sexoUsuario, txtTelefono.getText(), medico.getDireccion(), "Médico", txtUsuario.getText(),
+											           contrasena);
+									
 
+									
+								}
+								else {
+									
+									nuevoUsuario = new Usuario(txtCedula.getText(), txtNombre.getText(), dateChooserNacim.getDate(),
+									           sexoUsuario, txtTelefono.getText(), null, "Secretario", txtUsuario.getText(),
+									           contrasena);
+									
+								}
 								
-								nuevoUsuario = new Usuario(txtCedula.getText(), txtNombre.getText(), dateChooserNacim.getDate(),
-										           sexoUsuario, txtTelefono.getText(), medico.getDireccion(), "Médico", txtUsuario.getText(),
-										           contrasena);
 								
-
+								Clinica.getInstance().insertarUsuario(nuevoUsuario);
+								JOptionPane.showMessageDialog(null, "Registrado con éxito", "Registrar Usuario", JOptionPane.INFORMATION_MESSAGE);
+								dispose();
 								
 							}
 							else {
 								
-								nuevoUsuario = new Usuario(txtCedula.getText(), txtNombre.getText(), dateChooserNacim.getDate(),
-								           sexoUsuario, txtTelefono.getText(), null, "Secretario", txtUsuario.getText(),
-								           contrasena);
+								usuario.setNombreUsuario(txtUsuario.getText());
+								usuario.setContrasena(contrasena);
 								
-							}
-							
-							
-							Clinica.getInstance().insertarUsuario(nuevoUsuario);
-							JOptionPane.showMessageDialog(null, "Registrado con éxito", "Registrar Usuario", JOptionPane.INFORMATION_MESSAGE);
-							dispose();
-							
-						}
-						else {
-							
-							usuario.setNombreUsuario(txtUsuario.getText());
-							usuario.setContrasena(contrasena);
-							
-							if (usuario.getRolUsuario().equalsIgnoreCase("Secretario")) {
+								if (usuario.getRolUsuario().equalsIgnoreCase("Secretario")) {
+									
+									usuario.setTelefono(txtTelefono.getText());
+								}
 								
-								usuario.setTelefono(txtTelefono.getText());
+								Clinica.getInstance().actualizarUsuario(usuario);
+								dispose();
 							}
-							
-							Clinica.getInstance().actualizarUsuario(usuario);
-							dispose();
+						} catch (ValidarCampo e2) {
+							JOptionPane.showMessageDialog(null, e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+							e2.printStackTrace();
+							txtNombre.grabFocus();
 						}
-						
 					}
 				});
 				btnSiguiente.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));

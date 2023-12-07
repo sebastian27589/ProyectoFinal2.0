@@ -39,6 +39,9 @@ import logico.Vacuna;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import com.toedter.components.JSpinField;
+
+import exception.ValidarCampo;
+
 import javax.swing.JProgressBar;
 import com.jgoodies.common.format.EmptyNumberFormat;
 import java.text.NumberFormat;
@@ -49,6 +52,8 @@ import java.beans.PropertyChangeEvent;
 public class RegCita extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
+	private String nombre, cedula, telefono;
+	private Date fechaNacimiento, fechaCita;
 	private JTextField txtNombre;
 	private JTextField txtCedula;
 	private JTextField txtTelefono;
@@ -333,26 +338,59 @@ public class RegCita extends JDialog {
 				btnAgendar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						
-						if (rdbtnMasculino.isSelected()) {
+						try {
+							if (rdbtnMasculino.isSelected()) {
+								
+								sexoPersona = 'M';
+							}
+							else {
+								
+								sexoPersona = 'F';
+							}
 							
-							sexoPersona = 'M';
-						}
-						else {
+							nombre = txtNombre.getText();
+							cedula = txtCedula.getText();
+							telefono = txtTelefono.getText();
+							fechaNacimiento = dateChooserNacim.getDate();
+							fechaCita = dateChooserCita.getDate();
 							
-							sexoPersona = 'F';
+							
+							if (nombre.isEmpty() || cedula.isEmpty() || telefono.isEmpty()) {
+								throw new ValidarCampo("Debe llenar los campos obligatorios.");
+							}
+							
+							if (fechaNacimiento == null) {
+								throw new ValidarCampo("No ha seleccionado una fecha de nacimiento.");
+							}
+							
+							if (fechaCita == null) {
+								throw new ValidarCampo("Debe asginar la fecha de la cita.");
+							}
+							
+							if (!rdbtnMasculino.isSelected() && !rdbtnFemenino.isSelected()) {
+								throw new ValidarCampo("Debe seleccionar un sexo.");
+							}
+							
+							if (medico == null) {
+								throw new ValidarCampo("No ha seleccionado el médico.");
+							}
+							
+							Persona personaCita = new Persona(txtCedula.getText(), txtNombre.getText(), dateChooserNacim.getDate(),
+									                          sexoPersona, txtTelefono.getText(), null);
+							
+							Cita nuevaCita = new Cita(txtNumCita.getText(), personaCita, medico.getCodeMedico(), dateChooserCita.getDate(),
+									                  cbxHoraCita.getSelectedItem().toString());
+							
+							Clinica.getInstance().insertarCita(nuevaCita);
+							cbxHoraCita.setEnabled(false);
+							cbxHoraCita.setModel(new DefaultComboBoxModel<>());
+							JOptionPane.showMessageDialog(null, "Cita agendada con éxito", "Agendar Cita", JOptionPane.INFORMATION_MESSAGE);
+							clean();
+						} catch (ValidarCampo e2) {
+							JOptionPane.showMessageDialog(null, e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+							e2.printStackTrace();
+							txtNombre.grabFocus();
 						}
-						
-						Persona personaCita = new Persona(txtCedula.getText(), txtNombre.getText(), dateChooserNacim.getDate(),
-								                          sexoPersona, txtTelefono.getText(), null);
-						
-						Cita nuevaCita = new Cita(txtNumCita.getText(), personaCita, medico.getCodeMedico(), dateChooserCita.getDate(),
-								                  cbxHoraCita.getSelectedItem().toString());
-						
-						Clinica.getInstance().insertarCita(nuevaCita);
-						cbxHoraCita.setEnabled(false);
-						cbxHoraCita.setModel(new DefaultComboBoxModel<>());
-						JOptionPane.showMessageDialog(null, "Cita agendada con éxito", "Agendar Cita", JOptionPane.INFORMATION_MESSAGE);
-						clean();
 					}
 				});
 				btnAgendar.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
