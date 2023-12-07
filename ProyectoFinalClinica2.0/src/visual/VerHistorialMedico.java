@@ -220,8 +220,9 @@ public class VerHistorialMedico extends JDialog {
 		btnEnfermedades.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				// Mostrar enfermedades específicas
-				
+				MostrarEnfermedad mostrarEnfermedadesPaciente = new MostrarEnfermedad(histMed.getMisEnfermedades());
+				mostrarEnfermedadesPaciente.setModal(true);
+				mostrarEnfermedadesPaciente.setVisible(true);
 			}
 		});
 		btnEnfermedades.setBounds(9, 7, 117, 23);
@@ -235,7 +236,6 @@ public class VerHistorialMedico extends JDialog {
 				MostrarConsultaPaciente verConsultasPaciente = new MostrarConsultaPaciente(histMed.getPaciente());
 				verConsultasPaciente.setModal(true);
 				verConsultasPaciente.setVisible(true);
-				
 			}
 		});
 		btnConsultas.setBounds(136, 7, 117, 23);
@@ -249,7 +249,6 @@ public class VerHistorialMedico extends JDialog {
 				MostrarVacuna verVacunasPaciente = new MostrarVacuna(histMed.getPaciente().getMisVacunas());
 				verVacunasPaciente.setModal(true);
 				verVacunasPaciente.setVisible(true);
-				
 			}
 		});
 		btnVacunas.setBounds(263, 7, 117, 23);

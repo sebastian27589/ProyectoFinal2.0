@@ -116,7 +116,6 @@ public class RegConsultaMedica extends JDialog {
 			setTitle("Visualizar Consulta Médica");
 		}
 		
-		// Este ArrayList se debería de llenar con un archivo o sencillamente lo hacemos aquí mismo (DISCUTIR)
 		analisis = new ArrayList<String>();
 
 		analisis.add("Hemograma");
@@ -124,6 +123,11 @@ public class RegConsultaMedica extends JDialog {
 		analisis.add("Biopsia");
 		analisis.add("Perfil renal");
 		analisis.add("Panel hepático");
+		analisis.add("Electrocardiograma");
+		analisis.add("Radiografía de Tórax");
+		analisis.add("Perfil Lipídico");
+		analisis.add("TSH (Tiroides)");
+		analisis.add("Glucosa en sangre");
 		
 		setBounds(100, 100, 667, 390);
 		getContentPane().setLayout(new BorderLayout());
@@ -215,8 +219,6 @@ public class RegConsultaMedica extends JDialog {
 				VerHistorialMedico visualizarHistMed = new VerHistorialMedico(paciente.getCodePaciente());
 				visualizarHistMed.setModal(true);
 				visualizarHistMed.setVisible(true);
-				
-				
 			}
 		});
 		

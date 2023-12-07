@@ -162,7 +162,6 @@ public class VentanaLogin extends JDialog {
 			}
 		});
 		
-		
 		lblIconOcultarContra.setVisible(false);
 		
 		lblIconVerContra = new JLabel("");
@@ -177,7 +176,6 @@ public class VentanaLogin extends JDialog {
 				txtContrasena.setVisible(true);
 			}
 		});
-		
 		
 		lblIconVerContra.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		lblIconVerContra.setIcon(new ImageIcon(VentanaLogin.class.getResource("/Imagenes/iconVerContrasena.png")));
@@ -275,6 +273,15 @@ public class VentanaLogin extends JDialog {
 				
 				String usuario = txtUsuario.getText();
 				String password = String.valueOf(passwordFieldLogin.getPassword());
+				
+				if (lblIconVerContra.isVisible()) {
+					
+					password = String.valueOf(passwordFieldLogin.getPassword());
+				}
+				else {
+					
+					password = txtContrasena.getText();
+				}
 				
 				// [[BORRAR MÁS TARDE]]
 				System.out.println("Usuario: " + usuario + "\nContraseña: " + password);

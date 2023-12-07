@@ -38,8 +38,10 @@ import java.awt.event.KeyEvent;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import javax.swing.JCheckBox;
 
 public class MostrarConsultaPaciente extends JDialog {
 
@@ -166,7 +168,9 @@ public class MostrarConsultaPaciente extends JDialog {
 						
 						if (colIndex == 3) {
 							
-							// Abrir consMed en modo visualizar
+							RegConsultaMedica visualizarConsulta = new RegConsultaMedica(null, null, selected);
+							visualizarConsulta.setModal(true);
+							visualizarConsulta.setVisible(true);
 							tablePacientes.setValueAt(Boolean.FALSE, rowIndex, colIndex);
 						}
 
@@ -214,6 +218,28 @@ public class MostrarConsultaPaciente extends JDialog {
 		txtBuscarPaciente.setBounds(118, 36, 307, 22);
 		panel.add(txtBuscarPaciente);
 		txtBuscarPaciente.setColumns(10);
+		
+		JCheckBox checkboxFiltrarCons = new JCheckBox("M\u00E1s Relevantes");
+		checkboxFiltrarCons.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				if (checkboxFiltrarCons.isSelected()) {
+					
+					checkboxFiltrarCons.setSelected(false);
+					loadConsultasMedicas(Clinica.getInstance().getMisConsultasMedicas());
+				}
+				else {
+					
+					checkboxFiltrarCons.setSelected(true);
+					loadConsultasMedicas(Clinica.getInstance().getConsultasImportantesPaciente(paciente.getCodePaciente()));
+				}
+			}
+		});
+		checkboxFiltrarCons.setHorizontalAlignment(SwingConstants.CENTER);
+		checkboxFiltrarCons.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
+		checkboxFiltrarCons.setBounds(658, 36, 138, 22);
+		panel.add(checkboxFiltrarCons);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -232,17 +258,19 @@ public class MostrarConsultaPaciente extends JDialog {
 			}
 		}
 		
-		loadConsultasMedicas();
+		loadConsultasMedicas(Clinica.getInstance().getMisConsultasMedicas());
 		
 	}
 
-	public static void loadConsultasMedicas() {
+	public static void loadConsultasMedicas(ArrayList<ConsultaMedica> consultasAMostrar) {
 		
+		String formato = "dd/MM/yyyy";
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(formato);
 		Medico medico = null;
 		model.setRowCount(0);
 		row = new Object[model.getColumnCount()];
 		
-		for (ConsultaMedica consMed : Clinica.getInstance().getMisConsultasMedicas()) {
+		for (ConsultaMedica consMed : consultasAMostrar) {
 			
 			if (consMed.getCodePaciente().equalsIgnoreCase(paciente.getCodePaciente())) {
 				
@@ -251,12 +279,12 @@ public class MostrarConsultaPaciente extends JDialog {
 				medico = Clinica.getInstance().buscarMedicoByCode(consMed.getCodeMedico());
 				row[1] = medico.getNombre();
 				
-				row[2] = consMed.getFechaConsulta();
+				String fechaConFormato = simpleDateFormat.format(consMed.getFechaConsulta());
+				row[2] = fechaConFormato;
 				model.addRow(row);
 			}
 			
 		}
 		
 	}
-	
 }

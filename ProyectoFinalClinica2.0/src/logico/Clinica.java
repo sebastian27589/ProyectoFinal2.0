@@ -679,6 +679,67 @@ public class Clinica implements Serializable{
 	    return edad;
 	}
 	
+	public ArrayList<ConsultaMedica> getConsultasImportantesPaciente(String codePaciente) {
+		
+		ArrayList<ConsultaMedica> consultasPrioritarias = new ArrayList<ConsultaMedica>();
+		
+		for (ConsultaMedica consulta : misConsultasMedicas) {
+			
+			if (consulta.getCodePaciente().equalsIgnoreCase(codePaciente)) {
+				
+				if (consulta.getEnfermedad().isVigilada()) {
+					
+					consultasPrioritarias.add(consulta);
+				}
+			}
+		
+		}
+		
+		return consultasPrioritarias;
+	}
+	
+	public boolean containsALetter(String str) {
+		
+		char[] strAAnalizar = str.toCharArray();
+		int strLength = strAAnalizar.length;
+		boolean containsALetter = false;
+		
+		for (int index = 0; index < strLength; index++) {
+			
+			if (!(strAAnalizar[index] >= '0' && strAAnalizar[index] <= '9') && strAAnalizar[index] != '.') {
+				containsALetter = true;
+			}
+			
+		}
+		
+		return containsALetter;
+	}
+	
+	public boolean cedulaValida(String cedula) {
+		
+		char[] cedulaAAnalizar = cedula.toCharArray();
+		boolean documentoValido = true;
+		
+		if (containsALetter(cedula) || cedulaAAnalizar.length != 11) {
+			documentoValido = false;
+		}
+		
+		return documentoValido;
+		
+	}
+	
+	public boolean numDeTelefonoValido(String numDeTelefono) {
+		
+		char[] telefonoAAnalizar = numDeTelefono.toCharArray();
+		boolean telefonoValido = true;
+		
+		if (containsALetter(numDeTelefono) || telefonoAAnalizar.length != 10) {
+			telefonoValido = false;
+		}
+		
+		return telefonoValido;
+	}
+	
 	// Funciones para control de Citas
 	
 	public ArrayList<Cita> citasPendientesByCodeMedico(String codeMedico) {
