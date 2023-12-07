@@ -192,13 +192,13 @@ public class MostrarPaciente extends JDialog {
 		}
 		
 		JPanel panel_1 = new JPanel();
-		panel_1.setBackground(new Color(32, 178, 170));
+		panel_1.setBackground(new Color(240, 255, 240));
 		panel_1.setBounds(0, 128, 984, 91);
 		contentPanel.add(panel_1);
 		panel_1.setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBackground(new Color(245, 245, 245));
+		panel.setBackground(new Color(240, 248, 255));
 		panel.setBounds(0, 13, 984, 91);
 		contentPanel.add(panel);
 		panel.setLayout(null);
