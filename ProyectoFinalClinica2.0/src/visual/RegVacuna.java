@@ -78,18 +78,6 @@ public class RegVacuna extends JDialog {
 	public RegVacuna(Vacuna vacunaAModificar) {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(RegVacuna.class.getResource("/Imagenes/2830290011667485045-16.png")));
 		
-		
-		// Pruebas
-		Enfermedad ef1 = new Enfermedad("Sarampión", "Bacteria", "", 1, false);
-		Enfermedad ef2 = new Enfermedad("Tuberculosis", "Bacteria", "", 4, false);
-		Enfermedad ef3 = new Enfermedad("Dengue", "Virus", "", 3, false);
-		Enfermedad ef4 = new Enfermedad("neumococo", "Parásito", "", 2, false);
-		Clinica.getInstance().insertarEnfermedad(ef1);
-		Clinica.getInstance().insertarEnfermedad(ef2);
-		Clinica.getInstance().insertarEnfermedad(ef3);
-		Clinica.getInstance().insertarEnfermedad(ef4);
-		
-		//Color backgroundColor = new Color(0xDADDD8);
 		Color rayita1 = new Color(0x9BBFD8);
 		Color rayita2 = new Color(0x69747C);
 		Color rayita3 = new Color(0x9BBFD8);
