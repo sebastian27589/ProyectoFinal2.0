@@ -11,7 +11,6 @@ import javax.swing.border.EmptyBorder;
 
 import logico.Clinica;
 import logico.Medico;
-import logico.RoundedPanel;
 
 import javax.swing.JButton;
 import java.awt.Toolkit;
@@ -132,13 +131,6 @@ public class VentanaPrincipal extends JFrame {
 		menuRegistro.add(menuItemRegEnfermedad);
 		
 		JMenuItem menuItemRegVacunas = new JMenuItem("Registrar Vacunas");
-		menuItemRegVacunas.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				RegVacuna nuevaVacuna = new RegVacuna(null);
-				nuevaVacuna.setModal(true);
-				nuevaVacuna.setVisible(true);
-			}
-		});
 		menuRegistro.add(menuItemRegVacunas);
 		
 		JMenuItem menuItemRegVivienda = new JMenuItem("Registrar Vivienda");
@@ -338,27 +330,6 @@ public class VentanaPrincipal extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		
-		RoundedPanel roundedPanelUsuario = new RoundedPanel();
-		roundedPanelUsuario.setRoundTopLeft(18);
-		roundedPanelUsuario.setRoundTopRight(18);
-		roundedPanelUsuario.setRoundBottomLeft(18);
-		roundedPanelUsuario.setRoundBottomRight(18);
-		roundedPanelUsuario.setBounds(50, 877, 1824, 46);
-		contentPane.add(roundedPanelUsuario);
-		roundedPanelUsuario.setLayout(null);
-		
-        JLabel lbl_Tiempo = new JLabel();
-        lbl_Tiempo.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
-        lbl_Tiempo.setBounds(1682, 13, 130, 14);
-        
-        roundedPanelUsuario.add(lbl_Tiempo);
-        
-        JLabel lblNewLabel_1 = new JLabel(Clinica.getInstance().getUsuarioLogueado().getNombreUsuario());
-        lblNewLabel_1.setFont(new Font("Gill Sans MT", Font.PLAIN, 25));
-        lblNewLabel_1.setBounds(33, 7, 130, 33);
-        roundedPanelUsuario.add(lblNewLabel_1);
-		
 		JLabel label_4 = new JLabel("");
 		label_4.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/pngegg (2222).png")));
 		label_4.setBounds(934, 0, 766, 1000);
@@ -388,6 +359,22 @@ public class VentanaPrincipal extends JFrame {
 		lblNewLabel_3.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/pngegg (5).png")));
 		lblNewLabel_3.setBounds(0, 176, 670, 569);
 		contentPane.add(lblNewLabel_3);
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(50, 877, 1824, 46);
+		contentPane.add(panel);
+		panel.setLayout(null);
+		
+        JLabel lbl_Tiempo = new JLabel();
+        lbl_Tiempo.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
+        lbl_Tiempo.setBounds(1179, 15, 130, 14);
+        
+                panel.add(lbl_Tiempo);
+                
+                JLabel lblNewLabel_1 = new JLabel(Clinica.getInstance().getUsuarioLogueado().getNombreUsuario());
+                lblNewLabel_1.setFont(new Font("Gill Sans MT", Font.PLAIN, 25));
+                lblNewLabel_1.setBounds(33, 7, 130, 33);
+                panel.add(lblNewLabel_1);
 		
 		JLabel lblNewLabel_2 = new JLabel("");
 		lblNewLabel_2.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/pngegg (2).png")));
