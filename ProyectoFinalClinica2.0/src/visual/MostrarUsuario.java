@@ -39,6 +39,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Date;
+import java.awt.Toolkit;
+import javax.swing.ImageIcon;
 
 public class MostrarUsuario extends JDialog {
 
@@ -69,6 +71,7 @@ public class MostrarUsuario extends JDialog {
 	 * Create the dialog.
 	 */
 	public MostrarUsuario(ArrayList<Usuario> usuariosAMostrar) {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(MostrarUsuario.class.getResource("/Imagenes/iconVentanaLogin.png")));
 		
 		usuariosEspecificosAMostrar = usuariosAMostrar;
 		
@@ -82,7 +85,7 @@ public class MostrarUsuario extends JDialog {
 		
 		setResizable(false);
 		setTitle("Usuarios");
-		setBounds(100, 100, 857, 443);
+		setBounds(100, 100, 962, 495);
 		getContentPane().setLayout(new BorderLayout());
 		setLocationRelativeTo(null);
 		Color backgroundColor = new Color(0xDADDD8);
@@ -118,14 +121,19 @@ public class MostrarUsuario extends JDialog {
 			}
 		};
 		model.setColumnIdentifiers(header);
-		contentPanel.setBackground(backgroundColor);
+		contentPanel.setBackground(new Color(255, 255, 255));
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setBounds(794, 232, 203, 222);
+		contentPanel.add(lblNewLabel);
+		lblNewLabel.setIcon(new ImageIcon(MostrarUsuario.class.getResource("/Imagenes/pngegg (11).png")));
 		{
 			JPanel panel_2 = new JPanel();
 			panel_2.setBackground(new Color(255, 255, 255));
-			panel_2.setBounds(53, 81, 744, 248);
+			panel_2.setBounds(53, 81, 777, 248);
 			contentPanel.add(panel_2);
 			panel_2.setLayout(new BorderLayout(0, 0));
 			
@@ -185,18 +193,19 @@ public class MostrarUsuario extends JDialog {
 		}
 		
 		JPanel panel_1 = new JPanel();
-		panel_1.setBackground(rayita2);
-		panel_1.setBounds(0, 128, 851, 91);
+		panel_1.setBackground(new Color(176, 224, 230));
+		panel_1.setBounds(0, 128, 961, 91);
 		contentPanel.add(panel_1);
 		panel_1.setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBackground(rayita1);
-		panel.setBounds(0, 13, 851, 91);
+		panel.setBackground(new Color(173, 216, 230));
+		panel.setBounds(0, 13, 961, 91);
 		contentPanel.add(panel);
 		panel.setLayout(null);
 		
 		JLabel lblBuscarUsuario = new JLabel("Buscar:");
+		lblBuscarUsuario.setBackground(new Color(255, 255, 255));
 		lblBuscarUsuario.setHorizontalAlignment(SwingConstants.CENTER);
 		lblBuscarUsuario.setOpaque(true);
 		lblBuscarUsuario.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
@@ -225,6 +234,7 @@ public class MostrarUsuario extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton cancelButton = new JButton("Cerrar");
+				cancelButton.setBackground(new Color(255, 255, 255));
 				cancelButton.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 				cancelButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
@@ -233,6 +243,7 @@ public class MostrarUsuario extends JDialog {
 				});
 				
 				btnModificar = new JButton("Modificar");
+				btnModificar.setBackground(new Color(255, 255, 255));
 				btnModificar.setEnabled(false);
 				btnModificar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
@@ -248,6 +259,7 @@ public class MostrarUsuario extends JDialog {
 				buttonPane.add(btnModificar);
 				
 				btnEliminar = new JButton("Eliminar");
+				btnEliminar.setBackground(new Color(255, 255, 255));
 				btnEliminar.setEnabled(false);
 				btnEliminar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {

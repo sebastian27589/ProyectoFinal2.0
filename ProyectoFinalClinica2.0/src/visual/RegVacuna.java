@@ -29,6 +29,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.border.LineBorder;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import java.awt.Toolkit;
+import javax.swing.ImageIcon;
 
 public class RegVacuna extends JDialog {
 
@@ -47,7 +49,6 @@ public class RegVacuna extends JDialog {
 	private JButton btnRegistrar;
 	private JButton btnAnadir;
 	private JPanel panel_2;
-	private JLabel lblNewLabel;
 	private JLabel lblIcono;
 	private JPanel panel_3;
 	private JPanel panel_4;
@@ -56,6 +57,7 @@ public class RegVacuna extends JDialog {
 	private JPanel panel_6;
 	private JTable table;
 	private JButton btnQuitar;
+	private JLabel lblNewLabel;
 
 	/**
 	 * Launch the application.
@@ -74,6 +76,7 @@ public class RegVacuna extends JDialog {
 	 * Create the dialog.
 	 */
 	public RegVacuna(Vacuna vacunaAModificar) {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(RegVacuna.class.getResource("/Imagenes/2830290011667485045-16.png")));
 		
 		
 		// Pruebas
@@ -107,13 +110,18 @@ public class RegVacuna extends JDialog {
 		
 		
 		setResizable(false);
-		setBounds(100, 100, 954, 545);
+		setBounds(100, 100, 954, 562);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(new Color(255, 255, 255));
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
+		
+		lblNewLabel = new JLabel("");
+		lblNewLabel.setBounds(345, 100, 300, 562);
+		contentPanel.add(lblNewLabel);
+		lblNewLabel.setIcon(new ImageIcon(RegVacuna.class.getResource("/Imagenes/pngegg (12).png")));
 		
 		panel_3 = new JPanel();
 		panel_3.setBackground(new Color(0, 139, 139));
@@ -250,10 +258,6 @@ public class RegVacuna extends JDialog {
 		table.setModel(model);
 		scrollPane.setViewportView(table);
 		
-		lblNewLabel = new JLabel("LOGO");
-		lblNewLabel.setBounds(491, 96, 56, 16);
-		panel_1.add(lblNewLabel);
-		
 		btnQuitar = new JButton("x");
 		btnQuitar.setBounds(881, 167, 47, 25);
 		panel_1.add(btnQuitar);
@@ -270,8 +274,9 @@ public class RegVacuna extends JDialog {
 		});
 		btnQuitar.setActionCommand("OK");
 		
-		lblIcono = new JLabel("ICONO");
-		lblIcono.setBounds(26, 427, 45, 16);
+		lblIcono = new JLabel("");
+		lblIcono.setIcon(new ImageIcon(RegVacuna.class.getResource("/Imagenes/11423721931667542571-48.png")));
+		lblIcono.setBounds(23, 408, 54, 52);
 		contentPanel.add(lblIcono);
 		
 		panel_4 = new JPanel();

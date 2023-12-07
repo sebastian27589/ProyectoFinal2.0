@@ -107,7 +107,7 @@ public class MostrarVacuna extends JDialog {
 			}
 		};
 		model.setColumnIdentifiers(header);
-		contentPanel.setBackground(backgroundColor);
+		contentPanel.setBackground(new Color(255, 255, 255));
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
@@ -165,18 +165,19 @@ public class MostrarVacuna extends JDialog {
 		}
 		
 		JPanel panel_1 = new JPanel();
-		panel_1.setBackground(rayita2);
+		panel_1.setBackground(new Color(176, 224, 230));
 		panel_1.setBounds(0, 128, 851, 91);
 		contentPanel.add(panel_1);
 		panel_1.setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBackground(rayita1);
+		panel.setBackground(new Color(173, 216, 230));
 		panel.setBounds(0, 13, 851, 91);
 		contentPanel.add(panel);
 		panel.setLayout(null);
 		
 		JLabel lblBuscarVacuna = new JLabel("Buscar:");
+		lblBuscarVacuna.setBackground(new Color(255, 255, 255));
 		lblBuscarVacuna.setHorizontalAlignment(SwingConstants.CENTER);
 		lblBuscarVacuna.setOpaque(true);
 		lblBuscarVacuna.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
@@ -205,6 +206,7 @@ public class MostrarVacuna extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton cancelButton = new JButton("Cancelar");
+				cancelButton.setBackground(new Color(255, 255, 255));
 				cancelButton.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 				cancelButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {

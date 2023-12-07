@@ -38,6 +38,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Date;
+import javax.swing.ImageIcon;
+import java.awt.Toolkit;
 
 public class MostrarPaciente extends JDialog {
 
@@ -69,6 +71,7 @@ public class MostrarPaciente extends JDialog {
 	 * Create the dialog.
 	 */
 	public MostrarPaciente(ArrayList<Paciente> pacientesAMostrar) {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(MostrarPaciente.class.getResource("/Imagenes/paciente.png")));
 		
 		pacientesEspecificosAMostrar = pacientesAMostrar;
 		
@@ -82,7 +85,7 @@ public class MostrarPaciente extends JDialog {
 		
 		setResizable(false);
 		setTitle("Pacientes");
-		setBounds(100, 100, 857, 443);
+		setBounds(100, 100, 990, 466);
 		getContentPane().setLayout(new BorderLayout());
 		setLocationRelativeTo(null);
 		Color backgroundColor = new Color(0xDADDD8);
@@ -118,7 +121,7 @@ public class MostrarPaciente extends JDialog {
 			}
 		};
 		model.setColumnIdentifiers(header);
-		contentPanel.setBackground(backgroundColor);
+		contentPanel.setBackground(Color.WHITE);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
@@ -189,18 +192,19 @@ public class MostrarPaciente extends JDialog {
 		}
 		
 		JPanel panel_1 = new JPanel();
-		panel_1.setBackground(rayita2);
-		panel_1.setBounds(0, 128, 851, 91);
+		panel_1.setBackground(new Color(240, 255, 240));
+		panel_1.setBounds(0, 128, 984, 91);
 		contentPanel.add(panel_1);
 		panel_1.setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBackground(rayita1);
-		panel.setBounds(0, 13, 851, 91);
+		panel.setBackground(new Color(240, 248, 255));
+		panel.setBounds(0, 13, 984, 91);
 		contentPanel.add(panel);
 		panel.setLayout(null);
 		
 		JLabel lblBuscarPaciente = new JLabel("Buscar:");
+		lblBuscarPaciente.setBackground(new Color(255, 255, 255));
 		lblBuscarPaciente.setHorizontalAlignment(SwingConstants.CENTER);
 		lblBuscarPaciente.setOpaque(true);
 		lblBuscarPaciente.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
@@ -224,6 +228,7 @@ public class MostrarPaciente extends JDialog {
 		txtBuscarPaciente.setColumns(10);
 		
 		btnVerHistMed = new JButton("Historial M\u00E9dico");
+		btnVerHistMed.setBackground(new Color(255, 255, 255));
 		btnVerHistMed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -237,6 +242,13 @@ public class MostrarPaciente extends JDialog {
 		btnVerHistMed.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 		btnVerHistMed.setBounds(661, 37, 136, 22);
 		panel.add(btnVerHistMed);
+		
+		JLabel lblIcon = new JLabel("");
+		lblIcon.setOpaque(true);
+		lblIcon.setBackground(new Color(255, 255, 255, 20));
+		lblIcon.setIcon(new ImageIcon(MostrarPaciente.class.getResource("/Imagenes/xd.png")));
+		lblIcon.setBounds(825, 230, 128, 140);
+		contentPanel.add(lblIcon);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -244,6 +256,7 @@ public class MostrarPaciente extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton cancelButton = new JButton("Cerrar");
+				cancelButton.setBackground(new Color(255, 255, 255));
 				cancelButton.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 				cancelButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
@@ -252,6 +265,7 @@ public class MostrarPaciente extends JDialog {
 				});
 				
 				btnModificar = new JButton("Modificar");
+				btnModificar.setBackground(new Color(255, 255, 255));
 				btnModificar.setEnabled(false);
 				btnModificar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
@@ -267,6 +281,7 @@ public class MostrarPaciente extends JDialog {
 				buttonPane.add(btnModificar);
 				
 				btnEliminar = new JButton("Eliminar");
+				btnEliminar.setBackground(new Color(255, 255, 255));
 				btnEliminar.setEnabled(false);
 				btnEliminar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {

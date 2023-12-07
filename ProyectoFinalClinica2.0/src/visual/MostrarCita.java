@@ -40,6 +40,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.awt.Toolkit;
+import javax.swing.ImageIcon;
 
 public class MostrarCita extends JDialog {
 
@@ -69,12 +71,13 @@ public class MostrarCita extends JDialog {
 	 * Create the dialog.
 	 */
 	public MostrarCita(ArrayList<Cita> citasAMostrar) {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(MostrarCita.class.getResource("/Imagenes/5709036141642251933-128.png")));
 		
 		citasEspecificasAMostrar = citasAMostrar;
 		
 		setResizable(false);
 		setTitle("Citas");
-		setBounds(100, 100, 857, 443);
+		setBounds(100, 100, 857, 550);
 		getContentPane().setLayout(new BorderLayout());
 		setLocationRelativeTo(null);
 		Color backgroundColor = new Color(0xDADDD8);
@@ -95,7 +98,7 @@ public class MostrarCita extends JDialog {
 			}
 		};
 		model.setColumnIdentifiers(header);
-		contentPanel.setBackground(backgroundColor);
+		contentPanel.setBackground(new Color(255, 255, 255));
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
@@ -147,18 +150,19 @@ public class MostrarCita extends JDialog {
 		}
 		
 		JPanel panel_1 = new JPanel();
-		panel_1.setBackground(rayita2);
+		panel_1.setBackground(new Color(255, 218, 185));
 		panel_1.setBounds(0, 128, 851, 91);
 		contentPanel.add(panel_1);
 		panel_1.setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBackground(rayita1);
+		panel.setBackground(new Color(240, 230, 140));
 		panel.setBounds(0, 13, 851, 91);
 		contentPanel.add(panel);
 		panel.setLayout(null);
 		
 		JLabel lblBuscarVacuna = new JLabel("Buscar:");
+		lblBuscarVacuna.setBackground(new Color(255, 255, 255));
 		lblBuscarVacuna.setHorizontalAlignment(SwingConstants.CENTER);
 		lblBuscarVacuna.setOpaque(true);
 		lblBuscarVacuna.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
@@ -182,6 +186,7 @@ public class MostrarCita extends JDialog {
 		txtBuscarVacuna.setColumns(10);
 		
 		btnConsultar = new JButton("Consultar");
+		btnConsultar.setBackground(new Color(255, 255, 255));
 		btnConsultar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -205,6 +210,22 @@ public class MostrarCita extends JDialog {
 		btnConsultar.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 		btnConsultar.setBounds(693, 36, 104, 23);
 		panel.add(btnConsultar);
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.setLayout(null);
+		panel_2.setBackground(new Color(255, 248, 220));
+		panel_2.setBounds(0, 362, 851, 113);
+		contentPanel.add(panel_2);
+		
+		JLabel label = new JLabel("");
+		label.setIcon(new ImageIcon(MostrarCita.class.getResource("/Imagenes/pngegg (9).png")));
+		label.setBounds(710, 10, 129, 110);
+		panel_2.add(label);
+		
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setIcon(new ImageIcon(MostrarCita.class.getResource("/Imagenes/pngegg (10).png")));
+		lblNewLabel.setBounds(50, 0, 391, 110);
+		panel_2.add(lblNewLabel);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -212,6 +233,7 @@ public class MostrarCita extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton cancelButton = new JButton("Cerrar");
+				cancelButton.setBackground(new Color(255, 255, 255));
 				cancelButton.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 				cancelButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {

@@ -42,6 +42,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.JCheckBox;
+import java.awt.Toolkit;
+import javax.swing.ImageIcon;
 
 public class MostrarConsultaPaciente extends JDialog {
 
@@ -73,6 +75,7 @@ public class MostrarConsultaPaciente extends JDialog {
 	 * Create the dialog.
 	 */
 	public MostrarConsultaPaciente(Paciente pacienteAMostrarCons) {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(MostrarConsultaPaciente.class.getResource("/Imagenes/11891847711639747155-128.png")));
 		
 		paciente = Clinica.getInstance().buscarPacienteByCode(pacienteAMostrarCons.getCodePaciente());
 		
@@ -86,7 +89,7 @@ public class MostrarConsultaPaciente extends JDialog {
 		
 		setResizable(false);
 		setTitle("Consultas Médicas");
-		setBounds(100, 100, 857, 443);
+		setBounds(100, 100, 945, 443);
 		getContentPane().setLayout(new BorderLayout());
 		setLocationRelativeTo(null);
 		Color backgroundColor = new Color(0xDADDD8);
@@ -122,14 +125,14 @@ public class MostrarConsultaPaciente extends JDialog {
 			}
 		};
 		model.setColumnIdentifiers(header);
-		contentPanel.setBackground(backgroundColor);
+		contentPanel.setBackground(new Color(255, 255, 255));
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		{
 			JPanel panel_2 = new JPanel();
 			panel_2.setBackground(new Color(255, 255, 255));
-			panel_2.setBounds(53, 81, 744, 248);
+			panel_2.setBounds(147, 81, 765, 248);
 			contentPanel.add(panel_2);
 			panel_2.setLayout(new BorderLayout(0, 0));
 			
@@ -185,22 +188,23 @@ public class MostrarConsultaPaciente extends JDialog {
 		}
 		
 		JPanel panel_1 = new JPanel();
-		panel_1.setBackground(rayita2);
-		panel_1.setBounds(0, 128, 851, 91);
+		panel_1.setBackground(new Color(102, 205, 170));
+		panel_1.setBounds(0, 128, 939, 91);
 		contentPanel.add(panel_1);
 		panel_1.setLayout(null);
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(rayita1);
-		panel.setBounds(0, 13, 851, 91);
+		panel.setBounds(0, 13, 939, 91);
 		contentPanel.add(panel);
 		panel.setLayout(null);
 		
 		JLabel lblBuscarPaciente = new JLabel("Buscar:");
+		lblBuscarPaciente.setBackground(new Color(255, 255, 255));
 		lblBuscarPaciente.setHorizontalAlignment(SwingConstants.CENTER);
 		lblBuscarPaciente.setOpaque(true);
 		lblBuscarPaciente.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
-		lblBuscarPaciente.setBounds(53, 36, 55, 22);
+		lblBuscarPaciente.setBounds(147, 36, 55, 22);
 		panel.add(lblBuscarPaciente);
 		
 		txtBuscarPaciente = new JTextField();
@@ -215,11 +219,12 @@ public class MostrarConsultaPaciente extends JDialog {
 			}
 		});
 		txtBuscarPaciente.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
-		txtBuscarPaciente.setBounds(118, 36, 307, 22);
+		txtBuscarPaciente.setBounds(214, 36, 307, 22);
 		panel.add(txtBuscarPaciente);
 		txtBuscarPaciente.setColumns(10);
 		
 		JCheckBox checkboxFiltrarCons = new JCheckBox("M\u00E1s Relevantes");
+		checkboxFiltrarCons.setBackground(new Color(255, 255, 255));
 		checkboxFiltrarCons.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -238,8 +243,13 @@ public class MostrarConsultaPaciente extends JDialog {
 		});
 		checkboxFiltrarCons.setHorizontalAlignment(SwingConstants.CENTER);
 		checkboxFiltrarCons.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
-		checkboxFiltrarCons.setBounds(658, 36, 138, 22);
+		checkboxFiltrarCons.setBounds(774, 36, 138, 22);
 		panel.add(checkboxFiltrarCons);
+		
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setIcon(new ImageIcon(MostrarConsultaPaciente.class.getResource("/Imagenes/pngegg (8).png")));
+		lblNewLabel.setBounds(24, 216, 126, 124);
+		contentPanel.add(lblNewLabel);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -247,6 +257,7 @@ public class MostrarConsultaPaciente extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton cancelButton = new JButton("Cerrar");
+				cancelButton.setBackground(new Color(255, 255, 255));
 				cancelButton.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
 				cancelButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
