@@ -93,6 +93,8 @@ public class VentanaPrincipal extends JFrame {
 		setJMenuBar(menuBar);
 		
 		JMenu menuRegistro = new JMenu("Registro");
+		menuRegistro.setFont(new Font("Segoe UI", Font.PLAIN, 35));
+		menuRegistro.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/8933286741678773690-48.png")));
 		menuBar.add(menuRegistro);
 		
 		JMenuItem menuItemRegPaciente = new JMenuItem("Registrar Paciente");
@@ -151,6 +153,8 @@ public class VentanaPrincipal extends JFrame {
 			menuItemRegVivienda.setEnabled(false);
 		}
 		JMenu menuRecursosHumanos = new JMenu("Recursos Humanos");
+		menuRecursosHumanos.setFont(new Font("Segoe UI", Font.PLAIN, 35));
+		menuRecursosHumanos.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/14102962671595341166-48.png")));
 		if (Clinica.getInstance().getUsuarioLogueado().getRolUsuario().equalsIgnoreCase("Secretario") ||
 		    Clinica.getInstance().getUsuarioLogueado().getRolUsuario().equalsIgnoreCase("Médico")) {
 			
@@ -182,6 +186,8 @@ public class VentanaPrincipal extends JFrame {
 		menuRecursosHumanos.add(mntmNewMenuItem_6);
 		
 		JMenu menuDatosMedicos = new JMenu("Datos M\u00E9dicos");
+		menuDatosMedicos.setFont(new Font("Segoe UI", Font.PLAIN, 35));
+		menuDatosMedicos.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/10295499861529659195-48.png")));
 		if (Clinica.getInstance().getUsuarioLogueado().getRolUsuario().equalsIgnoreCase("Secretario")) {
 				
 			menuDatosMedicos.setEnabled(false);
@@ -212,6 +218,8 @@ public class VentanaPrincipal extends JFrame {
 		menuDatosMedicos.add(menuItemVacunas);
 		
 		JMenu menuCitas = new JMenu("Citas");
+		menuCitas.setFont(new Font("Segoe UI", Font.PLAIN, 35));
+		menuCitas.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/9766375281691835297-48.png")));
 		menuBar.add(menuCitas);
 		
 		JMenuItem menuItemAgendarCita = new JMenuItem("Agendar Cita");
@@ -249,6 +257,8 @@ public class VentanaPrincipal extends JFrame {
 		menuCitas.add(menuItemMostrarCitas);
 		
 		JMenu menuReportes = new JMenu("Reportes");
+		menuReportes.setFont(new Font("Segoe UI", Font.PLAIN, 35));
+		menuReportes.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/12663137361594941313-48.png")));
 		if (!Clinica.getInstance().getUsuarioLogueado().getRolUsuario().equalsIgnoreCase("Administrador")) {
 			
 			menuReportes.setEnabled(false);
@@ -266,6 +276,8 @@ public class VentanaPrincipal extends JFrame {
 		menuReportes.add(mntmNewMenuItem_9);
 		
 		JMenu menuGerencia = new JMenu("Gerencia");
+		menuGerencia.setFont(new Font("Segoe UI", Font.PLAIN, 35));
+		menuGerencia.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/8648519161659819449-48.png")));
 		if (!Clinica.getInstance().getUsuarioLogueado().getRolUsuario().equalsIgnoreCase("Administrador")) {
 			
 			menuGerencia.setEnabled(false);
@@ -318,26 +330,66 @@ public class VentanaPrincipal extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("New label");
-		lblNewLabel.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/principal_fondo.png")));
-		lblNewLabel.setBounds(434, 0, 562, 600);
-		contentPane.add(lblNewLabel);
+		JLabel label_4 = new JLabel("");
+		label_4.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/pngegg (2222).png")));
+		label_4.setBounds(934, 0, 766, 1000);
+		contentPane.add(label_4);
+		
+		JLabel label_3 = new JLabel("");
+		label_3.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/pngegg (2).png")));
+		label_3.setBounds(664, -57, 766, 1000);
+		contentPane.add(label_3);
+		
+		JLabel label_1 = new JLabel("");
+		label_1.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/pngegg (2222).png")));
+		label_1.setBounds(1230, 0, 766, 1000);
+		contentPane.add(label_1);
+		
+		JLabel label = new JLabel("");
+		label.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/pngegg (2222).png")));
+		label.setBounds(1532, 0, 766, 1000);
+		contentPane.add(label);
+		
+		JLabel label_2 = new JLabel("");
+		label_2.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/pngegg (5)6.png")));
+		label_2.setBounds(944, 131, 958, 569);
+		contentPane.add(label_2);
+		
+		JLabel lblNewLabel_3 = new JLabel("");
+		lblNewLabel_3.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/pngegg (5).png")));
+		lblNewLabel_3.setBounds(0, 176, 670, 569);
+		contentPane.add(lblNewLabel_3);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(21, 611, 1319, 46);
+		panel.setBounds(50, 877, 1824, 46);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
         JLabel lbl_Tiempo = new JLabel();
         lbl_Tiempo.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
         lbl_Tiempo.setBounds(1179, 15, 130, 14);
-
-        panel.add(lbl_Tiempo);
         
-        JLabel lblNewLabel_1 = new JLabel(Clinica.getInstance().getUsuarioLogueado().getNombreUsuario());
-        lblNewLabel_1.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
-        lblNewLabel_1.setBounds(33, 15, 130, 14);
-        panel.add(lblNewLabel_1);
+                panel.add(lbl_Tiempo);
+                
+                JLabel lblNewLabel_1 = new JLabel(Clinica.getInstance().getUsuarioLogueado().getNombreUsuario());
+                lblNewLabel_1.setFont(new Font("Gill Sans MT", Font.PLAIN, 25));
+                lblNewLabel_1.setBounds(33, 7, 130, 33);
+                panel.add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("");
+		lblNewLabel_2.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/pngegg (2).png")));
+		lblNewLabel_2.setBounds(310, -43, 766, 1000);
+		contentPane.add(lblNewLabel_2);
+        
+        JLabel lblNewLabel_4 = new JLabel("");
+        lblNewLabel_4.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/logo-y-slogan-a-color-1024x429.png")));
+        lblNewLabel_4.setBounds(621, 264, 708, 356);
+        contentPane.add(lblNewLabel_4);
+        
+        JLabel lblNewLabel = new JLabel("");
+        lblNewLabel.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/pngegg (2).png")));
+        lblNewLabel.setBounds(0, -48, 375, 991);
+        contentPane.add(lblNewLabel);
 
         Thread hilo = new Thread(() -> {
         	LocalDateTime fechaHora = LocalDateTime.of(2023, 1, 1, 0, 0, 0);
