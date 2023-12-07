@@ -789,6 +789,31 @@ public class Clinica implements Serializable{
 		System.out.println(misUsuarios.size()+" usuarios");
 	}
 
+	
+	public ArrayList<Paciente> obtenerPacientesEnVigilancia() {
+		ArrayList<Paciente> pacientesVigilados = new ArrayList<Paciente>();
+		
+		for (HistorialMedico historiales : misHistorialesMedicos) {
+			for (Enfermedad enfermedad : historiales.getMisEnfermedades()) {
+				if (enfermedad.isVigilada()) {
+					pacientesVigilados.add(historiales.getPaciente());
+				}
+				
+			}
+		}
+		
+		return pacientesVigilados;
+	}
+
+	public  HistorialMedico buscarHistorialPorPaciente(Paciente paciente, ArrayList<HistorialMedico> historialesMedicos) {
+		for (HistorialMedico historial : historialesMedicos) {
+	        if (historial.getPaciente().equals(paciente)) {
+	            return historial;
+	        }
+	    }
+	    return null;
+	}
+
 
 	
 }

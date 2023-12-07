@@ -17,10 +17,15 @@ import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
 import java.awt.Font;
 import javax.swing.border.SoftBevelBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+import logico.Clinica;
+import logico.Enfermedad;
+import logico.HistorialMedico;
 import logico.Medico;
 import logico.Paciente;
+import logico.Persona;
 
 import javax.swing.border.BevelBorder;
 import java.awt.Toolkit;
@@ -29,13 +34,18 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JRadioButton;
 import javax.swing.JTextPane;
+import javax.swing.border.EtchedBorder;
 
 public class GenerarReporte extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
-	private ArrayList<Paciente> pacientesEspecificasMostrar = new ArrayList<Paciente>();
+	private ArrayList<Paciente> pacientesEspecificosMostrar = new ArrayList<Paciente>();
 	private ArrayList<Medico> medicosEspecificosMostrar = new ArrayList<Medico>();
-	private static DefaultTableModel model;
+	private ArrayList<HistorialMedico> historialesMedicosMostrar = new ArrayList<HistorialMedico>();
+	//private ArrayList<Paciente>	pacientesEnVigilancia = new ArrayList<Paciente>();
+	private static DefaultTableModel model1;
+	private static DefaultTableModel model2;
+	private static DefaultTableModel model3;
 	private static Object[] row;
 	private JTable table;
 	private JRadioButton rdbtnCiudad;
@@ -50,7 +60,7 @@ public class GenerarReporte extends JDialog {
 	 */
 	public static void main(String[] args) {
 		try {
-			GenerarReporte dialog = new GenerarReporte(null, null);
+			GenerarReporte dialog = new GenerarReporte(null, null, null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -63,24 +73,37 @@ public class GenerarReporte extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public GenerarReporte(ArrayList<Paciente> personasAMostrar, ArrayList<Medico> medicosAMostrar) {
+	public GenerarReporte(ArrayList<Paciente> pacientesAMostrar, ArrayList<Medico> medicosAMostrar, ArrayList<HistorialMedico> historialMedicosAMostrar) {
+		
+		pacientesEspecificosMostrar = pacientesAMostrar;
+		medicosEspecificosMostrar = medicosAMostrar;
+		historialesMedicosMostrar = historialMedicosAMostrar;
 		
 		Object[] titulo1 = {"Nombre", "Cedula", "Enfermedad"};
 		Object[] titulo2 = {"Nombre", "Cedula", "Tipo de Sangre"};
 		Object[] titulo3 = {"Nombre", "Cedula", "Ciudad"};
 		
-		model = new DefaultTableModel() {
-			
+		model1 = new DefaultTableModel() {
 			public boolean isCellEditable(int row, int column) {       
-			       
-			       if (row >= 0 && column == 2) {
-			    	   return true;
-			       }
-			       else {
-			    	   return false;
-			       }
+			    return false;
 			}
 		};
+		
+		model2 = new DefaultTableModel() {
+			public boolean isCellEditable(int row, int column) {       
+			    return false;
+			}
+		};
+		
+		model3 = new DefaultTableModel() {
+			public boolean isCellEditable(int row, int column) {       
+			    return false;
+			}
+		};
+		
+		model1.setColumnIdentifiers(titulo1);
+		model2.setColumnIdentifiers(titulo2);
+		model3.setColumnIdentifiers(titulo3);
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GenerarReporte.class.getResource("/Imagenes/report (1).png")));
 		setTitle("Reportes de Salud");
@@ -95,6 +118,16 @@ public class GenerarReporte extends JDialog {
 		Color rayita2 = new Color(0x69747C);
 		int alpha = 60;
 		int alpha2 = 120;
+//		DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
+//		cellRenderer.setHorizontalAlignment(JLabel.CENTER);
+//		
+//		for (int index = 0; index < table.getColumnCount(); index++) {
+//			
+//			if (index != 3) {
+//				
+//				table.getColumnModel().getColumn(index).setCellRenderer(cellRenderer);
+//			}
+//		}
 		rayita1 = new Color(rayita1.getRed(), rayita1.getGreen(), rayita1.getBlue(), alpha);
 		rayita2 = new Color(rayita2.getRed(), rayita2.getGreen(), rayita2.getBlue(), alpha2);
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -153,6 +186,28 @@ public class GenerarReporte extends JDialog {
 		contentPanel.add(btnImprimir);
 		
 		JButton btnCargar = new JButton("Cargar");
+		btnCargar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				if (rdbtnVigia.isSelected()) {
+					
+					ArrayList<Paciente> pacientesEnVigilancia = Clinica.getInstance().obtenerPacientesEnVigilancia();
+					
+					//cargarPacientesPorTipoDeSangre(Clinica.getInstance().getMisPersonas());
+					cargarPacientesVigilados(pacientesEnVigilancia, Clinica.getInstance().getMisHistorialesMedicos());
+				} else if (rdbtnTipoSangre.isSelected()) {
+					
+					//pacientesEnVigilancia = Clinica.getInstance().obtenerPacientesEnVigilancia();
+					//cargarPacientesPorTipoDeSangre(Clinica.getInstance().getMisPersonas());
+					//cargarPacientesPorTipoDeSangre(pacientesEnVigilancia);
+				} else if (rdbtnCiudad.isSelected()) {
+					
+					//cargarPacientesPorCiudad(Clinica.getInstance().getMisPersonas());
+				}
+				
+				//actualizarTabla();
+			}
+		});
 		btnCargar.setEnabled(false);
 		btnCargar.setBackground(new Color(255, 255, 255));
 		btnCargar.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
@@ -167,6 +222,7 @@ public class GenerarReporte extends JDialog {
 				panelVigilado1.setVisible(false);
 				panelTipoSangre.setVisible(false);
 				panelCiudad.setVisible(true);
+				table.setModel(model3);
 			}
 		});
 		rdbtnCiudad.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
@@ -182,6 +238,7 @@ public class GenerarReporte extends JDialog {
 				panelVigilado1.setVisible(false);
 				panelTipoSangre.setVisible(true);
 				panelCiudad.setVisible(false);
+				table.setModel(model2);
 			}
 		});
 		rdbtnTipoSangre.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
@@ -199,6 +256,7 @@ public class GenerarReporte extends JDialog {
 				panelVigilado1.setVisible(true);
 				panelTipoSangre.setVisible(false);
 				panelCiudad.setVisible(false);
+				table.setModel(model1);
 			}
 		});
 		rdbtnVigia.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
@@ -276,4 +334,30 @@ public class GenerarReporte extends JDialog {
 			}
 		}
 	}
+
+
+	// Tabla 1: P. Vigiladas
+	public static void cargarPacientesVigilados(ArrayList<Paciente> pacientesEnVigilancia, ArrayList<HistorialMedico> historialesMedicos) {
+		model1.setRowCount(0);
+		row = new Object[model1.getColumnCount()];
+		for (Paciente paciente : pacientesEnVigilancia) {
+			row[0] = paciente.getNombre();
+			row[1] = paciente.getCedula();
+			
+			
+			HistorialMedico historial = Clinica.getInstance().buscarHistorialPorPaciente(paciente, historialesMedicos);
+	        if (historial != null && !historial.getMisEnfermedades().isEmpty()) {
+	            
+	            Enfermedad enfermedad = historial.getMisEnfermedades().get(0);
+	            row[2] = enfermedad.getNombre(); 
+	        } else {
+	            row[2] = "N/A"; 
+	        }
+
+			model1.addRow(row);
+		}
+	}
+
+
+
 }

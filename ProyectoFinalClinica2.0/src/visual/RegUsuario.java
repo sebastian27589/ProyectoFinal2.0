@@ -372,9 +372,9 @@ public class RegUsuario extends JDialog {
 									throw new ValidarCampo("Este nombre de usuario ya está en uso.");
 								}
 								
-								if (!Clinica.getInstance().cedulaValida(txtCedula.getText())) {
-									throw new ValidarCampo("Favor introducir una cédula válida.");
-								}
+//								if (!Clinica.getInstance().cedulaValida(txtCedula.getText())) {
+//									throw new ValidarCampo("Favor introducir una cédula válida.");
+//								}
 								
 								if (txtUsuario.getText().length() < 8) {
 									throw new ValidarCampo("Su nombre de usuario debe tener 8 o más caracteres.");

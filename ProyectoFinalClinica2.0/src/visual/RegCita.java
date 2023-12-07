@@ -364,7 +364,7 @@ public class RegCita extends JDialog {
 							}
 							
 							if (fechaCita == null) {
-								throw new ValidarCampo("Debe asginar la fecha de la cita.");
+								throw new ValidarCampo("Debe asignar la fecha de la cita.");
 							}
 							
 							if (!rdbtnMasculino.isSelected() && !rdbtnFemenino.isSelected()) {
