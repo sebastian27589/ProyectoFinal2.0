@@ -33,6 +33,7 @@ import exception.ValidarCampo;
 import logico.Clinica;
 import logico.Enfermedad;
 import javax.swing.JCheckBox;
+import javax.swing.ImageIcon;
 
 public class RegEnfermedad extends JDialog {
 
@@ -211,15 +212,15 @@ public class RegEnfermedad extends JDialog {
 		panel_7.add(lblSiemprePreocupndonos);
 		lblSiemprePreocupndonos.setFont(new Font("Gill Sans MT", Font.PLAIN, 16));
 		
-		JLabel lblImagen_1 = new JLabel("LOGO");
-		lblImagen_1.setFont(new Font("Gill Sans MT", Font.BOLD, 15));
-		lblImagen_1.setBounds(346, 39, 56, 16);
-		panel_6.add(lblImagen_1);
+		JLabel lblNewLabel_2 = new JLabel("");
+		lblNewLabel_2.setBounds(322, 0, 100, 100);
+		panel_6.add(lblNewLabel_2);
+		lblNewLabel_2.setIcon(new ImageIcon(RegEnfermedad.class.getResource("/Imagenes/enf_registrar_logo.png")));
 		
-		JLabel lblImagen = new JLabel("IMAGEN");
-		lblImagen.setFont(new Font("Gill Sans MT", Font.BOLD, 15));
-		lblImagen.setBounds(72, 52, 81, 16);
-		panel_2.add(lblImagen);
+		JLabel lblNewLabel_3 = new JLabel("");
+		lblNewLabel_3.setIcon(new ImageIcon(RegEnfermedad.class.getResource("/Imagenes/enf_registrar_img.png")));
+		lblNewLabel_3.setBounds(76, 13, 100, 100);
+		panel_2.add(lblNewLabel_3);
 		
 		JPanel panel_3 = new JPanel();
 		panel_3.setBackground(new Color(240, 128, 128));

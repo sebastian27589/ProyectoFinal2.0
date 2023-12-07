@@ -150,6 +150,9 @@ public class MostrarVacuna extends JDialog {
 							
 							selected = Clinica.getInstance().buscarVacunaByCode(tableVacunas.getValueAt(rowIndex, 0).toString());
 							// Aquí se debe abrir un MostrarEnfermedad con las enfermedades que tiene Vacuna en enfermedadesQueTrata
+							MostrarEnfermedad mostrarEnfermedades = new MostrarEnfermedad(selected.getEnfermedadesQueTrata());
+							mostrarEnfermedades.setModal(true);
+							mostrarEnfermedades.setVisible(true);
 							System.out.println("Abrir MostrarEnfermedad");
 							tableVacunas.setValueAt(Boolean.FALSE, rowIndex, colIndex);
 							
