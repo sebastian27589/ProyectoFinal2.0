@@ -257,7 +257,7 @@ public class VentanaLogin extends JDialog {
 				}
 				else {
 					JOptionPane.showMessageDialog(null, "Se produjo un error. Por favor, inténtalo de nuevo.", "Error", JOptionPane.ERROR_MESSAGE);
-				}
+				}//Coa
 				
 			}
 		});
