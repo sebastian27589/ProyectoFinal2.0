@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="jcalendar-1.4.jar"/>
+	<classpathentry kind="lib" path="jgoodies-common-1.2.0.jar"/>
+	<classpathentry kind="lib" path="jgoodies-looks-2.4.1.jar"/>
+	<classpathentry kind="lib" path="junit-4.6.jar"/>
+	<classpathentry kind="lib" path="swingx-all-1.6.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Cristopher/Downloads/sqljdbc_12.6.3.0_enu/sqljdbc_12.6/enu/jars/mssql-jdbc-12.6.3.jre8.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Cristopher/Downloads/sqljdbc_12.6.3.0_enu/sqljdbc_12.6/enu/jars/mssql-jdbc-12.6.3.jre8-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Cristopher/Downloads/sqljdbc_12.6.3.0_enu/sqljdbc_12.6/enu/jars/mssql-jdbc-12.6.3.jre8-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Cristopher/Downloads/sqljdbc_12.6.3.0_enu/sqljdbc_12.6/enu/jars/mssql-jdbc-12.6.3.jre11.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Cristopher/Downloads/sqljdbc_12.6.3.0_enu/sqljdbc_12.6/enu/jars/mssql-jdbc-12.6.3.jre11-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Cristopher/Downloads/sqljdbc_12.6.3.0_enu/sqljdbc_12.6/enu/jars/mssql-jdbc-12.6.3.jre11-sources.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
