@@ -54,23 +54,6 @@ public class VentanaPrincipal extends JFrame {
 
 	private JPanel contentPane;
 	private Dimension dim;
-	private JMenuItem mntmNewMenuItem;
-	private JMenuItem menuItemVacunas;
-	private JMenuItem menuItemAgendarCita;
-	private JMenuItem menuItemMostrarCitas;
-	private JMenuItem mntmNewMenuItem_1;
-	private JMenu menuItemUsuarios;
-	private JMenu menuCrearUsuario;
-	private JMenuItem menuItemMedico;
-	private JMenuItem menuItemSecretario;
-	private JMenuItem menuItemListaUsuarios;
-	private JMenuItem mntmNewMenuItem_2;
-	private JMenuItem mntmNewMenuItem_3;
-	private JMenu menuReportes;
-	private JMenu menuGerencia;
-	private JMenu menuRecursosHumanos;
-	private JMenu menuCitas;
-	private JMenu menuDatosMedicos;
 	private JLabel label;
 	private JPanel panel_2;
 	private JLabel lblRegistro;
@@ -88,9 +71,7 @@ public class VentanaPrincipal extends JFrame {
 	private RoundedPanel roundedPanelVacuna;
 	private RoundedPanel roundedPanelMedico;
 	private JLabel lblMedico;
-	private RoundedPanel roundedPanelSintoma;
 	private JLabel lblPersona;
-	private JLabel lblSintoma;
 	private JLabel lblEnfermedad;
 	private JLabel lblVacuna;
 	private JPanel panelFondo2;
@@ -173,19 +154,19 @@ public class VentanaPrincipal extends JFrame {
 		if (Clinica.getInstance().getUsuarioLogueado().getRolUsuario().equalsIgnoreCase("Secretario") ||
 		    Clinica.getInstance().getUsuarioLogueado().getRolUsuario().equalsIgnoreCase("Médico")) {
 			
-			menuRecursosHumanos.setEnabled(false);
+			//menuRecursosHumanos.setEnabled(false);
 		}
 		if (Clinica.getInstance().getUsuarioLogueado().getRolUsuario().equalsIgnoreCase("Secretario")) {
 				
-			menuDatosMedicos.setEnabled(false);
+			//menuDatosMedicos.setEnabled(false);
 		}
 		if (!Clinica.getInstance().getUsuarioLogueado().getRolUsuario().equalsIgnoreCase("Administrador")) {
 			
-			menuReportes.setEnabled(false);
+			//menuReportes.setEnabled(false);
 		}
 		if (!Clinica.getInstance().getUsuarioLogueado().getRolUsuario().equalsIgnoreCase("Administrador")) {
 			
-			menuGerencia.setEnabled(false);
+			//menuGerencia.setEnabled(false);
 		}
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
@@ -395,10 +376,10 @@ public class VentanaPrincipal extends JFrame {
         KGradientPanel gradientPanel = new KGradientPanel();
         gradientPanel.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
         gradientPanel.setOpaque(false);
-        gradientPanel.setkEndColor(new Color(0, 0, 255));
-        gradientPanel.kEndColor = new Color(0, 0, 255);
-        gradientPanel.kStartColor = new Color(255, 0, 255);
-        gradientPanel.setkStartColor(new Color(255, 0, 255));
+        gradientPanel.setkEndColor(new Color(255, 255, 255));
+        gradientPanel.kEndColor = new Color(51, 255, 153);
+        gradientPanel.kStartColor = new Color(19, 58, 113);
+        gradientPanel.setkStartColor(new Color(102, 153, 255));
         gradientPanel.setBounds(0, 0, (int)(459*widthRatio), (int)(993*heightRatio));
         contentPane.add(gradientPanel);
         gradientPanel.setLayout(null);
@@ -409,163 +390,6 @@ public class VentanaPrincipal extends JFrame {
         contentPane.add(panelFondo);
         panelFondo.setLayout(null);
         
-        Panel panel_1 = new Panel();
-        panel_1.setBounds((int)(943*widthRatio), (int)(457*heightRatio), (int)(345*widthRatio), (int)(417*heightRatio));
-        panelFondo.add(panel_1);
-        
-        menuDatosMedicos = new JMenu("Datos M\u00E9dicos");
-        panel_1.add(menuDatosMedicos);
-        menuDatosMedicos.setFont(new Font("Segoe UI", Font.PLAIN, (int)(30*heightRatio)));
-        menuDatosMedicos.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/10295499861529659195-48.png")));
-        
-        mntmNewMenuItem = new JMenuItem("Enfermedades");
-        mntmNewMenuItem.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		
-        		MostrarEnfermedad mostEnfermedad = new MostrarEnfermedad(null);
-        		mostEnfermedad.setModal(true);
-        		mostEnfermedad.setVisible(true);
-        	}
-        });
-        menuDatosMedicos.add(mntmNewMenuItem);
-        
-        menuItemVacunas = new JMenuItem("Vacunas");
-        menuItemVacunas.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		
-        		MostrarVacuna mostrarVacunas = new MostrarVacuna(null);
-        		mostrarVacunas.setModal(true);
-        		mostrarVacunas.setVisible(true);
-        	}
-        });
-        menuDatosMedicos.add(menuItemVacunas);
-        
-        menuCitas = new JMenu("Citas");
-        panel_1.add(menuCitas);
-        menuCitas.setFont(new Font("Segoe UI", Font.PLAIN, (int)(30*heightRatio)));
-        menuCitas.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/9766375281691835297-48.png")));
-        
-        menuItemAgendarCita = new JMenuItem("Agendar Cita");
-        menuItemAgendarCita.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		
-        		RegCita registrarCita = new RegCita(null);
-        		registrarCita.setModal(true);
-        		registrarCita.setVisible(true);
-        	}
-        });
-        menuCitas.add(menuItemAgendarCita);
-        
-        menuItemMostrarCitas = new JMenuItem("Listado de Citas");
-        menuItemMostrarCitas.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		
-        		MostrarCita mostrarCitasClinica = null;
-        		
-        		if (Clinica.getInstance().getUsuarioLogueado().getRolUsuario().equalsIgnoreCase("Médico")) {
-        			
-        			Medico medicoLogueado = Clinica.getInstance().buscarMedicoByCedula(Clinica.getInstance().getUsuarioLogueado().getCedula());
-        			
-        			mostrarCitasClinica = new MostrarCita(Clinica.getInstance().citasPendientesByCodeMedico(medicoLogueado.getCodeMedico()));
-        		}
-        		else {
-        			
-        			mostrarCitasClinica = new MostrarCita(null);
-        		}
-
-        		mostrarCitasClinica.setModal(true);
-        		mostrarCitasClinica.setVisible(true);
-        	}
-        });
-        menuCitas.add(menuItemMostrarCitas);
-        
-        menuReportes = new JMenu("Reportes");
-        panel_1.add(menuReportes);
-        menuReportes.setFont(new Font("Segoe UI", Font.PLAIN, (int)(30*heightRatio)));
-        menuReportes.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/12663137361594941313-48.png")));
-        
-        mntmNewMenuItem_1 = new JMenuItem("Abrir Reportes");
-        mntmNewMenuItem_1.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		GenerarReporte nuevoReporte = new GenerarReporte();
-        		nuevoReporte.setModal(true);
-        		nuevoReporte.setVisible(true);
-        	}
-        });
-        menuReportes.add(mntmNewMenuItem_1);
-        
-        menuGerencia = new JMenu("Gerencia");
-        panel_1.add(menuGerencia);
-        menuGerencia.setFont(new Font("Segoe UI", Font.PLAIN, (int)(30*heightRatio)));
-        menuGerencia.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/8648519161659819449-48.png")));
-        
-        menuItemUsuarios = new JMenu("Usuarios");
-        menuGerencia.add(menuItemUsuarios);
-        
-        menuCrearUsuario = new JMenu("Crear Usuario");
-        menuItemUsuarios.add(menuCrearUsuario);
-        
-        menuItemMedico = new JMenuItem("M\u00E9dico");
-        menuItemMedico.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		
-        		MostrarMedico mostrarMedicoParaCrearUser = new MostrarMedico(null, true, false);
-        		mostrarMedicoParaCrearUser.setModal(true);
-        		mostrarMedicoParaCrearUser.setVisible(true);
-        		
-        	}
-        });
-        menuCrearUsuario.add(menuItemMedico);
-        
-        menuItemSecretario = new JMenuItem("Secretario");
-        menuItemSecretario.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		
-        		RegUsuario registrarUsuario = new RegUsuario(null, null, false);
-        		registrarUsuario.setModal(true);
-        		registrarUsuario.setVisible(true);
-        		
-        	}
-        });
-        menuCrearUsuario.add(menuItemSecretario);
-        
-        menuItemListaUsuarios = new JMenuItem("Listado de Usuarios");
-        menuItemListaUsuarios.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		
-        		MostrarUsuario mostrarUsuarios = new MostrarUsuario(null);
-        		mostrarUsuarios.setModal(true);
-        		mostrarUsuarios.setVisible(true);
-        	}
-        });
-        menuItemUsuarios.add(menuItemListaUsuarios);
-        menuRecursosHumanos = new JMenu("Recursos Humanos");
-        panel_1.add(menuRecursosHumanos);
-        menuRecursosHumanos.setFont(new Font("Segoe UI", Font.PLAIN, (int)(30*heightRatio)));
-        menuRecursosHumanos.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/14102962671595341166-48.png")));
-        
-        mntmNewMenuItem_2 = new JMenuItem("M\u00E9dicos");
-        mntmNewMenuItem_2.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		
-        		MostrarMedico mostrarMedicos = new MostrarMedico(null, false, false);
-        		mostrarMedicos.setModal(true);
-        		mostrarMedicos.setVisible(true);
-        	}
-        });
-        menuRecursosHumanos.add(mntmNewMenuItem_2);
-        
-        mntmNewMenuItem_3 = new JMenuItem("Pacientes");
-        mntmNewMenuItem_3.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		
-        		MostrarPaciente mostrarPacientes = new MostrarPaciente(null);
-        		mostrarPacientes.setModal(true);
-        		mostrarPacientes.setVisible(true);
-        	}
-        });
-        menuRecursosHumanos.add(mntmNewMenuItem_3);
-        
         roundedPanelPersona = new RoundedPanel();
         roundedPanelPersona.setBorder(new CompoundBorder());
         roundedPanelPersona.setLayout(null);
@@ -574,10 +398,10 @@ public class VentanaPrincipal extends JFrame {
         roundedPanelPersona.setRoundBottomRight(35);
         roundedPanelPersona.setRoundBottomLeft(35);
         roundedPanelPersona.setBackground(new Color(81, 137, 252));
-        roundedPanelPersona.setBounds((int)(167*widthRatio), (int)(72*heightRatio), (int)(345*widthRatio), (int)(353*heightRatio));
+        roundedPanelPersona.setBounds((int)(286*widthRatio), (int)(72*heightRatio), (int)(345*widthRatio), (int)(353*heightRatio));
         panelFondo.add(roundedPanelPersona);
         
-        lblPersona = new JLabel("PERSONA");
+        lblPersona = new JLabel("PERSONAS");
         lblPersona.setForeground(new Color(255, 255, 255));
         lblPersona.setFont(new Font("Yu Gothic UI", Font.BOLD, 25));
         lblPersona.addMouseListener(new MouseAdapter() {
@@ -603,10 +427,12 @@ public class VentanaPrincipal extends JFrame {
         roundedPanelMedico.setRoundBottomRight(35);
         roundedPanelMedico.setRoundBottomLeft(35);
         roundedPanelMedico.setBackground(new Color(81, 137, 252));
-        roundedPanelMedico.setBounds((int)(553*widthRatio), (int)(72*heightRatio), (int)(345*widthRatio), (int)(353*heightRatio));
+        roundedPanelMedico.setBounds((int)(800*widthRatio), (int)(72*heightRatio), (int)(345*widthRatio), (int)(353*heightRatio));
         panelFondo.add(roundedPanelMedico);
         
-        lblMedico = new JLabel("");
+        lblMedico = new JLabel("M\u00C9DICOS");
+        lblMedico.setForeground(new Color(255, 255, 255));
+        lblMedico.setFont(new Font("Yu Gothic UI", Font.BOLD, 25));
         lblMedico.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
@@ -630,10 +456,12 @@ public class VentanaPrincipal extends JFrame {
         roundedPanelEnfermedad.setRoundBottomRight(35);
         roundedPanelEnfermedad.setRoundBottomLeft(35);
         roundedPanelEnfermedad.setBackground(new Color(81, 137, 252));
-        roundedPanelEnfermedad.setBounds((int)(167*widthRatio), (int)(457*heightRatio), (int)(345*widthRatio), (int)(353*heightRatio));
+        roundedPanelEnfermedad.setBounds((int)(286*widthRatio), (int)(457*heightRatio), (int)(345*widthRatio), (int)(353*heightRatio));
         panelFondo.add(roundedPanelEnfermedad);
         
-        lblEnfermedad = new JLabel("");
+        lblEnfermedad = new JLabel("ENFERMEDADES");
+        lblEnfermedad.setForeground(new Color(255, 255, 255));
+        lblEnfermedad.setFont(new Font("Yu Gothic UI", Font.BOLD, 25));
         lblEnfermedad.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
@@ -657,10 +485,12 @@ public class VentanaPrincipal extends JFrame {
         roundedPanelVacuna.setRoundBottomRight(35);
         roundedPanelVacuna.setRoundBottomLeft(35);
         roundedPanelVacuna.setBackground(new Color(81, 137, 252));
-        roundedPanelVacuna.setBounds((int)(553*widthRatio), (int)(457*heightRatio), (int)(345*widthRatio), (int)(353*heightRatio));
+        roundedPanelVacuna.setBounds((int)(800*widthRatio), (int)(457*heightRatio), (int)(345*widthRatio), (int)(353*heightRatio));
         panelFondo.add(roundedPanelVacuna);
         
-        lblVacuna = new JLabel("");
+        lblVacuna = new JLabel("VACUNAS");
+        lblVacuna.setForeground(new Color(255, 255, 255));
+        lblVacuna.setFont(new Font("Yu Gothic UI", Font.BOLD, 25));
         lblVacuna.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
@@ -675,25 +505,6 @@ public class VentanaPrincipal extends JFrame {
         lblVacuna.setHorizontalAlignment(SwingConstants.CENTER);
         lblVacuna.setBounds(0, 0, (int)(345*widthRatio), (int)(353*heightRatio));
         roundedPanelVacuna.add(lblVacuna);
-        
-        roundedPanelSintoma = new RoundedPanel();
-        roundedPanelSintoma.setBorder(new CompoundBorder());
-        roundedPanelSintoma.setLayout(null);
-        roundedPanelSintoma.setRoundTopRight(35);
-        roundedPanelSintoma.setRoundTopLeft(35);
-        roundedPanelSintoma.setRoundBottomRight(35);
-        roundedPanelSintoma.setRoundBottomLeft(35);
-        roundedPanelSintoma.setBackground(new Color(81, 137, 252));
-        roundedPanelSintoma.setBounds((int)(943*widthRatio), (int)(72*heightRatio), (int)(345*widthRatio), (int)(353*heightRatio));
-        panelFondo.add(roundedPanelSintoma);
-        
-        lblSintoma = new JLabel("");
-        lblSintoma.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/icons8-fever-64_1_optimized.png")));
-        lblSintoma.setVerticalTextPosition(SwingConstants.BOTTOM);
-        lblSintoma.setHorizontalTextPosition(SwingConstants.CENTER);
-        lblSintoma.setHorizontalAlignment(SwingConstants.CENTER);
-        lblSintoma.setBounds(0, 0, (int)(345*widthRatio), (int)(353*heightRatio));
-        roundedPanelSintoma.add(lblSintoma);
         
         panelFondo2 = new JPanel();
         panelFondo2.setBackground(new Color(255, 255, 255));
