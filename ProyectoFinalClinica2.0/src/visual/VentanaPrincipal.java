@@ -151,9 +151,13 @@ public class VentanaPrincipal extends JFrame {
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(VentanaPrincipal.class.getResource("/Imagenes/iconLogoHoms.png")));
 		dim = getToolkit().getScreenSize();
+		int screenWidthOriginal = 1920;
+		int screenHeightOriginal = 1080;
+		double widthRatio = (double) dim.width / screenWidthOriginal;
+		double heightRatio = (double) dim.height / screenHeightOriginal;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
-		setSize(dim.width,dim.height-40);
+		setBounds(100, 100, (int)(450*widthRatio), (int)(300*heightRatio));
+		setSize((int)(1920*widthRatio),(int)(1040*heightRatio));
 		setLocationRelativeTo(null);
 		
 		if (Clinica.getInstance().getUsuarioLogueado().getRolUsuario().equalsIgnoreCase("Secretario") ||
@@ -190,47 +194,40 @@ public class VentanaPrincipal extends JFrame {
 		
 		JPanel panelTiempoSesion = new JPanel();
 		panelTiempoSesion.setBorder(new CompoundBorder());
-		panelTiempoSesion.setBounds(492, 920, 1381, 46);
+		panelTiempoSesion.setBounds((int)(492*widthRatio), (int)(920*heightRatio), (int)(1381*widthRatio), (int)(46*heightRatio));
 		contentPane.add(panelTiempoSesion);
 		panelTiempoSesion.setLayout(null);
 		
         JLabel lbl_Tiempo = new JLabel();
         lbl_Tiempo.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
-        lbl_Tiempo.setBounds(1650, 7, 130, 33);
+        lbl_Tiempo.setBounds((int)(1230*widthRatio), (int)(7*heightRatio), (int)(130*widthRatio), (int)(33*heightRatio));
+        
         
                 panelTiempoSesion.add(lbl_Tiempo);
                 
                 JLabel lblNewLabel_1 = new JLabel(Clinica.getInstance().getUsuarioLogueado().getNombreUsuario());
-                lblNewLabel_1.setFont(new Font("Gill Sans MT", Font.PLAIN, 25));
-                lblNewLabel_1.setBounds(33, 7, 130, 33);
+                lblNewLabel_1.setFont(new Font("Gill Sans MT", Font.PLAIN, (int)(25*widthRatio)));
+                lblNewLabel_1.setBounds((int)(33*widthRatio), (int)(7*heightRatio), (int)(130*widthRatio), (int)(33*heightRatio));
                 panelTiempoSesion.add(lblNewLabel_1);
         
         lblRegistro = new JLabel("REGISTRO");
         lblRegistro.addMouseListener(new MouseAdapter() {
         	@Override
-        	public void mouseEntered(MouseEvent e) {
+        	public void mouseClicked(MouseEvent e) {
         		panelRegistro.setVisible(true);
         		panelCita.setVisible(false);
         		panelReporte.setVisible(false);
         		panelGerencia.setVisible(false);
         		panelCerrarSesion.setVisible(false);
-        		panelRegistro.setBackground(new Color(238, 236, 240));
+        		panelRegistro.setBackground(new Color(81, 137, 252));
         		panelFondo.setVisible(true);
         		panelFondo2.setVisible(false);
         		panelFondo3.setVisible(false);
         		panelFondo4.setVisible(false);
         	}
-        	@Override
-        	public void mouseExited(MouseEvent e) {
-        		panelRegistro.setVisible(false);
-        		panelCita.setVisible(false);
-        		panelReporte.setVisible(false);
-        		panelGerencia.setVisible(false);
-        		panelCerrarSesion.setVisible(false);
-        	}
         });
         lblRegistro.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/icons8-register-64.png")));
-        lblRegistro.setSize(459, 196);
+        lblRegistro.setSize((int)(459*widthRatio), (int)(196*heightRatio));
         lblRegistro.setVerticalTextPosition(SwingConstants.BOTTOM);
         lblRegistro.setPreferredSize(new Dimension(65, 25));
         lblRegistro.setLocation(new Point(0, 0));
@@ -243,7 +240,7 @@ public class VentanaPrincipal extends JFrame {
         
         panelRegistro = new JPanel();
         panelRegistro.setBorder(new CompoundBorder());
-        panelRegistro.setBounds(0, 0, 459, 196);
+        panelRegistro.setBounds(0, 0, (int)(459*widthRatio), (int)(196*heightRatio));
         contentPane.add(panelRegistro);
         panelRegistro.setBackground(new Color(255, 255, 255, 0));
         panelRegistro.setLayout(null);
@@ -252,28 +249,20 @@ public class VentanaPrincipal extends JFrame {
         lblCita = new JLabel("CITAS");
         lblCita.addMouseListener(new MouseAdapter() {
         	@Override
-        	public void mouseEntered(MouseEvent e) {
+        	public void mouseClicked(MouseEvent e) {
         		panelRegistro.setVisible(false);
         		panelCita.setVisible(true);
         		panelReporte.setVisible(false);
         		panelGerencia.setVisible(false);
         		panelCerrarSesion.setVisible(false);
-        		panelCita.setBackground(new Color(238, 236, 240));
+        		panelCita.setBackground(new Color(81, 137, 252));
         		panelFondo.setVisible(false);
         		panelFondo2.setVisible(true);
         		panelFondo3.setVisible(false);
         		panelFondo4.setVisible(false);
         	}
-        	@Override
-        	public void mouseExited(MouseEvent e) {
-        		panelRegistro.setVisible(false);
-        		panelCita.setVisible(false);
-        		panelReporte.setVisible(false);
-        		panelGerencia.setVisible(false);
-        		panelCerrarSesion.setVisible(false);
-        	}
         });
-        lblCita.setBounds(0, 198, 459, 196);
+        lblCita.setBounds(0, (int)(198*heightRatio), (int)(459*widthRatio), (int)(196*heightRatio));
         contentPane.add(lblCita);
         lblCita.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/icons8-appointment-64.png")));
         lblCita.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -286,35 +275,27 @@ public class VentanaPrincipal extends JFrame {
         
         panelCita = new JPanel();
         panelCita.setBorder(new CompoundBorder());
-        panelCita.setBounds(0, 198, 459, 196);
+        panelCita.setBounds(0, (int)(198*heightRatio), (int)(459*widthRatio), (int)(196*heightRatio));
         panelCita.setBackground(new Color(255, 255, 255, 0));
         contentPane.add(panelCita);
         contentPane.setLayout(null);
         
         lblReporte = new JLabel("REPORTES");
-        lblReporte.setBounds(0, 397, 459, 196);
+        lblReporte.setBounds(0, (int)(397*heightRatio), (int)(459*widthRatio), (int)(196*heightRatio));
         contentPane.add(lblReporte);
         lblReporte.addMouseListener(new MouseAdapter() {
         	@Override
-        	public void mouseEntered(MouseEvent e) {
+        	public void mouseClicked(MouseEvent e) {
         		panelRegistro.setVisible(false);
         		panelCita.setVisible(false);
         		panelReporte.setVisible(true);
         		panelGerencia.setVisible(false);
         		panelCerrarSesion.setVisible(false);
-        		panelReporte.setBackground(new Color(238, 236, 240));
+        		panelReporte.setBackground(new Color(81, 137, 252));
         		panelFondo.setVisible(false);
         		panelFondo2.setVisible(false);
         		panelFondo3.setVisible(true);
         		panelFondo4.setVisible(false);
-        	}
-        	@Override
-        	public void mouseExited(MouseEvent e) {
-        		panelRegistro.setVisible(false);
-        		panelCita.setVisible(false);
-        		panelReporte.setVisible(false);
-        		panelGerencia.setVisible(false);
-        		panelCerrarSesion.setVisible(false);
         	}
         });
         lblReporte.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/icons8-report-70.png")));
@@ -329,35 +310,27 @@ public class VentanaPrincipal extends JFrame {
         panelReporte = new JPanel();
         panelReporte.setBorder(new CompoundBorder());
         panelReporte.setForeground(new Color(0, 0, 0));
-        panelReporte.setBounds(0, 397, 459, 196);
+        panelReporte.setBounds(0, (int)(397*heightRatio), (int)(459*widthRatio), (int)(196*heightRatio));
         panelReporte.setBackground(new Color(255, 255, 255, 0));
         contentPane.add(panelReporte);
         panelReporte.setLayout(null);
         
 	                lblGerencia = new JLabel("GERENCIA");
-	                lblGerencia.setBounds(0, 596, 459, 196);
+	                lblGerencia.setBounds(0, (int)(596*heightRatio), (int)(459*widthRatio), (int)(196*heightRatio));
 	                contentPane.add(lblGerencia);
 	                lblGerencia.addMouseListener(new MouseAdapter() {
 	                	@Override
-	                	public void mouseEntered(MouseEvent e) {
+	                	public void mouseClicked(MouseEvent e) {
 	                		panelRegistro.setVisible(false);
 	                		panelCita.setVisible(false);
 	                		panelReporte.setVisible(false);
 	                		panelGerencia.setVisible(true);
 	                		panelCerrarSesion.setVisible(false);
-	                		panelGerencia.setBackground(new Color(238, 236, 240));
+	                		panelGerencia.setBackground(new Color(81, 137, 252));
 	                		panelFondo.setVisible(false);
 	                		panelFondo2.setVisible(false);
 	                		panelFondo3.setVisible(false);
 	                		panelFondo4.setVisible(true);
-	                	}
-	                	@Override
-	                	public void mouseExited(MouseEvent e) {
-	                		panelRegistro.setVisible(false);
-	                		panelCita.setVisible(false);
-	                		panelReporte.setVisible(false);
-	                		panelGerencia.setVisible(false);
-	                		panelCerrarSesion.setVisible(false);
 	                	}
 	                });
 	                lblGerencia.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/icons8-manager-70.png")));
@@ -371,31 +344,23 @@ public class VentanaPrincipal extends JFrame {
         
         panelGerencia = new JPanel();
         panelGerencia.setBorder(new CompoundBorder());
-        panelGerencia.setBounds(0, 596, 459, 196);
+        panelGerencia.setBounds(0, (int)(596*heightRatio), (int)(459*widthRatio), (int)(196*heightRatio));
         panelGerencia.setBackground(new Color(255, 255, 255, 0));
         contentPane.add(panelGerencia);
         panelGerencia.setLayout(null);
         
         lblCerrarSesion = new JLabel("CERRAR SESI\u00D3N");
-        lblCerrarSesion.setBounds(0, 797, 459, 196);
+        lblCerrarSesion.setBounds(0, (int)(797*heightRatio), (int)(459*widthRatio), (int)(196*heightRatio));
         contentPane.add(lblCerrarSesion);
         lblCerrarSesion.addMouseListener(new MouseAdapter() {
         	@Override
-        	public void mouseEntered(MouseEvent e) {
+        	public void mouseClicked(MouseEvent e) {
         		panelRegistro.setVisible(false);
         		panelCita.setVisible(false);
         		panelReporte.setVisible(false);
         		panelGerencia.setVisible(false);
         		panelCerrarSesion.setVisible(true);
-        		panelCerrarSesion.setBackground(new Color(238, 236, 240));
-        	}
-        	@Override
-        	public void mouseExited(MouseEvent e) {
-        		panelRegistro.setVisible(false);
-        		panelCita.setVisible(false);
-        		panelReporte.setVisible(false);
-        		panelGerencia.setVisible(false);
-        		panelCerrarSesion.setVisible(false);
+        		panelCerrarSesion.setBackground(new Color(81, 137, 252));
         	}
         });
         lblCerrarSesion.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/icons8-log-out-70.png")));
@@ -410,7 +375,7 @@ public class VentanaPrincipal extends JFrame {
         panelCerrarSesion = new JPanel();
         panelCerrarSesion.setBorder(new CompoundBorder());
 
-        panelCerrarSesion.setBounds(0, 797, 459, 196);
+        panelCerrarSesion.setBounds(0, (int)(797*heightRatio), (int)(459*widthRatio), (int)(196*heightRatio));
         panelCerrarSesion.setBackground(new Color(255, 255, 255, 0));
         contentPane.add(panelCerrarSesion);
         panelCerrarSesion.setLayout(null);
@@ -422,23 +387,23 @@ public class VentanaPrincipal extends JFrame {
         gradientPanel.kEndColor = new Color(0, 0, 255);
         gradientPanel.kStartColor = new Color(255, 0, 255);
         gradientPanel.setkStartColor(new Color(255, 0, 255));
-        gradientPanel.setBounds(0, 0, 459, 993);
+        gradientPanel.setBounds(0, 0, (int)(459*widthRatio), (int)(993*heightRatio));
         contentPane.add(gradientPanel);
         gradientPanel.setLayout(null);
         
         panelFondo = new JPanel();
         panelFondo.setBackground(new Color(255, 255, 255));
-        panelFondo.setBounds(458, 0, 1444, 993);
+        panelFondo.setBounds((int)(458*widthRatio), 0, (int)(1444*widthRatio), (int)(993*heightRatio));
         contentPane.add(panelFondo);
         panelFondo.setLayout(null);
         
         Panel panel_1 = new Panel();
-        panel_1.setBounds(943, 457, 295, 417);
+        panel_1.setBounds((int)(943*widthRatio), (int)(457*heightRatio), (int)(345*widthRatio), (int)(417*heightRatio));
         panelFondo.add(panel_1);
         
         menuDatosMedicos = new JMenu("Datos M\u00E9dicos");
         panel_1.add(menuDatosMedicos);
-        menuDatosMedicos.setFont(new Font("Segoe UI", Font.PLAIN, 30));
+        menuDatosMedicos.setFont(new Font("Segoe UI", Font.PLAIN, (int)(30*heightRatio)));
         menuDatosMedicos.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/10295499861529659195-48.png")));
         
         mntmNewMenuItem = new JMenuItem("Enfermedades");
@@ -465,7 +430,7 @@ public class VentanaPrincipal extends JFrame {
         
         menuCitas = new JMenu("Citas");
         panel_1.add(menuCitas);
-        menuCitas.setFont(new Font("Segoe UI", Font.PLAIN, 30));
+        menuCitas.setFont(new Font("Segoe UI", Font.PLAIN, (int)(30*heightRatio)));
         menuCitas.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/9766375281691835297-48.png")));
         
         menuItemAgendarCita = new JMenuItem("Agendar Cita");
@@ -504,7 +469,7 @@ public class VentanaPrincipal extends JFrame {
         
         menuReportes = new JMenu("Reportes");
         panel_1.add(menuReportes);
-        menuReportes.setFont(new Font("Segoe UI", Font.PLAIN, 30));
+        menuReportes.setFont(new Font("Segoe UI", Font.PLAIN, (int)(30*heightRatio)));
         menuReportes.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/12663137361594941313-48.png")));
         
         mntmNewMenuItem_1 = new JMenuItem("Abrir Reportes");
@@ -519,7 +484,7 @@ public class VentanaPrincipal extends JFrame {
         
         menuGerencia = new JMenu("Gerencia");
         panel_1.add(menuGerencia);
-        menuGerencia.setFont(new Font("Segoe UI", Font.PLAIN, 30));
+        menuGerencia.setFont(new Font("Segoe UI", Font.PLAIN, (int)(30*heightRatio)));
         menuGerencia.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/8648519161659819449-48.png")));
         
         menuItemUsuarios = new JMenu("Usuarios");
@@ -564,7 +529,7 @@ public class VentanaPrincipal extends JFrame {
         menuItemUsuarios.add(menuItemListaUsuarios);
         menuRecursosHumanos = new JMenu("Recursos Humanos");
         panel_1.add(menuRecursosHumanos);
-        menuRecursosHumanos.setFont(new Font("Segoe UI", Font.PLAIN, 30));
+        menuRecursosHumanos.setFont(new Font("Segoe UI", Font.PLAIN, (int)(30*heightRatio)));
         menuRecursosHumanos.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/14102962671595341166-48.png")));
         
         mntmNewMenuItem_2 = new JMenuItem("M\u00E9dicos");
@@ -597,7 +562,7 @@ public class VentanaPrincipal extends JFrame {
         roundedPanelPersona.setRoundBottomRight(35);
         roundedPanelPersona.setRoundBottomLeft(35);
         roundedPanelPersona.setBackground(new Color(81, 137, 252));
-        roundedPanelPersona.setBounds(167, 72, 345, 353);
+        roundedPanelPersona.setBounds((int)(167*widthRatio), (int)(72*heightRatio), (int)(345*widthRatio), (int)(353*heightRatio));
         panelFondo.add(roundedPanelPersona);
         
         lblPersona = new JLabel("PERSONA");
@@ -615,7 +580,7 @@ public class VentanaPrincipal extends JFrame {
         lblPersona.setVerticalTextPosition(SwingConstants.BOTTOM);
         lblPersona.setHorizontalTextPosition(SwingConstants.CENTER);
         lblPersona.setHorizontalAlignment(SwingConstants.CENTER);
-        lblPersona.setBounds(0, 0, 345, 353);
+        lblPersona.setBounds(0, 0, (int)(345*widthRatio), (int)(353*heightRatio));
         roundedPanelPersona.add(lblPersona);
         
         roundedPanelMedico = new RoundedPanel();
@@ -626,7 +591,7 @@ public class VentanaPrincipal extends JFrame {
         roundedPanelMedico.setRoundBottomRight(35);
         roundedPanelMedico.setRoundBottomLeft(35);
         roundedPanelMedico.setBackground(new Color(81, 137, 252));
-        roundedPanelMedico.setBounds(553, 72, 345, 353);
+        roundedPanelMedico.setBounds((int)(553*widthRatio), (int)(72*heightRatio), (int)(345*widthRatio), (int)(353*heightRatio));
         panelFondo.add(roundedPanelMedico);
         
         lblMedico = new JLabel("");
@@ -642,7 +607,7 @@ public class VentanaPrincipal extends JFrame {
         lblMedico.setHorizontalAlignment(SwingConstants.CENTER);
         lblMedico.setVerticalTextPosition(SwingConstants.BOTTOM);
         lblMedico.setHorizontalTextPosition(SwingConstants.CENTER);
-        lblMedico.setBounds(0, 0, 345, 353);
+        lblMedico.setBounds(0, 0, (int)(345*widthRatio), (int)(353*heightRatio));
         roundedPanelMedico.add(lblMedico);
         
         roundedPanelEnfermedad = new RoundedPanel();
@@ -653,7 +618,7 @@ public class VentanaPrincipal extends JFrame {
         roundedPanelEnfermedad.setRoundBottomRight(35);
         roundedPanelEnfermedad.setRoundBottomLeft(35);
         roundedPanelEnfermedad.setBackground(new Color(81, 137, 252));
-        roundedPanelEnfermedad.setBounds(167, 457, 345, 353);
+        roundedPanelEnfermedad.setBounds((int)(167*widthRatio), (int)(457*heightRatio), (int)(345*widthRatio), (int)(353*heightRatio));
         panelFondo.add(roundedPanelEnfermedad);
         
         lblEnfermedad = new JLabel("");
@@ -669,7 +634,7 @@ public class VentanaPrincipal extends JFrame {
         lblEnfermedad.setVerticalTextPosition(SwingConstants.BOTTOM);
         lblEnfermedad.setHorizontalTextPosition(SwingConstants.CENTER);
         lblEnfermedad.setHorizontalAlignment(SwingConstants.CENTER);
-        lblEnfermedad.setBounds(0, 0, 345, 353);
+        lblEnfermedad.setBounds(0, 0, (int)(345*widthRatio), (int)(353*heightRatio));
         roundedPanelEnfermedad.add(lblEnfermedad);
         
         roundedPanelVacuna = new RoundedPanel();
@@ -680,7 +645,7 @@ public class VentanaPrincipal extends JFrame {
         roundedPanelVacuna.setRoundBottomRight(35);
         roundedPanelVacuna.setRoundBottomLeft(35);
         roundedPanelVacuna.setBackground(new Color(81, 137, 252));
-        roundedPanelVacuna.setBounds(553, 457, 345, 353);
+        roundedPanelVacuna.setBounds((int)(553*widthRatio), (int)(457*heightRatio), (int)(345*widthRatio), (int)(353*heightRatio));
         panelFondo.add(roundedPanelVacuna);
         
         lblVacuna = new JLabel("");
@@ -696,7 +661,7 @@ public class VentanaPrincipal extends JFrame {
         lblVacuna.setVerticalTextPosition(SwingConstants.BOTTOM);
         lblVacuna.setHorizontalTextPosition(SwingConstants.CENTER);
         lblVacuna.setHorizontalAlignment(SwingConstants.CENTER);
-        lblVacuna.setBounds(0, 0, 345, 353);
+        lblVacuna.setBounds(0, 0, (int)(345*widthRatio), (int)(353*heightRatio));
         roundedPanelVacuna.add(lblVacuna);
         
         roundedPanelSintoma = new RoundedPanel();
@@ -707,7 +672,7 @@ public class VentanaPrincipal extends JFrame {
         roundedPanelSintoma.setRoundBottomRight(35);
         roundedPanelSintoma.setRoundBottomLeft(35);
         roundedPanelSintoma.setBackground(new Color(81, 137, 252));
-        roundedPanelSintoma.setBounds(943, 72, 345, 353);
+        roundedPanelSintoma.setBounds((int)(943*widthRatio), (int)(72*heightRatio), (int)(345*widthRatio), (int)(353*heightRatio));
         panelFondo.add(roundedPanelSintoma);
         
         lblSintoma = new JLabel("");
@@ -715,12 +680,12 @@ public class VentanaPrincipal extends JFrame {
         lblSintoma.setVerticalTextPosition(SwingConstants.BOTTOM);
         lblSintoma.setHorizontalTextPosition(SwingConstants.CENTER);
         lblSintoma.setHorizontalAlignment(SwingConstants.CENTER);
-        lblSintoma.setBounds(0, 0, 345, 353);
+        lblSintoma.setBounds(0, 0, (int)(345*widthRatio), (int)(353*heightRatio));
         roundedPanelSintoma.add(lblSintoma);
         
         panelFondo2 = new JPanel();
         panelFondo2.setBackground(new Color(255, 255, 255));
-        panelFondo2.setBounds(458, 0, 1444, 993);
+        panelFondo2.setBounds((int)(458*widthRatio), (int)(0*heightRatio), (int)(1444*widthRatio), (int)(993*heightRatio));
         contentPane.add(panelFondo2);
         panelFondo2.setLayout(null);
         
@@ -732,7 +697,7 @@ public class VentanaPrincipal extends JFrame {
         roundedAgendarCita.setRoundBottomLeft(35);
         roundedAgendarCita.setBorder(new CompoundBorder());
         roundedAgendarCita.setBackground(new Color(255, 222, 173));
-        roundedAgendarCita.setBounds(167, 72, 345, 353);
+        roundedAgendarCita.setBounds((int)(167*widthRatio), (int)(72*heightRatio), (int)(345*widthRatio), (int)(353*heightRatio));
         panelFondo2.add(roundedAgendarCita);
         
         lblAgendarCita = new JLabel("");
@@ -748,7 +713,7 @@ public class VentanaPrincipal extends JFrame {
         lblAgendarCita.setVerticalTextPosition(SwingConstants.BOTTOM);
         lblAgendarCita.setHorizontalTextPosition(SwingConstants.CENTER);
         lblAgendarCita.setHorizontalAlignment(SwingConstants.CENTER);
-        lblAgendarCita.setBounds(0, 0, 345, 353);
+        lblAgendarCita.setBounds(0, 0, (int)(345*widthRatio), (int)(353*heightRatio));
         roundedAgendarCita.add(lblAgendarCita);
         
         roundedListadoCita = new RoundedPanel();
@@ -759,7 +724,7 @@ public class VentanaPrincipal extends JFrame {
         roundedListadoCita.setRoundBottomLeft(35);
         roundedListadoCita.setBorder(new CompoundBorder());
         roundedListadoCita.setBackground(new Color(81, 137, 252));
-        roundedListadoCita.setBounds(553, 72, 345, 353);
+        roundedListadoCita.setBounds((int)(553*widthRatio), (int)(72*heightRatio), (int)(345*widthRatio), (int)(353*heightRatio));
         panelFondo2.add(roundedListadoCita);
         
         lblListadoCita = new JLabel("");
@@ -788,7 +753,7 @@ public class VentanaPrincipal extends JFrame {
         lblListadoCita.setVerticalTextPosition(SwingConstants.BOTTOM);
         lblListadoCita.setHorizontalTextPosition(SwingConstants.CENTER);
         lblListadoCita.setHorizontalAlignment(SwingConstants.CENTER);
-        lblListadoCita.setBounds(0, 0, 345, 353);
+        lblListadoCita.setBounds(0, 0, (int)(345*widthRatio), (int)(353*heightRatio));
         roundedListadoCita.add(lblListadoCita);
         
         panelFondo3 = new JPanel();
