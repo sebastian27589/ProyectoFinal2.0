@@ -1,20 +1,18 @@
 package visual;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 
-import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
-import javax.swing.border.TitledBorder;
 
 import logico.Clinica;
 import logico.RoundedPanel;
 import logico.Usuario;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import javax.swing.JTextField;
@@ -32,6 +30,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Date;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class VentanaLogin extends JDialog {
 
@@ -131,7 +131,6 @@ public class VentanaLogin extends JDialog {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		setLocationRelativeTo(null);
 		contentPanel.setLayout(null);
-		
 		JPanel panelContenedor = new JPanel();
 		panelContenedor.setBounds(0, 0, 814, 431);
 		contentPanel.add(panelContenedor);
@@ -255,6 +254,91 @@ public class VentanaLogin extends JDialog {
 		contenedorCampos.add(lblIconContrasena);
 		
 		RoundedPanel panelBotonLogin = new RoundedPanel();
+		txtUsuario.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+				String password;
+				
+				if (lblIconVerContra.isVisible()) {
+					
+					password = String.valueOf(passwordFieldLogin.getPassword());
+				}
+				else {
+					
+					password = txtContrasena.getText();
+				}
+				
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+    				if (Clinica.getInstance().permitirInicioSesion(txtUsuario.getText(), password)) {
+    					
+    					VentanaPrincipal ventanaPrincipal = new VentanaPrincipal();
+    					dispose();
+    					ventanaPrincipal.setVisible(true);
+    				}
+    				else {
+    					JOptionPane.showMessageDialog(null,"¡Usuario o Contraseña no válidos!", "Error", JOptionPane.ERROR_MESSAGE);
+    				}
+                }
+            }
+        });
+		
+		passwordFieldLogin.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+            	
+				String password;
+				
+				if (lblIconVerContra.isVisible()) {
+					
+					password = String.valueOf(passwordFieldLogin.getPassword());
+				}
+				else {
+					
+					password = txtContrasena.getText();
+				}
+            	
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+    				if (Clinica.getInstance().permitirInicioSesion(txtUsuario.getText(), password)) {
+    					
+    					VentanaPrincipal ventanaPrincipal = new VentanaPrincipal();
+    					dispose();
+    					ventanaPrincipal.setVisible(true);
+    				}
+    				else {
+    					JOptionPane.showMessageDialog(null,"¡Usuario o Contraseña no válidos!", "Error", JOptionPane.ERROR_MESSAGE);
+    				}
+                }
+            }
+        });
+		
+		txtContrasena.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+            	
+				String password;
+				
+				if (lblIconVerContra.isVisible()) {
+					
+					password = String.valueOf(passwordFieldLogin.getPassword());
+				}
+				else {
+					
+					password = txtContrasena.getText();
+				}
+            	
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+    				if (Clinica.getInstance().permitirInicioSesion(txtUsuario.getText(), password)) {
+    					
+    					VentanaPrincipal ventanaPrincipal = new VentanaPrincipal();
+    					dispose();
+    					ventanaPrincipal.setVisible(true);
+    				}
+    				else {
+    					JOptionPane.showMessageDialog(null,"¡Usuario o Contraseña no válidos!", "Error", JOptionPane.ERROR_MESSAGE);
+    				}
+                }
+            }
+        });
 		panelBotonLogin.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -270,8 +354,7 @@ public class VentanaLogin extends JDialog {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				
-				String usuario = txtUsuario.getText();
-				String password = String.valueOf(passwordFieldLogin.getPassword());
+				String password;
 				
 				if (lblIconVerContra.isVisible()) {
 					
@@ -282,16 +365,15 @@ public class VentanaLogin extends JDialog {
 					password = txtContrasena.getText();
 				}
 				
-				// [[BORRAR MÁS TARDE]]
-				System.out.println("Usuario: " + usuario + "\nContraseña: " + password);
-				
-				if (Clinica.getInstance().permitirInicioSesion(txtUsuario.getText(), String.valueOf(passwordFieldLogin.getPassword()))) {
+				if (Clinica.getInstance().permitirInicioSesion(txtUsuario.getText(), password)) {
 					
 					VentanaPrincipal ventanaPrincipal = new VentanaPrincipal();
 					dispose();
 					ventanaPrincipal.setVisible(true);
 				}
-				
+				else {
+					JOptionPane.showMessageDialog(null,"¡Usuario o Contraseña no válidos!", "Error", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 		panelBotonLogin.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));

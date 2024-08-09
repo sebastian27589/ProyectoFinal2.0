@@ -20,6 +20,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -361,6 +363,16 @@ public class VentanaPrincipal extends JFrame {
         		panelGerencia.setVisible(false);
         		panelCerrarSesion.setVisible(true);
         		panelCerrarSesion.setBackground(new Color(81, 137, 252));
+        		
+        		int Option = JOptionPane.showConfirmDialog(null, "¿Está seguro de que desea cerrar su sesión?", "Cerrar Sesión", JOptionPane.OK_CANCEL_OPTION);
+				
+        		if (Option == JOptionPane.OK_OPTION) {
+					VentanaLogin ventanaLogin = new VentanaLogin();
+					dispose();
+					ventanaLogin.setVisible(true);
+				}
+        		
+        		panelCerrarSesion.setVisible(false);
         	}
         });
         lblCerrarSesion.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/icons8-log-out-70.png")));
