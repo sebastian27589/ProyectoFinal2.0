@@ -519,11 +519,13 @@ public class VentanaPrincipal extends JFrame {
         roundedAgendarCita.setRoundBottomRight(35);
         roundedAgendarCita.setRoundBottomLeft(35);
         roundedAgendarCita.setBorder(new CompoundBorder());
-        roundedAgendarCita.setBackground(new Color(255, 222, 173));
-        roundedAgendarCita.setBounds((int)(167*widthRatio), (int)(72*heightRatio), (int)(345*widthRatio), (int)(353*heightRatio));
+        roundedAgendarCita.setBackground(new Color(81, 137, 252));
+        roundedAgendarCita.setBounds((int)(286*widthRatio), (int)(260*heightRatio), (int)(345*widthRatio), (int)(353*heightRatio));
         panelFondo2.add(roundedAgendarCita);
         
-        lblAgendarCita = new JLabel("");
+        lblAgendarCita = new JLabel("AGENDAR");
+        lblAgendarCita.setForeground(new Color(255, 255, 255));
+        lblAgendarCita.setFont(new Font("Yu Gothic UI", Font.BOLD, 25));
         lblAgendarCita.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
@@ -547,10 +549,12 @@ public class VentanaPrincipal extends JFrame {
         roundedListadoCita.setRoundBottomLeft(35);
         roundedListadoCita.setBorder(new CompoundBorder());
         roundedListadoCita.setBackground(new Color(81, 137, 252));
-        roundedListadoCita.setBounds((int)(553*widthRatio), (int)(72*heightRatio), (int)(345*widthRatio), (int)(353*heightRatio));
+        roundedListadoCita.setBounds((int)(800*widthRatio), (int)(260*heightRatio), (int)(345*widthRatio), (int)(353*heightRatio));
         panelFondo2.add(roundedListadoCita);
         
-        lblListadoCita = new JLabel("");
+        lblListadoCita = new JLabel("LISTAR");
+        lblListadoCita.setForeground(new Color(255, 255, 255));
+        lblListadoCita.setFont(new Font("Yu Gothic UI", Font.BOLD, 25));
         lblListadoCita.setBackground(new Color(255, 140, 0));
         lblListadoCita.addMouseListener(new MouseAdapter() {
         	@Override
