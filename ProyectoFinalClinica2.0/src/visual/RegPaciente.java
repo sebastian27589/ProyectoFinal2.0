@@ -94,7 +94,7 @@ public class RegPaciente extends JDialog {
 		}
 		
 		setResizable(false);
-		setBounds(100, 100, 793, 395);
+		setBounds(100, 100, 1276, 856);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(new Color(218, 221, 216));
@@ -105,7 +105,7 @@ public class RegPaciente extends JDialog {
 			JPanel panelContenedor1 = new JPanel();
 			panelContenedor1.setOpaque(false);
 			panelContenedor1.setBackground(new Color(218, 221, 216));
-			panelContenedor1.setBounds(0, 11, 787, 116);
+			panelContenedor1.setBounds(0, 11, 462, 414);
 			contentPanel.add(panelContenedor1);
 			panelContenedor1.setLayout(null);
 			
@@ -267,13 +267,13 @@ public class RegPaciente extends JDialog {
 		JPanel panelVerde = new JPanel();
 		panelVerde.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panelVerde.setBackground(new Color(107, 170, 117, 60));
-		panelVerde.setBounds(0, 21, 787, 112);
+		panelVerde.setBounds(472, 11, 456, 414);
 		contentPanel.add(panelVerde);
 		
 		JPanel panelGris = new JPanel();
 		panelGris.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panelGris.setBackground(new Color(105, 116, 124, 120));
-		panelGris.setBounds(0, 145, 787, 121);
+		panelGris.setBounds(86, 468, 787, 121);
 		contentPanel.add(panelGris);
 		panelGris.setLayout(null);
 		

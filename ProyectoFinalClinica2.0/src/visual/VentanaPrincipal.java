@@ -78,10 +78,6 @@ public class VentanaPrincipal extends JFrame {
 	private JPanel panelFondo3;
 	private JPanel panelFondo4;
 	private JPanel panelFondo;
-	private RoundedPanel roundedAgendarCita;
-	private JLabel lblAgendarCita;
-	private RoundedPanel roundedListadoCita;
-	private JLabel lblListadoCita;
 
 	/**
 	 * Launch the application.
@@ -103,6 +99,7 @@ public class VentanaPrincipal extends JFrame {
 	 * Create the frame.
 	 */
 	public VentanaPrincipal() {
+		setResizable(false);
 		
 		// Comentario de prueba
 		addWindowListener(new WindowAdapter() {
@@ -511,77 +508,6 @@ public class VentanaPrincipal extends JFrame {
         panelFondo2.setBounds((int)(458*widthRatio), (int)(0*heightRatio), (int)(1444*widthRatio), (int)(993*heightRatio));
         contentPane.add(panelFondo2);
         panelFondo2.setLayout(null);
-        
-        roundedAgendarCita = new RoundedPanel();
-        roundedAgendarCita.setLayout(null);
-        roundedAgendarCita.setRoundTopRight(35);
-        roundedAgendarCita.setRoundTopLeft(35);
-        roundedAgendarCita.setRoundBottomRight(35);
-        roundedAgendarCita.setRoundBottomLeft(35);
-        roundedAgendarCita.setBorder(new CompoundBorder());
-        roundedAgendarCita.setBackground(new Color(81, 137, 252));
-        roundedAgendarCita.setBounds((int)(286*widthRatio), (int)(260*heightRatio), (int)(345*widthRatio), (int)(353*heightRatio));
-        panelFondo2.add(roundedAgendarCita);
-        
-        lblAgendarCita = new JLabel("AGENDAR");
-        lblAgendarCita.setForeground(new Color(255, 255, 255));
-        lblAgendarCita.setFont(new Font("Yu Gothic UI", Font.BOLD, 25));
-        lblAgendarCita.addMouseListener(new MouseAdapter() {
-        	@Override
-        	public void mouseClicked(MouseEvent e) {
-        		RegCita registrarCita = new RegCita(null);
-        		registrarCita.setModal(true);
-        		registrarCita.setVisible(true);
-        	}
-        });
-        lblAgendarCita.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/icons8-appointment-100.png")));
-        lblAgendarCita.setVerticalTextPosition(SwingConstants.BOTTOM);
-        lblAgendarCita.setHorizontalTextPosition(SwingConstants.CENTER);
-        lblAgendarCita.setHorizontalAlignment(SwingConstants.CENTER);
-        lblAgendarCita.setBounds(0, 0, (int)(345*widthRatio), (int)(353*heightRatio));
-        roundedAgendarCita.add(lblAgendarCita);
-        
-        roundedListadoCita = new RoundedPanel();
-        roundedListadoCita.setLayout(null);
-        roundedListadoCita.setRoundTopRight(35);
-        roundedListadoCita.setRoundTopLeft(35);
-        roundedListadoCita.setRoundBottomRight(35);
-        roundedListadoCita.setRoundBottomLeft(35);
-        roundedListadoCita.setBorder(new CompoundBorder());
-        roundedListadoCita.setBackground(new Color(81, 137, 252));
-        roundedListadoCita.setBounds((int)(800*widthRatio), (int)(260*heightRatio), (int)(345*widthRatio), (int)(353*heightRatio));
-        panelFondo2.add(roundedListadoCita);
-        
-        lblListadoCita = new JLabel("LISTAR");
-        lblListadoCita.setForeground(new Color(255, 255, 255));
-        lblListadoCita.setFont(new Font("Yu Gothic UI", Font.BOLD, 25));
-        lblListadoCita.setBackground(new Color(255, 140, 0));
-        lblListadoCita.addMouseListener(new MouseAdapter() {
-        	@Override
-        	public void mouseClicked(MouseEvent e) {
-        		MostrarCita mostrarCitasClinica = null;
-        		
-        		if (Clinica.getInstance().getUsuarioLogueado().getRolUsuario().equalsIgnoreCase("Médico")) {
-        			
-        			Medico medicoLogueado = Clinica.getInstance().buscarMedicoByCedula(Clinica.getInstance().getUsuarioLogueado().getCedula());
-        			
-        			mostrarCitasClinica = new MostrarCita(Clinica.getInstance().citasPendientesByCodeMedico(medicoLogueado.getCodeMedico()));
-        		}
-        		else {
-        			
-        			mostrarCitasClinica = new MostrarCita(null);
-        		}
-
-        		mostrarCitasClinica.setModal(true);
-        		mostrarCitasClinica.setVisible(true);
-        	}
-        });
-        lblListadoCita.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/icons8-list-80.png")));
-        lblListadoCita.setVerticalTextPosition(SwingConstants.BOTTOM);
-        lblListadoCita.setHorizontalTextPosition(SwingConstants.CENTER);
-        lblListadoCita.setHorizontalAlignment(SwingConstants.CENTER);
-        lblListadoCita.setBounds(0, 0, (int)(345*widthRatio), (int)(353*heightRatio));
-        roundedListadoCita.add(lblListadoCita);
         
         panelFondo3 = new JPanel();
         panelFondo3.setLayout(null);
