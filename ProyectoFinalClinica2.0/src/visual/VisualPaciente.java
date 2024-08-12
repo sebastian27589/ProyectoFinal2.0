@@ -52,6 +52,7 @@ import keeptoo.KGradientPanel;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.BevelBorder;
 import javax.swing.ImageIcon;
+import java.awt.Dimension;
 
 public class VisualPaciente extends JPanel {
 
@@ -73,7 +74,8 @@ public class VisualPaciente extends JPanel {
 	private JRadioButton rdbtnMasculino;
 	private JRadioButton rdbtnFemenino;
 	private JTextArea txtareaDireccion;
-	private VisualPaciente paciente = null;
+	// Posiblemente haya que cambiar esto a VisualPaciente
+	private Paciente paciente = null;
 	private char sexoPaciente;
 	private JTextField txtAltura;
 	private JTextField txtPeso;
@@ -130,6 +132,7 @@ public class VisualPaciente extends JPanel {
 	private RoundedGlowPanel roundedGlowPanelBuscarPaciente;
 	private JLabel lblBuscar;
 	private JTextField txtBuscarPaciente;
+	private JLabel lblRegistrar_1;
 	
 	/**
 	 * Launch the application.
@@ -147,7 +150,7 @@ public class VisualPaciente extends JPanel {
 	/**
 	 * Create the dialog.
 	 */
-	public VisualPaciente(VisualPaciente pacienteAModificar, boolean regUnSoloPaciente, boolean visualizar, ArrayList<Paciente> pacientesAMostrar) 
+	public VisualPaciente(Paciente pacienteAModificar, boolean regUnSoloPaciente, boolean visualizar, ArrayList<Paciente> pacientesAMostrar) 
 	{
 		paciente = pacienteAModificar;
 		pacientesEspecificosAMostrar = pacientesAMostrar;
@@ -178,6 +181,7 @@ public class VisualPaciente extends JPanel {
 		model.setColumnIdentifiers(header);
 		
 		setBounds(100, 100, 1444, 993);
+		contentPanel.setSize(new Dimension(1400, 900));
 		contentPanel.setBackground(new Color(248, 248, 255));
 		contentPanel.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		contentPanel.setLayout(null);
@@ -961,13 +965,125 @@ public class VisualPaciente extends JPanel {
 		roundedGlowPanelRegistrar.setBorder(null);
 		roundedGlowPanelRegistrar.setBackground(Color.WHITE);
 		
-		lblRegistrar = new JLabel("Registrar");
+//		lblRegistrar = new JLabel("Registrar");
+//		lblRegistrar.addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
+//				try {
+//					if (paciente == null) {
+//						
+//						if (rdbtnMasculino.isSelected()) {
+//							
+//							sexoPaciente = 'M';
+//						}
+//						else {
+//							
+//							sexoPaciente = 'F';
+//						}
+//						
+//						nombre = txtNombre.getText();
+//						cedula = txtCedula.getText();
+//						telefono = txtTelefono.getText();
+//						fechaNacimiento = dateChooserNacim.getDate();
+//						peso = Float.parseFloat(txtPeso.getText());
+//						altura = Float.parseFloat(txtAltura.getText());
+//						
+//						if (nombre.isEmpty() || cedula.isEmpty() || telefono.isEmpty()) {
+//							throw new ValidarCampo("Debe llenar los campos obligatorios.");
+//						}
+//						
+//						if (fechaNacimiento == null) {
+//							throw new ValidarCampo("No ha seleccionado una fecha de nacimiento.");
+//						}
+//						
+//						if (cbxTipoSangre.getSelectedIndex() == 0) {
+//							throw new ValidarCampo("No ha seleccionado un tipo de sangre.");
+//						}
+//						
+//						if (peso <= 0 || altura <= 0) {
+//							throw new ValidarCampo("Las entradas del peso o la altura no pueden ser negativas.");
+//						} 
+//						
+//						if (!rdbtnMasculino.isSelected() && !rdbtnFemenino.isSelected()) {
+//							throw new ValidarCampo("Debe seleccionar un sexo.");
+//						}
+//						
+//						Paciente nuevoPaciente = new Paciente(txtCedula.getText(), txtNombre.getText(), dateChooserNacim.getDate(),
+//								 sexoPaciente, txtTelefono.getText(), txtareaDireccion.getText(), txtCodePaciente.getText(),
+//								 cbxTipoSangre.getSelectedItem().toString(), new Float(txtAltura.getText()), new Float(txtPeso.getText()),
+//								 txtareaAlergias.getText(), txtareaInfoRelevante.getText());
+//						
+//						codePacienteRegistrado = nuevoPaciente.getCodePaciente();
+//						ElegirVacunaPaciente elegirVacunas = new ElegirVacunaPaciente(null);
+//						elegirVacunas.setModal(true);
+//						elegirVacunas.setVisible(true);
+//						nuevoPaciente.getMisVacunas().addAll(elegirVacunas.extraerVacunasElegidas());
+//						Clinica.getInstance().insertarPaciente(nuevoPaciente);
+//						JOptionPane.showMessageDialog(null, "Registrado con éxito", "Registrar Paciente", JOptionPane.INFORMATION_MESSAGE);
+//						
+//						if (regUnSoloPaciente) {
+//							
+//							dispose();
+//						}
+//						else {
+//							clean();
+//						}
+//						
+//					}
+//					else {
+//				
+//						if (rdbtnMasculino.isSelected()) {
+//							
+//							sexoPaciente = 'M';
+//						}
+//						else {
+//							
+//							sexoPaciente = 'F';
+//						}
+//						
+//						paciente.setTipoDeSangre(cbxTipoSangre.getSelectedItem().toString());
+//						paciente.setAltura(new Float(txtAltura.getText()));
+//						paciente.setPeso(new Float(txtPeso.getText()));
+//						paciente.setTelefono(txtTelefono.getText());
+//						paciente.setDireccion(txtareaDireccion.getText());
+//						paciente.setAlergias(txtareaAlergias.getText());
+//						
+//						ElegirVacunaPaciente elegirVacunas = new ElegirVacunaPaciente(paciente);
+//						elegirVacunas.setModal(true);
+//						elegirVacunas.setVisible(true);
+//						paciente.getMisVacunas().clear();
+//						paciente.getMisVacunas().addAll(elegirVacunas.extraerVacunasElegidas());							
+//						Clinica.getInstance().actualizarPaciente(paciente);
+//						dispose();
+//					}
+//				} catch (ValidarCampo e2) {
+//					JOptionPane.showMessageDialog(null, e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+//					e2.printStackTrace();
+//					txtNombre.grabFocus();
+//				}
+//				catch (NumberFormatException e3) {
+//					JOptionPane.showMessageDialog(null, "Ingrese datos válidos para la altura y el peso.", "Error", JOptionPane.ERROR_MESSAGE);
+//					txtPeso.grabFocus();
+//				}
+//				
+//			}
+//		});
+
 		lblRegistrar.setHorizontalAlignment(SwingConstants.CENTER);
 		lblRegistrar.setForeground(new Color(100, 149, 237));
 		lblRegistrar.setFont(new Font("Yu Gothic UI", Font.BOLD, 15));
 		lblRegistrar.setBackground(Color.WHITE);
 		lblRegistrar.setBounds(0, 0, 132, 49);
 		roundedGlowPanelRegistrar.add(lblRegistrar);
+		
+		lblRegistrar_1 = new JLabel("Registrar");
+		lblRegistrar_1.setHorizontalAlignment(SwingConstants.CENTER);
+		lblRegistrar_1.setForeground(new Color(100, 149, 237));
+		lblRegistrar_1.setFont(new Font("Yu Gothic UI", Font.BOLD, 15));
+		lblRegistrar_1.setEnabled(false);
+		lblRegistrar_1.setBackground(Color.WHITE);
+		lblRegistrar_1.setBounds(0, 0, 132, 49);
+		roundedGlowPanelRegistrar.add(lblRegistrar_1);
 		
 		roundedGlowHistorial = new RoundedGlowPanel();
 		roundedGlowHistorial.setLayout(null);
@@ -1062,175 +1178,6 @@ public class VisualPaciente extends JPanel {
 			lblEliminar.setVisible(false);
 		}
 		
-		
-//		{
-//			JPanel buttonPane = new JPanel();
-//			buttonPane.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-//			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-//			{
-//				btnSiguiente = new JButton("Siguiente");
-//				btnSiguiente.setBackground(Color.WHITE);
-//				btnSiguiente.addActionListener(new ActionListener() {
-//					public void actionPerformed(ActionEvent e) {
-//						
-//						try {
-//							if (paciente == null) {
-//								
-//								if (rdbtnMasculino.isSelected()) {
-//									
-//									sexoPaciente = 'M';
-//								}
-//								else {
-//									
-//									sexoPaciente = 'F';
-//								}
-//								
-//								nombre = txtNombre.getText();
-//								cedula = txtCedula.getText();
-//								telefono = txtTelefono.getText();
-//								fechaNacimiento = dateChooserNacim.getDate();
-//								peso = Float.parseFloat(txtPeso.getText());
-//								altura = Float.parseFloat(txtAltura.getText());
-//								
-//								if (nombre.isEmpty() || cedula.isEmpty() || telefono.isEmpty()) {
-//									throw new ValidarCampo("Debe llenar los campos obligatorios.");
-//								}
-//								
-//								if (fechaNacimiento == null) {
-//									throw new ValidarCampo("No ha seleccionado una fecha de nacimiento.");
-//								}
-//								
-//								if (cbxTipoSangre.getSelectedIndex() == 0) {
-//									throw new ValidarCampo("No ha seleccionado un tipo de sangre.");
-//								}
-//								
-//								if (peso <= 0 || altura <= 0) {
-//									throw new ValidarCampo("Las entradas del peso o la altura no pueden ser negativas.");
-//								} 
-//								
-//								if (!rdbtnMasculino.isSelected() && !rdbtnFemenino.isSelected()) {
-//									throw new ValidarCampo("Debe seleccionar un sexo.");
-//								}
-//								
-//								VisualPaciente nuevoPaciente = new VisualPaciente(txtCedula.getText(), txtNombre.getText(), dateChooserNacim.getDate(),
-//										 sexoPaciente, txtTelefono.getText(), txtareaDireccion.getText(), txtCodePaciente.getText(),
-//										 cbxTipoSangre.getSelectedItem().toString(), new Float(txtAltura.getText()), new Float(txtPeso.getText()),
-//										 txtareaAlergias.getText(), txtareaInfoRelevante.getText());
-//								
-//								codePacienteRegistrado = nuevoPaciente.getCodePaciente();
-//								ElegirVacunaPaciente elegirVacunas = new ElegirVacunaPaciente(null);
-//								elegirVacunas.setModal(true);
-//								elegirVacunas.setVisible(true);
-//								nuevoPaciente.getMisVacunas().addAll(elegirVacunas.extraerVacunasElegidas());
-//								Clinica.getInstance().insertarPaciente(nuevoPaciente);
-//								JOptionPane.showMessageDialog(null, "Registrado con éxito", "Registrar Paciente", JOptionPane.INFORMATION_MESSAGE);
-//								
-//								if (regUnSoloPaciente) {
-//									
-//									dispose();
-//								}
-//								else {
-//									clean();
-//								}
-//								
-//							}
-//							else {
-//						
-//								if (rdbtnMasculino.isSelected()) {
-//									
-//									sexoPaciente = 'M';
-//								}
-//								else {
-//									
-//									sexoPaciente = 'F';
-//								}
-//								
-//								paciente.setTipoDeSangre(cbxTipoSangre.getSelectedItem().toString());
-//								paciente.setAltura(new Float(txtAltura.getText()));
-//								paciente.setPeso(new Float(txtPeso.getText()));
-//								paciente.setTelefono(txtTelefono.getText());
-//								paciente.setDireccion(txtareaDireccion.getText());
-//								paciente.setAlergias(txtareaAlergias.getText());
-//								paciente.setInfoImportante(txtareaInfoRelevante.getText());
-//								
-//								ElegirVacunaPaciente elegirVacunas = new ElegirVacunaPaciente(paciente);
-//								elegirVacunas.setModal(true);
-//								elegirVacunas.setVisible(true);
-//								paciente.getMisVacunas().clear();
-//								paciente.getMisVacunas().addAll(elegirVacunas.extraerVacunasElegidas());							
-//								Clinica.getInstance().actualizarPaciente(paciente);
-//								dispose();
-//							}
-//						} catch (ValidarCampo e2) {
-//							JOptionPane.showMessageDialog(null, e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-//							e2.printStackTrace();
-//							txtNombre.grabFocus();
-//						}
-//						catch (NumberFormatException e3) {
-//							JOptionPane.showMessageDialog(null, "Ingrese datos válidos para la altura y el peso.", "Error", JOptionPane.ERROR_MESSAGE);
-//							txtPeso.grabFocus();
-//						}
-//						
-//					}
-//				});
-//				btnSiguiente.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
-//				btnSiguiente.setActionCommand("OK");
-//				buttonPane.add(btnSiguiente);
-//				getRootPane().setDefaultButton(btnSiguiente);
-//			}
-//			{
-//				cancelButton = new JButton("Cancelar");
-//				cancelButton.setBackground(Color.WHITE);
-//				
-//				if (regUnSoloPaciente) {
-//					
-//					setDefaultCloseOperation(0);
-//					cancelButton.setEnabled(false);
-//				}
-//				
-//				cancelButton.addActionListener(new ActionListener() {
-//					public void actionPerformed(ActionEvent e) {
-//						dispose();
-//					}
-//				});
-//				cancelButton.setFont(new Font("Gill Sans MT", Font.PLAIN, 14));
-//				cancelButton.setActionCommand("Cancel");
-//				buttonPane.add(cancelButton);
-//			}
-//		}
-		
-//		if (paciente != null) {
-//			
-//			txtNombre.setEditable(false);
-//			rdbtnMasculino.setEnabled(false);
-//			rdbtnFemenino.setEnabled(false);
-//			txtCedula.setEditable(false);
-//			dateChooserNacim.setEnabled(false);
-//			
-//			if (visualizar) {
-//				
-//				setTitle("Datos del Paciente");
-//				
-//				txtTelefono.setEditable(false);
-//				cbxTipoSangre.setEnabled(false);
-//				txtAltura.setEditable(false);
-//				txtPeso.setEditable(false);
-//				txtareaAlergias.setEditable(false);
-//				txtareaInfoRelevante.setEditable(false);
-//				txtareaDireccion.setEditable(false);
-//			}
-//			
-//		}
-//		
-//		loadPaciente();
-//		
-//		if (visualizar) {
-//			
-//			btnSiguiente.setVisible(false);
-//			cancelButton.setText("Cerrar");
-//		}
-		
-	}
 	
 //	private void loadPaciente() {
 //		
@@ -1257,7 +1204,9 @@ public class VisualPaciente extends JPanel {
 //			txtareaInfoRelevante.setText(paciente.getInfoImportante());
 //		}
 //		
-//	}
+	}
+	
+// AQUI TERMINA REGPACIENTE
 	
 	public static void loadPacientes() {
 		

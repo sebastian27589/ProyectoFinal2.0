@@ -16,31 +16,36 @@ public class Persona implements Serializable {
     protected char sexo;
     protected String telefono;
     protected String direccion;
+    
+    
 
     public Persona(String cedula, String nombre, Date fechaDeNacimiento, char sexo, String telefono, String direccion) {
-        super();
-        this.cedula = cedula;
-        this.nombre = nombre;
-        this.fechaDeNacimiento = fechaDeNacimiento;
-        this.sexo = sexo;
-        this.telefono = telefono;
-        this.direccion = direccion;
-    }
+		super();
+		this.cedula = cedula;
+		this.nombre = nombre;
+		this.fechaDeNacimiento = fechaDeNacimiento;
+		this.sexo = sexo;
+		this.telefono = telefono;
+		this.direccion = direccion;
+	}
 
-    public String getCedula() {
+
+    public String getNombre() {
+		return nombre;
+	}
+
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+
+	public String getCedula() {
         return cedula;
     }
 
     public void setCedula(String cedula) {
         this.cedula = cedula;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
     }
 
     public Date getFechaDeNacimiento() {

@@ -14,8 +14,9 @@ public class Medico extends Persona {
     private ArrayList<String> especialidades;
     
 	public Medico(String cedula, String nombre, Date fechaDeNacimiento, char sexo, String telefono, String direccion,
-			String codeMedico) {
+				  String codeMedico) {
 		super(cedula, nombre, fechaDeNacimiento, sexo, telefono, direccion);
+		// TODO Auto-generated constructor stub
 		this.codeMedico = codeMedico;
 		this.especialidades = new ArrayList<String>();
 	}

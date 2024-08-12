@@ -76,7 +76,8 @@ public class RoundedPanel extends JPanel {
         super.paintComponent(grphcs);
     }
 
-    private Shape createRoundTopLeft() {
+
+	private Shape createRoundTopLeft() {
         int width = getWidth();
         int height = getHeight();
         int roundX = Math.min(width, roundTopLeft);

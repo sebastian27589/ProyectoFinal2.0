@@ -18,9 +18,11 @@ public class Paciente extends Persona {
     private String infoImportante;
     private ArrayList<Vacuna> misVacunas;
     
-	public Paciente(String cedula, String nombre, Date fechaDeNacimiento, char sexo, String telefono, String direccion,
-			String codePaciente, String tipoDeSangre, float altura, float peso, String alergias, String infoImportante) {
+	public Paciente(String cedula, String nombre, Date fechaDeNacimiento, char sexo, String telefono,
+			String direccion, String codePaciente, String tipoDeSangre, float altura, float peso, String alergias, 
+			String infoImportante) {
 		super(cedula, nombre, fechaDeNacimiento, sexo, telefono, direccion);
+		// TODO Auto-generated constructor stub
 		this.codePaciente = codePaciente;
 		this.tipoDeSangre = tipoDeSangre;
 		this.altura = altura;
