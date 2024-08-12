@@ -11,12 +11,18 @@ import javax.swing.Timer;
 
 public class PanelSimulacionAnim extends JPanel {
     private float opacity = 1.0f;
+    
+    public PanelSimulacionAnim() {
+        setOpaque(false);
+    }
 
     @Override
     protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g.create();
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
-        super.paintComponent(g2d);
+        g2d.setColor(getBackground());
+        g2d.fillRect(0, 0, getWidth(), getHeight());
         g2d.dispose();
     }
 
@@ -29,7 +35,7 @@ public class PanelSimulacionAnim extends JPanel {
         return opacity;
     }
 
-    public void fadeOut(int delay) {
+    public void Desaparecer(int delay) {
         Timer timer = new Timer(delay, new ActionListener() {
             private float currentOpacity = opacity;
 
@@ -47,7 +53,7 @@ public class PanelSimulacionAnim extends JPanel {
         timer.start();
     }
 
-    public void fadeIn(int delay) {
+    public void Aparecer(int delay) {
         setVisible(true);
         Timer timer = new Timer(delay, new ActionListener() {
             private float currentOpacity = 0.0f;

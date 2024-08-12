@@ -12,6 +12,7 @@ import javax.swing.border.EmptyBorder;
 import keeptoo.KGradientPanel;
 import logico.Clinica;
 import logico.Medico;
+import logico.PanelSimulacionAnim;
 
 import javax.swing.JButton;
 import java.awt.Toolkit;
@@ -57,15 +58,15 @@ public class VentanaPrincipal extends JFrame {
 	private JLabel label;
 	private JPanel panel_2;
 	private JLabel lblRegistro;
-	private JPanel panelCita;
+	private PanelSimulacionAnim panelCita;
 	private JLabel lblCita;
-	private JPanel panelReporte;
+	private PanelSimulacionAnim panelReporte;
 	private JLabel lblReporte;
-	private JPanel panelGerencia;
+	private PanelSimulacionAnim panelGerencia;
 	private JLabel lblGerencia;
-	private JPanel panelCerrarSesion;
+	private PanelSimulacionAnim panelCerrarSesion;
 	private JLabel lblCerrarSesion;
-	private JPanel panelRegistro;
+	private PanelSimulacionAnim panelRegistro;
 	private RoundedPanel roundedPanelPersona;
 	private RoundedPanel roundedPanelEnfermedad;
 	private RoundedPanel roundedPanelVacuna;
@@ -74,10 +75,12 @@ public class VentanaPrincipal extends JFrame {
 	private JLabel lblPersona;
 	private JLabel lblEnfermedad;
 	private JLabel lblVacuna;
-	private JPanel panelFondo2;
-	private JPanel panelFondo3;
-	private JPanel panelFondo4;
-	private JPanel panelFondo;
+	private PanelSimulacionAnim panelFondo2;
+	private PanelSimulacionAnim panelFondo3;
+	private PanelSimulacionAnim panelFondo4;
+	private PanelSimulacionAnim panelFondo;
+	private int ind = 0;
+	private int tiempoAnim = 20;
 
 	/**
 	 * Launch the application.
@@ -194,16 +197,25 @@ public class VentanaPrincipal extends JFrame {
         lblRegistro.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
-        		panelRegistro.setVisible(true);
-        		panelCita.setVisible(false);
-        		panelReporte.setVisible(false);
-        		panelGerencia.setVisible(false);
-        		panelCerrarSesion.setVisible(false);
-        		panelRegistro.setBackground(new Color(81, 137, 252));
-        		panelFondo.setVisible(true);
-        		panelFondo2.setVisible(false);
-        		panelFondo3.setVisible(false);
-        		panelFondo4.setVisible(false);
+        		switch (ind){
+        			case 1:
+        				panelCita.Desaparecer(tiempoAnim);
+        				panelFondo2.Desaparecer(tiempoAnim);
+        				break;
+        			case 2:
+        				panelReporte.Desaparecer(tiempoAnim);
+        				panelFondo3.Desaparecer(tiempoAnim);
+        				break;
+        			case 3:
+        				panelGerencia.Desaparecer(tiempoAnim);
+        				panelFondo4.Desaparecer(tiempoAnim);
+        				break;
+        		}
+        		
+        		ind = 0;
+				panelRegistro.setBackground(new Color(81, 137, 252));
+				panelRegistro.Aparecer(tiempoAnim);
+				panelFondo.Aparecer(tiempoAnim);
         	}
         });
         lblRegistro.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/icons8-register-64.png")));
@@ -218,7 +230,7 @@ public class VentanaPrincipal extends JFrame {
         lblRegistro.setFont(new Font("Yu Gothic UI", Font.BOLD, 25));
         contentPane.add(lblRegistro);
         
-        panelRegistro = new JPanel();
+        panelRegistro = new PanelSimulacionAnim();
         panelRegistro.setBorder(new CompoundBorder());
         panelRegistro.setBounds(0, 0, (int)(459*widthRatio), (int)(196*heightRatio));
         contentPane.add(panelRegistro);
@@ -230,16 +242,25 @@ public class VentanaPrincipal extends JFrame {
         lblCita.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
-        		panelRegistro.setVisible(false);
-        		panelCita.setVisible(true);
-        		panelReporte.setVisible(false);
-        		panelGerencia.setVisible(false);
-        		panelCerrarSesion.setVisible(false);
-        		panelCita.setBackground(new Color(81, 137, 252));
-        		panelFondo.setVisible(false);
-        		panelFondo2.setVisible(true);
-        		panelFondo3.setVisible(false);
-        		panelFondo4.setVisible(false);
+        		switch (ind){
+        			case 0:
+        				panelRegistro.Desaparecer(tiempoAnim);
+        				panelFondo.Desaparecer(tiempoAnim);
+        				break;
+        			case 2:
+        				panelReporte.Desaparecer(tiempoAnim);
+        				panelFondo3.Desaparecer(tiempoAnim);
+        				break;
+        			case 3:
+        				panelGerencia.Desaparecer(tiempoAnim);
+        				panelFondo4.Desaparecer(tiempoAnim);
+        				break;
+        		}
+        		
+        		ind = 1;
+				panelCita.setBackground(new Color(81, 137, 252));
+				panelCita.Aparecer(tiempoAnim);
+				panelFondo2.Aparecer(tiempoAnim);
         	}
         });
         lblCita.setBounds(0, (int)(198*heightRatio), (int)(459*widthRatio), (int)(196*heightRatio));
@@ -253,7 +274,7 @@ public class VentanaPrincipal extends JFrame {
         lblCita.setForeground(Color.WHITE);
         lblCita.setFont(new Font("Yu Gothic UI", Font.BOLD, 25));
         
-        panelCita = new JPanel();
+        panelCita = new PanelSimulacionAnim();
         panelCita.setBorder(new CompoundBorder());
         panelCita.setBounds(0, (int)(198*heightRatio), (int)(459*widthRatio), (int)(196*heightRatio));
         panelCita.setBackground(new Color(255, 255, 255, 0));
@@ -266,16 +287,25 @@ public class VentanaPrincipal extends JFrame {
         lblReporte.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
-        		panelRegistro.setVisible(false);
-        		panelCita.setVisible(false);
-        		panelReporte.setVisible(true);
-        		panelGerencia.setVisible(false);
-        		panelCerrarSesion.setVisible(false);
-        		panelReporte.setBackground(new Color(81, 137, 252));
-        		panelFondo.setVisible(false);
-        		panelFondo2.setVisible(false);
-        		panelFondo3.setVisible(true);
-        		panelFondo4.setVisible(false);
+        		switch (ind){
+        			case 0:
+        				panelRegistro.Desaparecer(tiempoAnim);
+        				panelFondo.Desaparecer(tiempoAnim);
+        				break;
+        			case 1:
+        				panelCita.Desaparecer(tiempoAnim);
+        				panelFondo2.Desaparecer(tiempoAnim);
+        				break;
+        			case 3:
+        				panelGerencia.Desaparecer(tiempoAnim);
+        				panelFondo4.Desaparecer(tiempoAnim);
+        				break;
+        		}
+        		
+        		ind = 2;
+				panelReporte.setBackground(new Color(81, 137, 252));
+				panelReporte.Aparecer(tiempoAnim);
+				panelFondo3.Aparecer(tiempoAnim);
         	}
         });
         lblReporte.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/icons8-report-70.png")));
@@ -287,42 +317,51 @@ public class VentanaPrincipal extends JFrame {
         lblReporte.setForeground(Color.WHITE);
         lblReporte.setFont(new Font("Yu Gothic UI", Font.BOLD, 25));
         
-        panelReporte = new JPanel();
+        panelReporte = new PanelSimulacionAnim();
         panelReporte.setBorder(new CompoundBorder());
         panelReporte.setForeground(new Color(0, 0, 0));
         panelReporte.setBounds(0, (int)(397*heightRatio), (int)(459*widthRatio), (int)(196*heightRatio));
         panelReporte.setBackground(new Color(255, 255, 255, 0));
         contentPane.add(panelReporte);
         panelReporte.setLayout(null);
+
+        lblGerencia = new JLabel("GERENCIA");
+        lblGerencia.setBounds(0, (int)(596*heightRatio), (int)(459*widthRatio), (int)(196*heightRatio));
+        contentPane.add(lblGerencia);
+        lblGerencia.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseClicked(MouseEvent e) {
+        		switch (ind){
+        			case 0:
+        				panelRegistro.Desaparecer(tiempoAnim);
+        				panelFondo.Desaparecer(tiempoAnim);
+        				break;
+        			case 1:
+        				panelCita.Desaparecer(tiempoAnim);
+        				panelFondo2.Desaparecer(tiempoAnim);
+        				break;
+        			case 2:
+        				panelReporte.Desaparecer(tiempoAnim);
+        				panelFondo3.Desaparecer(tiempoAnim);
+        				break;
+        		}
+        		
+        		ind = 3;
+				panelGerencia.setBackground(new Color(81, 137, 252));
+				panelGerencia.Aparecer(tiempoAnim);
+				panelFondo4.Aparecer(tiempoAnim);
+        	}
+        });
+        lblGerencia.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/icons8-manager-70.png")));
+        lblGerencia.setVerticalTextPosition(SwingConstants.BOTTOM);
+        lblGerencia.setPreferredSize(new Dimension(65, 25));
+        lblGerencia.setIconTextGap(7);
+        lblGerencia.setHorizontalTextPosition(SwingConstants.CENTER);
+        lblGerencia.setHorizontalAlignment(SwingConstants.CENTER);
+        lblGerencia.setForeground(Color.WHITE);
+        lblGerencia.setFont(new Font("Yu Gothic UI", Font.BOLD, 25));
         
-	                lblGerencia = new JLabel("GERENCIA");
-	                lblGerencia.setBounds(0, (int)(596*heightRatio), (int)(459*widthRatio), (int)(196*heightRatio));
-	                contentPane.add(lblGerencia);
-	                lblGerencia.addMouseListener(new MouseAdapter() {
-	                	@Override
-	                	public void mouseClicked(MouseEvent e) {
-	                		panelRegistro.setVisible(false);
-	                		panelCita.setVisible(false);
-	                		panelReporte.setVisible(false);
-	                		panelGerencia.setVisible(true);
-	                		panelCerrarSesion.setVisible(false);
-	                		panelGerencia.setBackground(new Color(81, 137, 252));
-	                		panelFondo.setVisible(false);
-	                		panelFondo2.setVisible(false);
-	                		panelFondo3.setVisible(false);
-	                		panelFondo4.setVisible(true);
-	                	}
-	                });
-	                lblGerencia.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/icons8-manager-70.png")));
-	                lblGerencia.setVerticalTextPosition(SwingConstants.BOTTOM);
-	                lblGerencia.setPreferredSize(new Dimension(65, 25));
-	                lblGerencia.setIconTextGap(7);
-	                lblGerencia.setHorizontalTextPosition(SwingConstants.CENTER);
-	                lblGerencia.setHorizontalAlignment(SwingConstants.CENTER);
-	                lblGerencia.setForeground(Color.WHITE);
-	                lblGerencia.setFont(new Font("Yu Gothic UI", Font.BOLD, 25));
-        
-        panelGerencia = new JPanel();
+        panelGerencia = new PanelSimulacionAnim();
         panelGerencia.setBorder(new CompoundBorder());
         panelGerencia.setBounds(0, (int)(596*heightRatio), (int)(459*widthRatio), (int)(196*heightRatio));
         panelGerencia.setBackground(new Color(255, 255, 255, 0));
@@ -335,12 +374,28 @@ public class VentanaPrincipal extends JFrame {
         lblCerrarSesion.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
-        		panelRegistro.setVisible(false);
-        		panelCita.setVisible(false);
-        		panelReporte.setVisible(false);
-        		panelGerencia.setVisible(false);
-        		panelCerrarSesion.setVisible(true);
-        		panelCerrarSesion.setBackground(new Color(81, 137, 252));
+        		switch (ind){
+    			case 0:
+    				panelRegistro.Desaparecer(tiempoAnim);
+    				panelFondo.Desaparecer(tiempoAnim);
+    				break;
+    			case 1:
+    				panelCita.Desaparecer(tiempoAnim);
+    				panelFondo2.Desaparecer(tiempoAnim);
+    				break;
+    			case 2:
+    				panelReporte.Desaparecer(tiempoAnim);
+    				panelFondo3.Desaparecer(tiempoAnim);
+    				break;
+    				
+    			case 3:
+    				panelGerencia.Desaparecer(tiempoAnim);
+    				panelFondo4.Desaparecer(tiempoAnim);
+    				break;
+        		}
+    		
+				panelCerrarSesion.setBackground(new Color(81, 137, 252));
+				panelCerrarSesion.Aparecer(tiempoAnim);
         		
         		int Option = JOptionPane.showConfirmDialog(null, "¿Está seguro de que desea cerrar su sesión?", "Cerrar Sesión", JOptionPane.OK_CANCEL_OPTION);
 				
@@ -350,7 +405,8 @@ public class VentanaPrincipal extends JFrame {
 					ventanaLogin.setVisible(true);
 				}
         		
-        		panelCerrarSesion.setVisible(false);
+        		panelCerrarSesion.Desaparecer(tiempoAnim);
+        		ind = 4;
         	}
         });
         lblCerrarSesion.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/icons8-log-out-70.png")));
@@ -362,7 +418,7 @@ public class VentanaPrincipal extends JFrame {
         lblCerrarSesion.setForeground(Color.WHITE);
         lblCerrarSesion.setFont(new Font("Yu Gothic UI", Font.BOLD, 25));
         
-        panelCerrarSesion = new JPanel();
+        panelCerrarSesion = new PanelSimulacionAnim();
         panelCerrarSesion.setBorder(new CompoundBorder());
 
         panelCerrarSesion.setBounds(0, (int)(797*heightRatio), (int)(459*widthRatio), (int)(196*heightRatio));
@@ -381,7 +437,7 @@ public class VentanaPrincipal extends JFrame {
         contentPane.add(gradientPanel);
         gradientPanel.setLayout(null);
         
-        panelFondo = new JPanel();
+        panelFondo = new PanelSimulacionAnim();
         panelFondo.setBackground(new Color(255, 255, 255));
         panelFondo.setBounds((int)(458*widthRatio), 0, (int)(1444*widthRatio), (int)(993*heightRatio));
         contentPane.add(panelFondo);
@@ -503,19 +559,19 @@ public class VentanaPrincipal extends JFrame {
         lblVacuna.setBounds(0, 0, (int)(345*widthRatio), (int)(353*heightRatio));
         roundedPanelVacuna.add(lblVacuna);
         
-        panelFondo2 = new JPanel();
+        panelFondo2 = new PanelSimulacionAnim();
         panelFondo2.setBackground(new Color(255, 255, 255));
         panelFondo2.setBounds((int)(458*widthRatio), (int)(0*heightRatio), (int)(1444*widthRatio), (int)(993*heightRatio));
         contentPane.add(panelFondo2);
         panelFondo2.setLayout(null);
         
-        panelFondo3 = new JPanel();
+        panelFondo3 = new PanelSimulacionAnim();
         panelFondo3.setLayout(null);
         panelFondo3.setBackground(Color.WHITE);
         panelFondo3.setBounds(458, 0, 1444, 993);
         contentPane.add(panelFondo3);
         
-        panelFondo4 = new JPanel();
+        panelFondo4 = new PanelSimulacionAnim();
         panelFondo4.setLayout(null);
         panelFondo4.setBackground(Color.WHITE);
         panelFondo4.setBounds(458, 0, 1444, 993);
