@@ -103,7 +103,6 @@ public class VisualPaciente extends JPanel {
 	private RoundedPanel roundedPanelPeso;
 	private JLabel lblFDeNac;
 	private RoundedPanel roundedPanelFNac;
-	private JPanel panel;
 	private JPanel panel_1;
 	private RoundedGlowPanel roundedGlowPanelCodePaciente;
 	private RoundedGlowPanel roundedGlowPanelPApellido;
@@ -151,7 +150,7 @@ public class VisualPaciente extends JPanel {
 	/**
 	 * Create the dialog.
 	 */
-	public VisualPaciente(Paciente pacienteAModificar, boolean regUnSoloPaciente, boolean visualizar, ArrayList<Paciente> pacientesAMostrar) 
+	public VisualPaciente() 
 	{
 		dim = getToolkit().getScreenSize();
 		int screenWidthOriginal = 1920;
@@ -159,8 +158,8 @@ public class VisualPaciente extends JPanel {
 		double widthRatio = (double) dim.width / screenWidthOriginal;
 		double heightRatio = (double) dim.height / screenHeightOriginal;
 		
-		paciente = pacienteAModificar;
-		pacientesEspecificosAMostrar = pacientesAMostrar;
+		//paciente = pacienteAModificar;
+		//pacientesEspecificosAMostrar = pacientesAMostrar;
 		
 		Object[] header = {"Código", "Cédula", "Nombre", "Sexo", "Teléfono", "Ver más"};
 		model = new DefaultTableModel() {
@@ -188,7 +187,7 @@ public class VisualPaciente extends JPanel {
 		model.setColumnIdentifiers(header);
 		
 		setBounds(100, 100, 1444, 993);
-		contentPanel.setSize(new Dimension((int)(1444*widthRatio),(int)(993*heightRatio)));
+		contentPanel.setSize(new Dimension((int)(1400*widthRatio),(int)(900*heightRatio)));
 		contentPanel.setBackground(new Color(248, 248, 255));
 		contentPanel.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		contentPanel.setLayout(null);
@@ -197,9 +196,9 @@ public class VisualPaciente extends JPanel {
 		label.setIcon(new ImageIcon(VisualPaciente.class.getResource("/Imagenes/isometric-mri-room-in-hospital (1).png")));
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		label.setForeground(new Color(65, 105, 225));
-		label.setFont(new Font("Yu Gothic UI", Font.BOLD, 15));
+		label.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
 		label.setBackground(Color.WHITE);
-		label.setBounds((int)(923*widthRatio),(int)(655*heightRatio), (int)(477*widthRatio),(int)(295*heightRatio));
+		label.setBounds((int)(923*widthRatio), (int)(655*heightRatio), (int)(477*widthRatio), (int)(248*heightRatio));
 		contentPanel.add(label);
 		
 		panelTablaPersona = new JPanel();
@@ -266,7 +265,7 @@ public class VisualPaciente extends JPanel {
 				
 			}
 		});
-		tablePacientes.setFont(new Font("Yu Gothic UI", Font.PLAIN, 15));
+		tablePacientes.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
 		tablePacientes.setFillsViewportHeight(true);
 		scrollPane.setViewportView(tablePacientes);
 		{
@@ -865,7 +864,7 @@ public class VisualPaciente extends JPanel {
 		gradientPanel.setkGradientFocus(-10);
 		gradientPanel.kEndColor = new Color(102, 204, 255);
 		gradientPanel.setkStartColor(new Color(51, 255, 204));
-		gradientPanel.setBounds(0,(int)(780*heightRatio), (int)(1400*widthRatio),(int)(170*heightRatio));
+		gradientPanel.setBounds(0, (int)(780*heightRatio), (int)(1400*widthRatio), (int)(170*heightRatio));
 		contentPanel.add(gradientPanel);
 		gradientPanel.setLayout(null);
 		
