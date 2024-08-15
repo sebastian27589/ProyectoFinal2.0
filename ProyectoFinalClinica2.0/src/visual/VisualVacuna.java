@@ -293,7 +293,7 @@ public class VisualVacuna extends JPanel {
 			
 			txtCodeVacuna = new JTextField();
 			txtCodeVacuna.setBackground(new Color(255, 255, 255));
-			txtCodeVacuna.setBounds(92,14, 48,22);
+			txtCodeVacuna.setBounds((int)(92*widthRatio),(int)(14*heightRatio), (int)(48*widthRatio),(int)(22*heightRatio));
 			roundedPanelCodeVacuna.add(txtCodeVacuna);
 			txtCodeVacuna.setBorder(null);
 			txtCodeVacuna.setEditable(false);
@@ -410,7 +410,7 @@ public class VisualVacuna extends JPanel {
 			roundedGlowPanelLaboratorio.add(roundedPanelLaboratorio);
 			
 			txtLaboratorio = new JTextField();
-			txtLaboratorio.setFont(new Font("Yu Gothic UI", Font.PLAIN, 15));
+			txtLaboratorio.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
 			txtLaboratorio.setColumns(10);
 			txtLaboratorio.setBorder(null);
 			txtLaboratorio.setBounds((int)(100*widthRatio), (int)(0*heightRatio), (int)(424*widthRatio), (int)(46*heightRatio));
