@@ -40,6 +40,7 @@ import com.toedter.calendar.JDateChooser;
 import exception.ValidarCampo;
 import logico.Clinica;
 import logico.Paciente;
+import logico.PanelSimulacionAnim;
 import logico.Persona;
 import logico.RoundedGlowPanel;
 import logico.RoundedPanel;
@@ -56,7 +57,7 @@ import java.awt.Dimension;
 import javax.swing.JCheckBox;
 import javax.swing.border.EtchedBorder;
 
-public class VisualEnfermedad extends JPanel {
+public class VisualEnfermedad extends PanelSimulacionAnim {
 
 	private static DefaultTableModel model;
 	private Dimension dim;
@@ -65,7 +66,6 @@ public class VisualEnfermedad extends JPanel {
 	private Paciente selected = null;
 	private ArrayList<Paciente> pacientesEspecificosAMostrar = new ArrayList<Paciente>();
 	
-	private final JPanel contentPanel = new JPanel();
 	private String nombre, cedula, telefono;
 	private float peso, altura;
 	private Date fechaNacimiento;
@@ -76,10 +76,6 @@ public class VisualEnfermedad extends JPanel {
 	private char sexoPaciente;
 	private JComboBox cbxTipoEnfermedad;
 	public static String codePacienteRegistrado = null;
-	private JButton btnSiguiente;
-	private JButton cancelButton;
-	private JPanel panelDatosPersona;
-	private JPanel panel_1;
 	private JPanel panelTablaEnfermedad;
 	private JLabel lblEliminar;
 	private JLabel lblModificar;
@@ -96,8 +92,7 @@ public class VisualEnfermedad extends JPanel {
 	 */
 	public static void main(String[] args) {
 		try {
-			RegPaciente dialog = new RegPaciente(null, false, false);
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			VisualEnfermedad dialog = new VisualEnfermedad();
 			dialog.setVisible(true);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -144,16 +139,16 @@ public class VisualEnfermedad extends JPanel {
 		model.setColumnIdentifiers(header);
 		
 		setBounds(100, 100, 1444, 993);
-		contentPanel.setSize(new Dimension((int)(1381*widthRatio),(int)(900*heightRatio)));
-		contentPanel.setBackground(Color.WHITE);
-		contentPanel.setBorder(null);
-		contentPanel.setLayout(null);
+		setSize(new Dimension((int)(1381*widthRatio),(int)(900*heightRatio)));
+		setBackground(Color.WHITE);
+		setBorder(null);
+		setLayout(null);
 		
 		panelTablaEnfermedad = new JPanel();
 		panelTablaEnfermedad.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panelTablaEnfermedad.setBackground(new Color(255, 255, 255));
 		panelTablaEnfermedad.setBounds((int)(814*widthRatio),(int)(13*heightRatio), (int)(550*widthRatio),(int)(515*heightRatio));
-		contentPanel.add(panelTablaEnfermedad);
+		add(panelTablaEnfermedad);
 		panelTablaEnfermedad.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane(tableEnfermedad);
@@ -223,7 +218,7 @@ public class VisualEnfermedad extends JPanel {
 			panelDatosEnfermedad.setRoundBottomRight(35);
 			panelDatosEnfermedad.setRoundBottomLeft(35);
 			panelDatosEnfermedad.setBounds((int)(12*widthRatio),(int)(13*heightRatio), (int)(790*widthRatio),(int)(721*heightRatio));
-			contentPanel.add(panelDatosEnfermedad);
+			add(panelDatosEnfermedad);
 			panelDatosEnfermedad.setBackground(new Color(240, 240, 240));
 			panelDatosEnfermedad.setLayout(null);
 			
@@ -378,10 +373,6 @@ public class VisualEnfermedad extends JPanel {
 			cbxTipoEnfermedad.setSelectedIndex(0);
 			cbxTipoEnfermedad.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
 			
-			RoundedGlowPanel panel11 = new RoundedGlowPanel();
-			panel_1.setBounds(108, 462, 145, 59);
-			panelDatosEnfermedad.add(panel_1);
-			
 			RoundedPanel roundedPanelTablaSintoma = new RoundedPanel();
 			roundedPanelTablaSintoma.setLayout(null);
 			roundedPanelTablaSintoma.setBackground(Color.WHITE);
@@ -461,7 +452,7 @@ public class VisualEnfermedad extends JPanel {
 			panelDatosEnfermedad.add(chbxVigilancia);
 			
 			cbxSintomas = new JComboBox();
-			cbxSintomas.setSelectedIndex(0);
+			//cbxSintomas.setSelectedIndex(0);
 			cbxSintomas.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
 			cbxSintomas.setBorder(null);
 			cbxSintomas.setBounds((int)(229*widthRatio),(int)(412*heightRatio), (int)(216*widthRatio), (int)(46*heightRatio));
@@ -476,7 +467,7 @@ public class VisualEnfermedad extends JPanel {
 		gradientPanel.kEndColor = new Color(102, 204, 255);
 		gradientPanel.setkStartColor(new Color(51, 255, 204));
 		gradientPanel.setBounds((int)(0*widthRatio),(int)(780*heightRatio), (int)(1381*widthRatio),(int)(120*heightRatio));
-		contentPanel.add(gradientPanel);
+		add(gradientPanel);
 		gradientPanel.setLayout(null);
 		
 		RoundedGlowPanel roundedGlowPanelModificar = new RoundedGlowPanel();
@@ -491,7 +482,7 @@ public class VisualEnfermedad extends JPanel {
 		roundedGlowPanelModificar.setBorder(null);
 		roundedGlowPanelModificar.setBackground(Color.WHITE);
 		roundedGlowPanelModificar.setBounds((int)(1105*widthRatio),(int)(599*heightRatio), (int)(132*widthRatio),(int)(49*heightRatio));
-		contentPanel.add(roundedGlowPanelModificar);
+		add(roundedGlowPanelModificar);
 		
 		lblModificar = new JLabel("Modificar");
 		lblModificar.setEnabled(false);
@@ -531,7 +522,7 @@ public class VisualEnfermedad extends JPanel {
 		roundedGlowPanelEliminar.setBorder(null);
 		roundedGlowPanelEliminar.setBackground(Color.WHITE);
 		roundedGlowPanelEliminar.setBounds((int)(1249*widthRatio),(int)(599*heightRatio), (int)(118*widthRatio),(int)(49*heightRatio));
-		contentPanel.add(roundedGlowPanelEliminar);
+		add(roundedGlowPanelEliminar);
 		
 		lblEliminar = new JLabel("Eliminar");
 		lblEliminar.setEnabled(false);
@@ -566,7 +557,7 @@ public class VisualEnfermedad extends JPanel {
 		
 		RoundedGlowPanel roundedGlowPanelRegistrar = new RoundedGlowPanel();
 		roundedGlowPanelRegistrar.setBounds((int)(961*widthRatio),(int)(599*heightRatio), (int)(132*widthRatio),(int)(49*heightRatio));
-		contentPanel.add(roundedGlowPanelRegistrar);
+		add(roundedGlowPanelRegistrar);
 		roundedGlowPanelRegistrar.setLayout(null);
 		roundedGlowPanelRegistrar.setRoundTopRight(60);
 		roundedGlowPanelRegistrar.setRoundTopLeft(60);
@@ -577,8 +568,7 @@ public class VisualEnfermedad extends JPanel {
 		roundedGlowPanelRegistrar.setForeground(Color.WHITE);
 		roundedGlowPanelRegistrar.setBorder(null);
 		roundedGlowPanelRegistrar.setBackground(Color.WHITE);
-		
-//		lblRegistrar = new JLabel("Registrar");
+
 //		lblRegistrar.addMouseListener(new MouseAdapter() {
 //			@Override
 //			public void mouseClicked(MouseEvent e) {
@@ -681,13 +671,6 @@ public class VisualEnfermedad extends JPanel {
 //				
 //			}
 //		});
-
-		lblRegistrar.setHorizontalAlignment(SwingConstants.CENTER);
-		lblRegistrar.setForeground(new Color(100, 149, 237));
-		lblRegistrar.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
-		lblRegistrar.setBackground(Color.WHITE);
-		lblRegistrar.setBounds(0, 0, (int)(132*widthRatio),(int)(49*heightRatio));
-		roundedGlowPanelRegistrar.add(lblRegistrar);
 		
 		lblRegistrar_1 = new JLabel("Registrar");
 		lblRegistrar_1.setHorizontalAlignment(SwingConstants.CENTER);
@@ -726,7 +709,7 @@ public class VisualEnfermedad extends JPanel {
 		roundedGlowPanelBuscarEnfermedad.setBorder(null);
 		roundedGlowPanelBuscarEnfermedad.setBackground(Color.WHITE);
 		roundedGlowPanelBuscarEnfermedad.setBounds((int)(817*widthRatio),(int)(541*heightRatio), (int)(550*widthRatio),(int)(49*heightRatio));
-		contentPanel.add(roundedGlowPanelBuscarEnfermedad);
+		add(roundedGlowPanelBuscarEnfermedad);
 		
 		JLabel lblBuscar = new JLabel("Buscar:");
 		lblBuscar.setHorizontalAlignment(SwingConstants.CENTER);

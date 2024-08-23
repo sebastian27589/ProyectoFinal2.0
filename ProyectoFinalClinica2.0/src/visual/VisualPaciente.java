@@ -40,6 +40,7 @@ import com.toedter.calendar.JDateChooser;
 import exception.ValidarCampo;
 import logico.Clinica;
 import logico.Paciente;
+import logico.PanelSimulacionAnim;
 import logico.Persona;
 import logico.RoundedGlowPanel;
 import logico.RoundedPanel;
@@ -54,7 +55,7 @@ import javax.swing.border.BevelBorder;
 import javax.swing.ImageIcon;
 import java.awt.Dimension;
 
-public class VisualPaciente extends JPanel {
+public class VisualPaciente extends PanelSimulacionAnim {
 
 	private static DefaultTableModel model;
 	private Dimension dim;
@@ -84,50 +85,35 @@ public class VisualPaciente extends JPanel {
 	private JButton btnSiguiente;
 	private JButton cancelButton;
 	private JPanel panelDatosPersona;
-	private RoundedPanel roundedPanelPNombre;
 	private JTextField txtSnombre;
 	private JTextField txtPApellido;
 	private JLabel lblPApellido;
-	private RoundedPanel roundedPanelPApellido;
 	private JTextField txtSApellido;
 	private JLabel lblSApellido;
+	private RoundedPanel roundedPanelPNombre;
+	private RoundedPanel roundedPanelPApellido;
 	private RoundedPanel roundedPanelSApellido;
 	private RoundedPanel roundedPanelCodePaciente;
-	private JLabel lblCdigo;
-	private JLabel lblCedula;
 	private RoundedPanel roundedPanelCedula;
-	private JLabel lblTelefono;
 	private RoundedPanel roundedPanelTelefono;
-	private JLabel lblAltura;
 	private RoundedPanel roundedPanelAltura;
 	private RoundedPanel roundedPanelPeso;
-	private JLabel lblFDeNac;
 	private RoundedPanel roundedPanelFNac;
-	private JPanel panel_1;
-	private RoundedGlowPanel roundedGlowPanelCodePaciente;
-	private RoundedGlowPanel roundedGlowPanelPApellido;
-	private RoundedGlowPanel roundedGlowPanelSApellido;
-	private RoundedGlowPanel roundedGlowPanelSNombre;
-	private RoundedGlowPanel roundedGlowPanelPNombre;
-	private RoundedGlowPanel roundedGlowPanelCedula;
-	private RoundedGlowPanel roundedGlowPanelTelefono;
-	private RoundedGlowPanel roundedGlowPanelFNacimiento;
-	private RoundedGlowPanel roundedGlowPanelAltura;
-	private RoundedGlowPanel roundedGlowPanelTSangre;
-	private RoundedGlowPanel roundedGlowPanelPeso;
-	private JLabel lblDireccion;
 	private RoundedPanel roundedPanelDireccion;
-	private JLabel lblAlergia;
 	private RoundedPanel roundedPanelAlergia;
-	private RoundedGlowPanel roundedGlowPanelDireccion;
+	private JLabel lblCdigo;
+	private JLabel lblCedula;
+	private JLabel lblTelefono;
+	private JLabel lblAltura;
+	private JLabel lblFDeNac;
+	private JPanel panel_1;
+	private JLabel lblDireccion;
+	private JLabel lblAlergia;
 	private JPanel panelTablaPersona;
-	private RoundedGlowPanel roundedGlowPanelEliminar;
 	private JLabel lblEliminar;
 	private JLabel lblModificar;
 	private JLabel lblRegistrar;
-	private RoundedGlowPanel roundedGlowHistorial;
 	private JLabel lblHistorial;
-	private RoundedGlowPanel roundedGlowPanelBuscarPaciente;
 	private JLabel lblBuscar;
 	private JTextField txtBuscarPaciente;
 	private JLabel lblRegistrar_1;
@@ -187,10 +173,10 @@ public class VisualPaciente extends JPanel {
 		model.setColumnIdentifiers(header);
 		
 		setBounds(100, 100, 1444, 993);
-		contentPanel.setSize(new Dimension((int)(1400*widthRatio),(int)(900*heightRatio)));
-		contentPanel.setBackground(new Color(248, 248, 255));
-		contentPanel.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		contentPanel.setLayout(null);
+		setSize(new Dimension((int)(1400*widthRatio),(int)(900*heightRatio)));
+		setBackground(new Color(248, 248, 255));
+		setBorder(null);
+		setLayout(null);
 		
 		JLabel label = new JLabel("");
 		label.setIcon(new ImageIcon(VisualPaciente.class.getResource("/Imagenes/isometric-mri-room-in-hospital (1).png")));
@@ -199,17 +185,17 @@ public class VisualPaciente extends JPanel {
 		label.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
 		label.setBackground(Color.WHITE);
 		label.setBounds((int)(923*widthRatio), (int)(655*heightRatio), (int)(477*widthRatio), (int)(248*heightRatio));
-		contentPanel.add(label);
+		add(label);
 		
 		panelTablaPersona = new JPanel();
 		panelTablaPersona.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panelTablaPersona.setBackground(new Color(255, 255, 255));
-		panelTablaPersona.setBounds((int)(814*widthRatio),(int)(13*heightRatio), (int)(574*widthRatio),(int)(515*heightRatio));
-		contentPanel.add(panelTablaPersona);
+		panelTablaPersona.setBounds((int)(814*widthRatio),(int)(13*heightRatio), (int)(555*widthRatio),(int)(515*heightRatio));
+		add(panelTablaPersona);
 		panelTablaPersona.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane(tablePacientes);
-		panelTablaPersona.add(scrollPane, BorderLayout.CENTER);
+		panelTablaPersona.add(scrollPane);
 		
 		tablePacientes = new JTable(model);
 		tablePacientes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -232,39 +218,6 @@ public class VisualPaciente extends JPanel {
 		tablePacientes.getColumnModel().getColumn(3).setPreferredWidth(5);
 		tablePacientes.getColumnModel().getColumn(4).setPreferredWidth(25);
 		tablePacientes.getColumnModel().getColumn(5).setPreferredWidth(5);
-		tablePacientes.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				
-				int rowIndex = tablePacientes.getSelectedRow(), colIndex = tablePacientes.getSelectedColumn();
-				
-				if (rowIndex >= 0) {
-					
-					selected = Clinica.getInstance().buscarPacienteByCode(tablePacientes.getValueAt(rowIndex, 0).toString());
-					lblHistorial.setEnabled(true);
-					
-					if (pacientesEspecificosAMostrar == null) {
-						
-						lblModificar.setEnabled(true);
-						lblEliminar.setEnabled(true);
-					}
-					
-					if (colIndex == 5) {
-						
-						/* RECORDAR QUE AQUI EN VEZ DE ABRIR LA PESTAÑA DE REGISTRAR PACIENTE, DEBEMOS PONER LOS DATOS DE LA PERSONA EN 
-						 * LOS CAMPOS QUE SALEN DENTRO DEL MISMO PANEL.
-						
-						RegPaciente visualizarPaciente = new RegPaciente(selected, false, true);
-						visualizarPaciente.setModal(true);
-						visualizarPaciente.setVisible(true);
-						tablePacientes.setValueAt(Boolean.FALSE, rowIndex, colIndex); */
-					}
-
-					
-				}
-				
-			}
-		});
 		tablePacientes.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
 		tablePacientes.setFillsViewportHeight(true);
 		scrollPane.setViewportView(tablePacientes);
@@ -275,7 +228,7 @@ public class VisualPaciente extends JPanel {
 			panelDatosPersona.setRoundBottomRight(35);
 			panelDatosPersona.setRoundBottomLeft(35);
 			panelDatosPersona.setBounds((int)(12*widthRatio),(int)(13*heightRatio), (int)(790*widthRatio),(int)(721*heightRatio));
-			contentPanel.add(panelDatosPersona);
+			add(panelDatosPersona);
 			panelDatosPersona.setBackground(new Color(240, 240, 240));
 			panelDatosPersona.setLayout(null);
 			
@@ -289,7 +242,6 @@ public class VisualPaciente extends JPanel {
 			rdbtnMasculino.setBounds((int)(260*widthRatio),(int)(464*heightRatio), (int)(93*widthRatio),(int)(22*heightRatio));
 			panelDatosPersona.add(rdbtnMasculino);
 			rdbtnMasculino.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
-			
 			rdbtnFemenino = new JRadioButton("Mujer");
 			rdbtnFemenino.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -435,7 +387,7 @@ public class VisualPaciente extends JPanel {
 			txtCodePaciente.setColumns(10);
 			txtCodePaciente.setText("P-"+Clinica.getInstance().getGeneradorCodePaciente());
 			
-			roundedGlowPanelCodePaciente = new RoundedGlowPanel();
+			RoundedGlowPanel roundedGlowPanelCodePaciente = new RoundedGlowPanel();
 			roundedGlowPanelCodePaciente.setBounds((int)(184*widthRatio),(int)(79*heightRatio), (int)(170*widthRatio),(int)(61*heightRatio));
 			panelDatosPersona.add(roundedGlowPanelCodePaciente);
 			roundedGlowPanelCodePaciente.setGlowAlpha(170);
@@ -530,6 +482,7 @@ public class VisualPaciente extends JPanel {
 			roundedPanelAltura.add(lblAltura);
 			
 			spnAltura = new JSpinner();
+			spnAltura.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 			spnAltura.setBorder(null);
 			spnAltura.setBounds((int)(65*widthRatio),0, (int)(40*widthRatio),(int)(46*heightRatio));
 			roundedPanelAltura.add(spnAltura);
@@ -554,6 +507,7 @@ public class VisualPaciente extends JPanel {
 			roundedPanelPeso.add(lblPeso);
 			
 			spnPeso = new JSpinner();
+			spnPeso.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 			spnPeso.setBorder(null);
 			spnPeso.setBounds((int)(65*widthRatio),0, (int)(40*widthRatio),(int)(46*heightRatio));
 			roundedPanelPeso.add(spnPeso);
@@ -613,10 +567,6 @@ public class VisualPaciente extends JPanel {
 			dateChooserNacim.setBorder(new EmptyBorder(0, 0, 0, 0));
 			dateChooserNacim.getCalendarButton().setFont(new Font("Yu Gothic UI", Font.PLAIN, 15));
 			
-			RoundedGlowPanel panel11 = new RoundedGlowPanel();
-			panel_1.setBounds(108, 462, 145, 59);
-			panelDatosPersona.add(panel_1);
-			
 			RoundedPanel roundedPanel_1 = new RoundedPanel();
 			roundedPanel_1.setLayout(null);
 			roundedPanel_1.setRoundTopRight(18);
@@ -636,7 +586,7 @@ public class VisualPaciente extends JPanel {
 			lblImagen.setBounds((int)(203*widthRatio),(int)(101*heightRatio), (int)(348*widthRatio),(int)(22*heightRatio));
 			roundedPanel_1.add(lblImagen);
 			
-			roundedGlowPanelPNombre = new RoundedGlowPanel();
+			RoundedGlowPanel roundedGlowPanelPNombre = new RoundedGlowPanel();
 			roundedGlowPanelPNombre.setLayout(null);
 			roundedGlowPanelPNombre.setRoundTopRight(60);
 			roundedGlowPanelPNombre.setRoundTopLeft(60);
@@ -650,7 +600,7 @@ public class VisualPaciente extends JPanel {
 			roundedGlowPanelPNombre.setBounds((int)(77*widthRatio),(int)(144*heightRatio), (int)(277*widthRatio),(int)(59*heightRatio));
 			panelDatosPersona.add(roundedGlowPanelPNombre);
 			
-			roundedGlowPanelSNombre = new RoundedGlowPanel();
+			RoundedGlowPanel roundedGlowPanelSNombre = new RoundedGlowPanel();
 			roundedGlowPanelSNombre.setLayout(null);
 			roundedGlowPanelSNombre.setRoundTopRight(60);
 			roundedGlowPanelSNombre.setRoundTopLeft(60);
@@ -664,7 +614,7 @@ public class VisualPaciente extends JPanel {
 			roundedGlowPanelSNombre.setBounds((int)(77*widthRatio),(int)(205*heightRatio), (int)(277*widthRatio),(int)(59*heightRatio));
 			panelDatosPersona.add(roundedGlowPanelSNombre);
 			
-			roundedGlowPanelPApellido = new RoundedGlowPanel();
+			RoundedGlowPanel roundedGlowPanelPApellido = new RoundedGlowPanel();
 			roundedGlowPanelPApellido.setLayout(null);
 			roundedGlowPanelPApellido.setRoundTopRight(60);
 			roundedGlowPanelPApellido.setRoundTopLeft(60);
@@ -678,7 +628,7 @@ public class VisualPaciente extends JPanel {
 			roundedGlowPanelPApellido.setBounds((int)(77*widthRatio),(int)(266*heightRatio), (int)(277*widthRatio),(int)(59*heightRatio));
 			panelDatosPersona.add(roundedGlowPanelPApellido);
 			
-			roundedGlowPanelSApellido = new RoundedGlowPanel();
+			RoundedGlowPanel roundedGlowPanelSApellido = new RoundedGlowPanel();
 			roundedGlowPanelSApellido.setLayout(null);
 			roundedGlowPanelSApellido.setRoundTopRight(60);
 			roundedGlowPanelSApellido.setRoundTopLeft(60);
@@ -692,7 +642,7 @@ public class VisualPaciente extends JPanel {
 			roundedGlowPanelSApellido.setBounds((int)(77*widthRatio),(int)(327*heightRatio), (int)(277*widthRatio),(int)(53*heightRatio));
 			panelDatosPersona.add(roundedGlowPanelSApellido);
 			
-			roundedGlowPanelCedula = new RoundedGlowPanel();
+			RoundedGlowPanel roundedGlowPanelCedula = new RoundedGlowPanel();
 			roundedGlowPanelCedula.setLayout(null);
 			roundedGlowPanelCedula.setRoundTopRight(60);
 			roundedGlowPanelCedula.setRoundTopLeft(60);
@@ -706,7 +656,7 @@ public class VisualPaciente extends JPanel {
 			roundedGlowPanelCedula.setBounds((int)(365*widthRatio),(int)(79*heightRatio), (int)(277*widthRatio),(int)(59*heightRatio));
 			panelDatosPersona.add(roundedGlowPanelCedula);
 			
-			roundedGlowPanelTelefono = new RoundedGlowPanel();
+			RoundedGlowPanel roundedGlowPanelTelefono = new RoundedGlowPanel();
 			roundedGlowPanelTelefono.setLayout(null);
 			roundedGlowPanelTelefono.setRoundTopRight(60);
 			roundedGlowPanelTelefono.setRoundTopLeft(60);
@@ -720,7 +670,7 @@ public class VisualPaciente extends JPanel {
 			roundedGlowPanelTelefono.setBounds((int)(365*widthRatio),(int)(144*heightRatio), (int)(277*widthRatio),(int)(59*heightRatio));
 			panelDatosPersona.add(roundedGlowPanelTelefono);
 			
-			roundedGlowPanelFNacimiento = new RoundedGlowPanel();
+			RoundedGlowPanel roundedGlowPanelFNacimiento = new RoundedGlowPanel();
 			roundedGlowPanelFNacimiento.setLayout(null);
 			roundedGlowPanelFNacimiento.setRoundTopRight(60);
 			roundedGlowPanelFNacimiento.setRoundTopLeft(60);
@@ -734,7 +684,7 @@ public class VisualPaciente extends JPanel {
 			roundedGlowPanelFNacimiento.setBounds((int)(365*widthRatio),(int)(205*heightRatio), (int)(135*widthRatio),(int)(59*heightRatio));
 			panelDatosPersona.add(roundedGlowPanelFNacimiento);
 			
-			roundedGlowPanelAltura = new RoundedGlowPanel();
+			RoundedGlowPanel roundedGlowPanelAltura = new RoundedGlowPanel();
 			roundedGlowPanelAltura.setLayout(null);
 			roundedGlowPanelAltura.setRoundTopRight(60);
 			roundedGlowPanelAltura.setRoundTopLeft(60);
@@ -748,7 +698,7 @@ public class VisualPaciente extends JPanel {
 			roundedGlowPanelAltura.setBounds((int)(365*widthRatio),(int)(266*heightRatio), (int)(135*widthRatio),(int)(59*heightRatio));
 			panelDatosPersona.add(roundedGlowPanelAltura);
 			
-			roundedGlowPanelPeso = new RoundedGlowPanel();
+			RoundedGlowPanel roundedGlowPanelPeso = new RoundedGlowPanel();
 			roundedGlowPanelPeso.setLayout(null);
 			roundedGlowPanelPeso.setRoundTopRight(60);
 			roundedGlowPanelPeso.setRoundTopLeft(60);
@@ -762,7 +712,7 @@ public class VisualPaciente extends JPanel {
 			roundedGlowPanelPeso.setBounds((int)(507*widthRatio),(int)(266*heightRatio), (int)(135*widthRatio),(int)(59*heightRatio));
 			panelDatosPersona.add(roundedGlowPanelPeso);
 			
-			roundedGlowPanelTSangre = new RoundedGlowPanel();
+			RoundedGlowPanel roundedGlowPanelTSangre = new RoundedGlowPanel();
 			roundedGlowPanelTSangre.setLayout(null);
 			roundedGlowPanelTSangre.setRoundTopRight(60);
 			roundedGlowPanelTSangre.setRoundTopLeft(60);
@@ -828,7 +778,7 @@ public class VisualPaciente extends JPanel {
 			txtareaAlergias.setLineWrap(true);
 			txtareaAlergias.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
 			
-			roundedGlowPanelDireccion = new RoundedGlowPanel();
+			RoundedGlowPanel roundedGlowPanelDireccion = new RoundedGlowPanel();
 			roundedGlowPanelDireccion.setLayout(null);
 			roundedGlowPanelDireccion.setRoundTopRight(60);
 			roundedGlowPanelDireccion.setRoundTopLeft(60);
@@ -865,22 +815,22 @@ public class VisualPaciente extends JPanel {
 		gradientPanel.kEndColor = new Color(102, 204, 255);
 		gradientPanel.setkStartColor(new Color(51, 255, 204));
 		gradientPanel.setBounds(0, (int)(780*heightRatio), (int)(1400*widthRatio), (int)(170*heightRatio));
-		contentPanel.add(gradientPanel);
+		add(gradientPanel);
 		gradientPanel.setLayout(null);
 		
-		RoundedGlowPanel roundedGlowPanelRegistro = new RoundedGlowPanel();
-		roundedGlowPanelRegistro.setLayout(null);
-		roundedGlowPanelRegistro.setRoundTopRight(60);
-		roundedGlowPanelRegistro.setRoundTopLeft(60);
-		roundedGlowPanelRegistro.setRoundBottomRight(60);
-		roundedGlowPanelRegistro.setRoundBottomLeft(60);
-		roundedGlowPanelRegistro.setGlowColor(Color.CYAN);
-		roundedGlowPanelRegistro.setGlowAlpha(170);
-		roundedGlowPanelRegistro.setForeground(Color.WHITE);
-		roundedGlowPanelRegistro.setBorder(null);
-		roundedGlowPanelRegistro.setBackground(Color.WHITE);
-		roundedGlowPanelRegistro.setBounds((int)(1114*widthRatio),(int)(599*heightRatio), (int)(132*widthRatio),(int)(49*heightRatio));
-		contentPanel.add(roundedGlowPanelRegistro);
+		RoundedGlowPanel roundedGlowPanelModificar = new RoundedGlowPanel();
+		roundedGlowPanelModificar.setLayout(null);
+		roundedGlowPanelModificar.setRoundTopRight(60);
+		roundedGlowPanelModificar.setRoundTopLeft(60);
+		roundedGlowPanelModificar.setRoundBottomRight(60);
+		roundedGlowPanelModificar.setRoundBottomLeft(60);
+		roundedGlowPanelModificar.setGlowColor(Color.CYAN);
+		roundedGlowPanelModificar.setGlowAlpha(170);
+		roundedGlowPanelModificar.setForeground(Color.WHITE);
+		roundedGlowPanelModificar.setBorder(null);
+		roundedGlowPanelModificar.setBackground(Color.WHITE);
+		roundedGlowPanelModificar.setBounds((int)(1107*widthRatio),(int)(599*heightRatio), (int)(118*widthRatio),(int)(49*heightRatio));
+		add(roundedGlowPanelModificar);
 		
 		lblModificar = new JLabel("Modificar");
 		lblModificar.setEnabled(false);
@@ -888,27 +838,10 @@ public class VisualPaciente extends JPanel {
 		lblModificar.setForeground(new Color(60, 179, 113));
 		lblModificar.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
 		lblModificar.setBackground(Color.WHITE);
-		lblModificar.setBounds(0, 0, (int)(132*widthRatio),(int)(49*heightRatio));
-		roundedGlowPanelRegistro.add(lblModificar);
+		lblModificar.setBounds(0, 0, (int)(118*widthRatio),(int)(49*heightRatio));
+		roundedGlowPanelModificar.add(lblModificar);
 		
-		/* RECORDAR CAMBIAR ESTO POR EL LABEL DE MODIFICAR, ADEMAS HAY QUE CAMBIAR LA ESTRUCTURA PARA QUE PONGA LOS DATOS DE LA
-		 * PERSONA EN LOS CAMPOS DEL MISMO PANEL.
-		 
-		
-		btnModificar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				RegPaciente mod_verPaciente = new RegPaciente(selected, false, false);
-				mod_verPaciente.setModal(true);
-				mod_verPaciente.setVisible(true);
-				loadPacientes();
-				JOptionPane.showMessageDialog(null, "Modificado con éxito", "Modificar Paciente", JOptionPane.INFORMATION_MESSAGE);
-			}
-		});
-		
-		*/
-		
-		roundedGlowPanelEliminar = new RoundedGlowPanel();
+		RoundedGlowPanel roundedGlowPanelEliminar = new RoundedGlowPanel();
 		roundedGlowPanelEliminar.setLayout(null);
 		roundedGlowPanelEliminar.setRoundTopRight(60);
 		roundedGlowPanelEliminar.setRoundTopLeft(60);
@@ -919,8 +852,8 @@ public class VisualPaciente extends JPanel {
 		roundedGlowPanelEliminar.setForeground(Color.WHITE);
 		roundedGlowPanelEliminar.setBorder(null);
 		roundedGlowPanelEliminar.setBackground(Color.WHITE);
-		roundedGlowPanelEliminar.setBounds((int)(1256*widthRatio),(int)(599*heightRatio), (int)(132*widthRatio),(int)(49*heightRatio));
-		contentPanel.add(roundedGlowPanelEliminar);
+		roundedGlowPanelEliminar.setBounds((int)(1249*widthRatio),(int)(599*heightRatio), (int)(118*widthRatio),(int)(49*heightRatio));
+		add(roundedGlowPanelEliminar);
 		
 		lblEliminar = new JLabel("Eliminar");
 		lblEliminar.setEnabled(false);
@@ -928,34 +861,12 @@ public class VisualPaciente extends JPanel {
 		lblEliminar.setForeground(new Color(220, 20, 60));
 		lblEliminar.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
 		lblEliminar.setBackground(Color.WHITE);
-		lblEliminar.setBounds(0, 0, (int)(132*widthRatio),(int)(49*heightRatio));
+		lblEliminar.setBounds(0, 0, (int)(118*widthRatio),(int)(49*heightRatio));
 		roundedGlowPanelEliminar.add(lblEliminar);
 		
-		/* RECORDAR CAMBIAR ESTO POR EL LABEL DE ELIMINAR, CREO QUE NO HAY QUE HACER CAMBIOS EN LA ESTRUCTURA PERO
-		 * VERIFICAR.
-		  
-		btnEliminar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				int Option = JOptionPane.showConfirmDialog(null, "¿Está seguro de eliminar al Paciente con código: <" + selected.getCodePaciente() + ">?", "Eliminar Paciente", JOptionPane.OK_CANCEL_OPTION);
-				
-				if (Option == JOptionPane.OK_OPTION) {
-					
-					Clinica.getInstance().eliminarPaciente(selected);
-					loadPacientes();
-					btnEliminar.setEnabled(false);
-					btnModificar.setEnabled(false);
-					btnVerHistMed.setEnabled(false);
-				}
-				
-			}
-		});
-		
-		*/
-		
 		RoundedGlowPanel roundedGlowPanelRegistrar = new RoundedGlowPanel();
-		roundedGlowPanelRegistrar.setBounds((int)(824*widthRatio),(int)(599*heightRatio), (int)(132*widthRatio),(int)(49*heightRatio));
-		contentPanel.add(roundedGlowPanelRegistrar);
+		roundedGlowPanelRegistrar.setBounds((int)(817*widthRatio),(int)(599*heightRatio), (int)(118*widthRatio),(int)(49*heightRatio));
+		add(roundedGlowPanelRegistrar);
 		roundedGlowPanelRegistrar.setLayout(null);
 		roundedGlowPanelRegistrar.setRoundTopRight(60);
 		roundedGlowPanelRegistrar.setRoundTopLeft(60);
@@ -967,127 +878,16 @@ public class VisualPaciente extends JPanel {
 		roundedGlowPanelRegistrar.setBorder(null);
 		roundedGlowPanelRegistrar.setBackground(Color.WHITE);
 		
-//		lblRegistrar = new JLabel("Registrar");
-//		lblRegistrar.addMouseListener(new MouseAdapter() {
-//			@Override
-//			public void mouseClicked(MouseEvent e) {
-//				try {
-//					if (paciente == null) {
-//						
-//						if (rdbtnMasculino.isSelected()) {
-//							
-//							sexoPaciente = 'M';
-//						}
-//						else {
-//							
-//							sexoPaciente = 'F';
-//						}
-//						
-//						nombre = txtNombre.getText();
-//						cedula = txtCedula.getText();
-//						telefono = txtTelefono.getText();
-//						fechaNacimiento = dateChooserNacim.getDate();
-//						peso = Float.parseFloat(txtPeso.getText());
-//						altura = Float.parseFloat(txtAltura.getText());
-//						
-//						if (nombre.isEmpty() || cedula.isEmpty() || telefono.isEmpty()) {
-//							throw new ValidarCampo("Debe llenar los campos obligatorios.");
-//						}
-//						
-//						if (fechaNacimiento == null) {
-//							throw new ValidarCampo("No ha seleccionado una fecha de nacimiento.");
-//						}
-//						
-//						if (cbxTipoSangre.getSelectedIndex() == 0) {
-//							throw new ValidarCampo("No ha seleccionado un tipo de sangre.");
-//						}
-//						
-//						if (peso <= 0 || altura <= 0) {
-//							throw new ValidarCampo("Las entradas del peso o la altura no pueden ser negativas.");
-//						} 
-//						
-//						if (!rdbtnMasculino.isSelected() && !rdbtnFemenino.isSelected()) {
-//							throw new ValidarCampo("Debe seleccionar un sexo.");
-//						}
-//						
-//						Paciente nuevoPaciente = new Paciente(txtCedula.getText(), txtNombre.getText(), dateChooserNacim.getDate(),
-//								 sexoPaciente, txtTelefono.getText(), txtareaDireccion.getText(), txtCodePaciente.getText(),
-//								 cbxTipoSangre.getSelectedItem().toString(), new Float(txtAltura.getText()), new Float(txtPeso.getText()),
-//								 txtareaAlergias.getText(), txtareaInfoRelevante.getText());
-//						
-//						codePacienteRegistrado = nuevoPaciente.getCodePaciente();
-//						ElegirVacunaPaciente elegirVacunas = new ElegirVacunaPaciente(null);
-//						elegirVacunas.setModal(true);
-//						elegirVacunas.setVisible(true);
-//						nuevoPaciente.getMisVacunas().addAll(elegirVacunas.extraerVacunasElegidas());
-//						Clinica.getInstance().insertarPaciente(nuevoPaciente);
-//						JOptionPane.showMessageDialog(null, "Registrado con éxito", "Registrar Paciente", JOptionPane.INFORMATION_MESSAGE);
-//						
-//						if (regUnSoloPaciente) {
-//							
-//							dispose();
-//						}
-//						else {
-//							clean();
-//						}
-//						
-//					}
-//					else {
-//				
-//						if (rdbtnMasculino.isSelected()) {
-//							
-//							sexoPaciente = 'M';
-//						}
-//						else {
-//							
-//							sexoPaciente = 'F';
-//						}
-//						
-//						paciente.setTipoDeSangre(cbxTipoSangre.getSelectedItem().toString());
-//						paciente.setAltura(new Float(txtAltura.getText()));
-//						paciente.setPeso(new Float(txtPeso.getText()));
-//						paciente.setTelefono(txtTelefono.getText());
-//						paciente.setDireccion(txtareaDireccion.getText());
-//						paciente.setAlergias(txtareaAlergias.getText());
-//						
-//						ElegirVacunaPaciente elegirVacunas = new ElegirVacunaPaciente(paciente);
-//						elegirVacunas.setModal(true);
-//						elegirVacunas.setVisible(true);
-//						paciente.getMisVacunas().clear();
-//						paciente.getMisVacunas().addAll(elegirVacunas.extraerVacunasElegidas());							
-//						Clinica.getInstance().actualizarPaciente(paciente);
-//						dispose();
-//					}
-//				} catch (ValidarCampo e2) {
-//					JOptionPane.showMessageDialog(null, e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-//					e2.printStackTrace();
-//					txtNombre.grabFocus();
-//				}
-//				catch (NumberFormatException e3) {
-//					JOptionPane.showMessageDialog(null, "Ingrese datos válidos para la altura y el peso.", "Error", JOptionPane.ERROR_MESSAGE);
-//					txtPeso.grabFocus();
-//				}
-//				
-//			}
-//		});
-
-		lblRegistrar.setHorizontalAlignment(SwingConstants.CENTER);
-		lblRegistrar.setForeground(new Color(100, 149, 237));
-		lblRegistrar.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
-		lblRegistrar.setBackground(Color.WHITE);
-		lblRegistrar.setBounds(0, 0, (int)(132*widthRatio),(int)(49*heightRatio));
-		roundedGlowPanelRegistrar.add(lblRegistrar);
-		
 		lblRegistrar_1 = new JLabel("Registrar");
 		lblRegistrar_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblRegistrar_1.setForeground(new Color(100, 149, 237));
 		lblRegistrar_1.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
 		lblRegistrar_1.setEnabled(false);
 		lblRegistrar_1.setBackground(Color.WHITE);
-		lblRegistrar_1.setBounds(0, 0, (int)(132*widthRatio),(int)(49*heightRatio));
+		lblRegistrar_1.setBounds(0, 0, (int)(118*widthRatio),(int)(49*heightRatio));
 		roundedGlowPanelRegistrar.add(lblRegistrar_1);
 		
-		roundedGlowHistorial = new RoundedGlowPanel();
+		RoundedGlowPanel roundedGlowHistorial = new RoundedGlowPanel();
 		roundedGlowHistorial.setLayout(null);
 		roundedGlowHistorial.setRoundTopRight(60);
 		roundedGlowHistorial.setRoundTopLeft(60);
@@ -1098,8 +898,8 @@ public class VisualPaciente extends JPanel {
 		roundedGlowHistorial.setForeground(Color.WHITE);
 		roundedGlowHistorial.setBorder(null);
 		roundedGlowHistorial.setBackground(Color.WHITE);
-		roundedGlowHistorial.setBounds((int)(970*widthRatio),(int)(599*heightRatio), (int)(132*widthRatio),(int)(49*heightRatio));
-		contentPanel.add(roundedGlowHistorial);
+		roundedGlowHistorial.setBounds((int)(963*widthRatio),(int)(599*heightRatio), (int)(118*widthRatio),(int)(49*heightRatio));
+		add(roundedGlowHistorial);
 		
 		lblHistorial = new JLabel("Historial");
 		lblHistorial.setEnabled(false);
@@ -1107,26 +907,10 @@ public class VisualPaciente extends JPanel {
 		lblHistorial.setForeground(new Color(100, 149, 237));
 		lblHistorial.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
 		lblHistorial.setBackground(Color.WHITE);
-		lblHistorial.setBounds(0, 0, (int)(132*widthRatio),(int)(49*heightRatio));
+		lblHistorial.setBounds(0, 0, (int)(118*widthRatio),(int)(49*heightRatio));
 		roundedGlowHistorial.add(lblHistorial);
 		
-		/*RECORDAR CAMBIAR ESTO POR EL LABEL DE HISTORIAL, ADEMAS HAY QUE CREAR UN NUEVO PANEL QUE MUESTRE
-		 *EL HISTORIAL DE LA PERSONA SELECCIONADA.
-		 
-		
-		btnVerHistMed.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				VerHistorialMedico verHistorialPaciente = new VerHistorialMedico(selected.getCodePaciente());
-				verHistorialPaciente.setModal(true);
-				verHistorialPaciente.setVisible(true);
-				
-			}
-		});
-		
-		*/
-		
-		roundedGlowPanelBuscarPaciente = new RoundedGlowPanel();
+		RoundedGlowPanel roundedGlowPanelBuscarPaciente = new RoundedGlowPanel();
 		roundedGlowPanelBuscarPaciente.setLayout(null);
 		roundedGlowPanelBuscarPaciente.setRoundTopRight(60);
 		roundedGlowPanelBuscarPaciente.setRoundTopLeft(60);
@@ -1137,15 +921,15 @@ public class VisualPaciente extends JPanel {
 		roundedGlowPanelBuscarPaciente.setForeground(Color.WHITE);
 		roundedGlowPanelBuscarPaciente.setBorder(null);
 		roundedGlowPanelBuscarPaciente.setBackground(Color.WHITE);
-		roundedGlowPanelBuscarPaciente.setBounds((int)(824*widthRatio),(int)(541*heightRatio), (int)(564*widthRatio),(int)(49*heightRatio));
-		contentPanel.add(roundedGlowPanelBuscarPaciente);
+		roundedGlowPanelBuscarPaciente.setBounds((int)(817*widthRatio),(int)(541*heightRatio), (int)(550*widthRatio),(int)(49*heightRatio));
+		add(roundedGlowPanelBuscarPaciente);
 		
 		lblBuscar = new JLabel("Buscar:");
 		lblBuscar.setHorizontalAlignment(SwingConstants.CENTER);
 		lblBuscar.setForeground(new Color(100, 149, 237));
 		lblBuscar.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
 		lblBuscar.setBackground(Color.WHITE);
-		lblBuscar.setBounds(0, 0, (int)(132*widthRatio),(int)(49*heightRatio));
+		lblBuscar.setBounds(0, 0, (int)(118*widthRatio),(int)(49*heightRatio));
 		roundedGlowPanelBuscarPaciente.add(lblBuscar);
 		
 		txtBuscarPaciente = new JTextField();
@@ -1167,109 +951,5 @@ public class VisualPaciente extends JPanel {
 		roundedGlowPanelBuscarPaciente.add(txtBuscarPaciente);
 		txtBuscarPaciente.setColumns(10);
 		
-		if (pacientesEspecificosAMostrar == null) {
-			
-			loadPacientes();
-		}
-		else {
-			
-			loadPacientesEspecificos();
-			lblBuscar.setVisible(false);
-			txtBuscarPaciente.setVisible(false);
-			lblModificar.setVisible(false);
-			lblEliminar.setVisible(false);
-		}
-		
-	
-//	private void loadPaciente() {
-//		
-//		if (paciente != null) {
-//			
-//			txtCodePaciente.setText(paciente.getCodePaciente());
-//			txtNombre.setText(paciente.getNombre());
-//			if (paciente.getSexo() == 'M') {
-//				
-//				rdbtnMasculino.setSelected(true);
-//			}
-//			else {
-//				
-//				rdbtnFemenino.setSelected(true);
-//			}
-//			txtCedula.setText(paciente.getCedula());
-//			dateChooserNacim.setDate(paciente.getFechaDeNacimiento());
-//			txtTelefono.setText(paciente.getTelefono());
-//			cbxTipoSangre.setSelectedItem(paciente.getTipoDeSangre());
-//			txtAltura.setText(String.valueOf(paciente.getAltura()));
-//			txtPeso.setText(String.valueOf(paciente.getPeso()));
-//			txtareaDireccion.setText(paciente.getDireccion());
-//			txtareaAlergias.setText(paciente.getAlergias());
-//			txtareaInfoRelevante.setText(paciente.getInfoImportante());
-//		}
-//		
-	}
-	
-// AQUI TERMINA REGPACIENTE
-	
-	public static void loadPacientes() {
-		
-		model.setRowCount(0);
-		row = new Object[model.getColumnCount()];
-		
-		for (Persona persona : Clinica.getInstance().getMisPersonas()) {
-			
-			if (persona instanceof Paciente) {
-				
-				row[0] = ((Paciente) persona).getCodePaciente();
-				row[1] = persona.getCedula();
-				row[2] = persona.getNombre();
-				row[3] = persona.getSexo();
-				row[4] = persona.getTelefono();
-				model.addRow(row);
-			}
-			
-		}
-		
-	}
-	
-	private void loadPacientesEspecificos() {
-		
-		model.setRowCount(0);
-		row = new Object[model.getColumnCount()];
-		
-		for (Persona persona : pacientesEspecificosAMostrar) {
-			
-			if (persona instanceof Paciente) {
-				
-				row[0] = ((Paciente) persona).getCodePaciente();
-				row[1] = persona.getCedula();
-				row[2] = persona.getNombre();
-				row[3] = persona.getSexo();
-				row[4] = persona.getTelefono();
-				model.addRow(row);
-			}
-			
-		}
-		
-	}
-	
-	private void clean() {
-		
-		txtCodePaciente.setText("P-"+Clinica.getInstance().getGeneradorCodePaciente());
-		txtPNombre.setText("");
-		rdbtnMasculino.setSelected(false);
-		rdbtnFemenino.setSelected(false);
-		txtCedula.setText("");
-		dateChooserNacim.setCalendar(null);
-		cbxTipoSangre.setSelectedIndex(0);
-		txtTelefono.setText("");
-		spnAltura.setValue(0);
-		spnPeso.setValue(0);
-		txtareaAlergias.setText("");
-		txtareaDireccion.setText("");
-	}
-	
-	public String getCodePacienteRegistrado() {
-		
-		return codePacienteRegistrado;
 	}
 }

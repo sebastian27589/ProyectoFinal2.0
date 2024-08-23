@@ -40,6 +40,7 @@ import com.toedter.calendar.JDateChooser;
 import exception.ValidarCampo;
 import logico.Clinica;
 import logico.Paciente;
+import logico.PanelSimulacionAnim;
 import logico.Persona;
 import logico.RoundedGlowPanel;
 import logico.RoundedPanel;
@@ -56,7 +57,7 @@ import java.awt.Dimension;
 import javax.swing.JCheckBox;
 import javax.swing.border.EtchedBorder;
 
-public class VisualVacuna extends JPanel {
+public class VisualVacuna extends PanelSimulacionAnim {
 
 	private static DefaultTableModel model;
 	private Dimension dim;
@@ -75,10 +76,6 @@ public class VisualVacuna extends JPanel {
 	private Paciente paciente = null;
 	private char sexoPaciente;
 	public static String codePacienteRegistrado = null;
-	private JButton btnSiguiente;
-	private JButton cancelButton;
-	private JPanel panelDatosPersona;
-	private JPanel panel_1;
 	private JPanel panelTablaVacuna;
 	private JLabel lblEliminarVacuna;
 	private JLabel lblModificarVacuna;
@@ -95,8 +92,7 @@ public class VisualVacuna extends JPanel {
 	 */
 	public static void main(String[] args) {
 		try {
-			RegPaciente dialog = new RegPaciente(null, false, false);
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			VisualVacuna dialog = new VisualVacuna();
 			dialog.setVisible(true);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -143,16 +139,16 @@ public class VisualVacuna extends JPanel {
 		model.setColumnIdentifiers(header);
 		
 		setBounds(100, 100, 1444, 993);
-		contentPanel.setSize(new Dimension((int)(1381*widthRatio),(int)(900*heightRatio)));
-		contentPanel.setBackground(Color.WHITE);
-		contentPanel.setBorder(null);
-		contentPanel.setLayout(null);
+		setSize(new Dimension((int)(1381*widthRatio),(int)(900*heightRatio)));
+		setBackground(Color.WHITE);
+		setBorder(null);
+		setLayout(null);
 		
 		panelTablaVacuna = new JPanel();
 		panelTablaVacuna.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panelTablaVacuna.setBackground(new Color(255, 255, 255));
 		panelTablaVacuna.setBounds((int)(814*widthRatio),(int)(13*heightRatio), (int)(550*widthRatio),(int)(515*heightRatio));
-		contentPanel.add(panelTablaVacuna);
+		add(panelTablaVacuna);
 		panelTablaVacuna.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane(tableEnfermedad);
@@ -222,7 +218,7 @@ public class VisualVacuna extends JPanel {
 			panelDatosVacuna.setRoundBottomRight(35);
 			panelDatosVacuna.setRoundBottomLeft(35);
 			panelDatosVacuna.setBounds((int)(12*widthRatio),(int)(13*heightRatio), (int)(790*widthRatio),(int)(721*heightRatio));
-			contentPanel.add(panelDatosVacuna);
+			add(panelDatosVacuna);
 			panelDatosVacuna.setBackground(new Color(240, 240, 240));
 			panelDatosVacuna.setLayout(null);
 			
@@ -324,10 +320,6 @@ public class VisualVacuna extends JPanel {
 			lblRegistroDeVacuna.setBounds((int)(157*widthRatio),(int)(20*heightRatio), (int)(416*widthRatio),(int)(46*heightRatio));
 			panelDatosVacuna.add(lblRegistroDeVacuna);
 			
-			RoundedGlowPanel panel11 = new RoundedGlowPanel();
-			panel_1.setBounds(108, 462, 145, 59);
-			panelDatosVacuna.add(panel_1);
-			
 			RoundedPanel roundedPanelTablaEnfermedad = new RoundedPanel();
 			roundedPanelTablaEnfermedad.setLayout(null);
 			roundedPanelTablaEnfermedad.setBackground(Color.WHITE);
@@ -379,7 +371,7 @@ public class VisualVacuna extends JPanel {
 			panelDatosVacuna.add(chbxVigilancia);
 			
 			cbxEnfermedad = new JComboBox();
-			cbxEnfermedad.setSelectedIndex(0);
+			//cbxEnfermedad.setSelectedIndex(0);
 			cbxEnfermedad.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
 			cbxEnfermedad.setBorder(null);
 			cbxEnfermedad.setBounds((int)(229*widthRatio), (int)(330*heightRatio), (int)(216*widthRatio), (int)(46*heightRatio));
@@ -434,7 +426,7 @@ public class VisualVacuna extends JPanel {
 		gradientPanel.kEndColor = new Color(102, 204, 255);
 		gradientPanel.setkStartColor(new Color(51, 255, 204));
 		gradientPanel.setBounds((int)(0*widthRatio),(int)(780*heightRatio), (int)(1381*widthRatio),(int)(120*heightRatio));
-		contentPanel.add(gradientPanel);
+		add(gradientPanel);
 		gradientPanel.setLayout(null);
 		
 		RoundedGlowPanel roundedGlowPanelModificarVacuna = new RoundedGlowPanel();
@@ -449,7 +441,7 @@ public class VisualVacuna extends JPanel {
 		roundedGlowPanelModificarVacuna.setBorder(null);
 		roundedGlowPanelModificarVacuna.setBackground(Color.WHITE);
 		roundedGlowPanelModificarVacuna.setBounds((int)(1105*widthRatio),(int)(599*heightRatio), (int)(132*widthRatio),(int)(49*heightRatio));
-		contentPanel.add(roundedGlowPanelModificarVacuna);
+		add(roundedGlowPanelModificarVacuna);
 		
 		lblModificarVacuna = new JLabel("Modificar");
 		lblModificarVacuna.setEnabled(false);
@@ -489,7 +481,7 @@ public class VisualVacuna extends JPanel {
 		roundedGlowPanelEliminarVacuna.setBorder(null);
 		roundedGlowPanelEliminarVacuna.setBackground(Color.WHITE);
 		roundedGlowPanelEliminarVacuna.setBounds((int)(1249*widthRatio),(int)(599*heightRatio), (int)(118*widthRatio),(int)(49*heightRatio));
-		contentPanel.add(roundedGlowPanelEliminarVacuna);
+		add(roundedGlowPanelEliminarVacuna);
 		
 		lblEliminarVacuna = new JLabel("Eliminar");
 		lblEliminarVacuna.setEnabled(false);
@@ -524,7 +516,7 @@ public class VisualVacuna extends JPanel {
 		
 		RoundedGlowPanel roundedGlowPanelRegistrarVacuna = new RoundedGlowPanel();
 		roundedGlowPanelRegistrarVacuna.setBounds((int)(961*widthRatio),(int)(599*heightRatio), (int)(132*widthRatio),(int)(49*heightRatio));
-		contentPanel.add(roundedGlowPanelRegistrarVacuna);
+		add(roundedGlowPanelRegistrarVacuna);
 		roundedGlowPanelRegistrarVacuna.setLayout(null);
 		roundedGlowPanelRegistrarVacuna.setRoundTopRight(60);
 		roundedGlowPanelRegistrarVacuna.setRoundTopLeft(60);
@@ -536,7 +528,6 @@ public class VisualVacuna extends JPanel {
 		roundedGlowPanelRegistrarVacuna.setBorder(null);
 		roundedGlowPanelRegistrarVacuna.setBackground(Color.WHITE);
 		
-//		lblRegistrar = new JLabel("Registrar");
 //		lblRegistrar.addMouseListener(new MouseAdapter() {
 //			@Override
 //			public void mouseClicked(MouseEvent e) {
@@ -639,13 +630,6 @@ public class VisualVacuna extends JPanel {
 //				
 //			}
 //		});
-
-		lblRegistrar.setHorizontalAlignment(SwingConstants.CENTER);
-		lblRegistrar.setForeground(new Color(100, 149, 237));
-		lblRegistrar.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
-		lblRegistrar.setBackground(Color.WHITE);
-		lblRegistrar.setBounds(0, 0, (int)(132*widthRatio),(int)(49*heightRatio));
-		roundedGlowPanelRegistrarVacuna.add(lblRegistrar);
 		
 		lblRegistrarVacuna = new JLabel("Registrar");
 		lblRegistrarVacuna.setHorizontalAlignment(SwingConstants.CENTER);
@@ -684,7 +668,7 @@ public class VisualVacuna extends JPanel {
 		roundedGlowPanelBuscarVacuna.setBorder(null);
 		roundedGlowPanelBuscarVacuna.setBackground(Color.WHITE);
 		roundedGlowPanelBuscarVacuna.setBounds((int)(817*widthRatio),(int)(541*heightRatio), (int)(550*widthRatio),(int)(49*heightRatio));
-		contentPanel.add(roundedGlowPanelBuscarVacuna);
+		add(roundedGlowPanelBuscarVacuna);
 		
 		JLabel lblBuscar = new JLabel("Buscar:");
 		lblBuscar.setHorizontalAlignment(SwingConstants.CENTER);

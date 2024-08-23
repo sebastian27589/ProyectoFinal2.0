@@ -10,7 +10,11 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 public class PanelSimulacionAnim extends JPanel {
-    private float opacity = 1.0f;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private float opacity = 1.0f;
     
     public PanelSimulacionAnim() {
         setOpaque(false);

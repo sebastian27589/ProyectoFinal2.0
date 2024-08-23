@@ -42,6 +42,7 @@ public class VentanaLogin extends JDialog {
 	private JTextField txtContrasena;
 	private JLabel lblIconOcultarContra;
 	private JLabel lblIconVerContra;
+	private byte ind = 1;
 
 	/**
 	 * Launch the application.
@@ -157,6 +158,7 @@ public class VentanaLogin extends JDialog {
 				txtContrasena.setVisible(false);
 				passwordFieldLogin.setText(txtContrasena.getText());
 				passwordFieldLogin.setVisible(true);
+				ind = 1;
 			}
 		});
 		
@@ -172,6 +174,7 @@ public class VentanaLogin extends JDialog {
 				passwordFieldLogin.setVisible(false);
 				txtContrasena.setText(String.valueOf(passwordFieldLogin.getPassword()));
 				txtContrasena.setVisible(true);
+				ind = 0;
 			}
 		});
 		
@@ -257,27 +260,16 @@ public class VentanaLogin extends JDialog {
 		txtUsuario.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-				String password;
-				
-				if (lblIconVerContra.isVisible()) {
-					
-					password = String.valueOf(passwordFieldLogin.getPassword());
-				}
-				else {
-					
-					password = txtContrasena.getText();
-				}
 				
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-    				if (Clinica.getInstance().permitirInicioSesion(txtUsuario.getText(), password)) {
-    					
-    					VentanaPrincipal ventanaPrincipal = new VentanaPrincipal();
-    					dispose();
-    					ventanaPrincipal.setVisible(true);
-    				}
-    				else {
-    					JOptionPane.showMessageDialog(null,"¡Usuario o Contraseña no válidos!", "Error", JOptionPane.ERROR_MESSAGE);
-    				}
+                	if(ind == 0) {
+                		txtContrasena.requestFocusInWindow();
+                		txtContrasena.selectAll();
+                	}else {
+                		passwordFieldLogin.requestFocusInWindow();
+                		passwordFieldLogin.selectAll();
+                		
+                	}
                 }
             }
         });

@@ -1,26 +1,45 @@
 package logico;
 
+import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Shape;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 public class RoundedGlowPanel extends JPanel {
 
-    public int getRoundTopLeft() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private float opacity = 1.0f;
+
+	public int getRoundTopLeft() {
         return roundTopLeft;
     }
 
     public void setRoundTopLeft(int roundTopLeft) {
         this.roundTopLeft = roundTopLeft;
         repaint();
+    }
+    
+    public void setOpacity(float opacity) {
+        this.opacity = opacity;
+        repaint();
+    }
+
+    public float getOpacity() {
+        return opacity;
     }
 
     public int getRoundTopRight() {
@@ -83,6 +102,7 @@ public class RoundedGlowPanel extends JPanel {
     @Override
     protected void paintComponent(Graphics grphcs) {
         Graphics2D g2 = (Graphics2D) grphcs.create();
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setColor(getBackground());
         Area area = new Area(createRoundTopLeft());
@@ -178,5 +198,42 @@ public class RoundedGlowPanel extends JPanel {
         area.add(new Area(new Rectangle2D.Double(0, 0, width - roundX / 2, height)));
         area.add(new Area(new Rectangle2D.Double(0, 0, width, height - roundY / 2)));
         return area;
+    }
+    
+    public void Desaparecer(int delay) {
+        Timer timer = new Timer(delay, new ActionListener() {
+            private float currentOpacity = opacity;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                currentOpacity -= 0.05f;
+                if (currentOpacity <= 0) {
+                    setVisible(false);
+                    ((Timer) e.getSource()).stop();
+                } else {
+                    setOpacity(currentOpacity);
+                }
+            }
+        });
+        timer.start();
+    }
+
+    public void Aparecer(int delay) {
+        setVisible(true);
+        Timer timer = new Timer(delay, new ActionListener() {
+            private float currentOpacity = 0.0f;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                currentOpacity += 0.05f;
+                if (currentOpacity >= 1.0f) {
+                    setOpacity(1.0f);
+                    ((Timer) e.getSource()).stop();
+                } else {
+                    setOpacity(currentOpacity);
+                }
+            }
+        });
+        timer.start();
     }
 }

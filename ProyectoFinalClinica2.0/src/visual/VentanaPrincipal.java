@@ -75,10 +75,10 @@ public class VentanaPrincipal extends JFrame {
 	private JLabel lblPersona;
 	private JLabel lblEnfermedad;
 	private JLabel lblVacuna;
+	private PanelSimulacionAnim panelFondo;
 	private PanelSimulacionAnim panelFondo2;
 	private PanelSimulacionAnim panelFondo3;
 	private PanelSimulacionAnim panelFondo4;
-	private PanelSimulacionAnim panelFondo;
 	private int ind = 0;
 	private int tiempoAnim = 20;
 
@@ -104,7 +104,6 @@ public class VentanaPrincipal extends JFrame {
 	public VentanaPrincipal() {
 		setResizable(false);
 		
-		// Comentario de prueba
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -174,6 +173,30 @@ public class VentanaPrincipal extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+		VisualPaciente mostrarPersona = new VisualPaciente();
+		mostrarPersona.setSize((int)(1381*widthRatio), (int)(900*heightRatio));
+		mostrarPersona.setLocation((int)(492*widthRatio), (int)(10*heightRatio));
+		mostrarPersona.setVisible(false);
+        
+		VisualMedico mostrarMedico = new VisualMedico();
+		mostrarMedico.setSize((int)(1381*widthRatio), (int)(900*heightRatio));
+		mostrarMedico.setLocation((int)(492*widthRatio), (int)(10*heightRatio));
+        mostrarMedico.setVisible(false);
+        
+		VisualEnfermedad mostrarEnfermedad = new VisualEnfermedad();
+		mostrarEnfermedad.setSize((int)(1381*widthRatio), (int)(900*heightRatio));
+		mostrarEnfermedad.setLocation((int)(492*widthRatio), (int)(10*heightRatio));
+		mostrarEnfermedad.setVisible(false);
+		
+		VisualVacuna mostrarVacuna = new VisualVacuna();
+		mostrarVacuna.setSize((int)(1381*widthRatio), (int)(900*heightRatio));
+		mostrarVacuna.setLocation((int)(492*widthRatio), (int)(10*heightRatio));
+		mostrarVacuna.setVisible(false);
+		
+		VisualCita mostrarCita = new VisualCita();
+		mostrarCita.setSize((int)(1381*widthRatio), (int)(900*heightRatio));
+		mostrarCita.setLocation((int)(492*widthRatio), (int)(10*heightRatio));
+		mostrarCita.setVisible(false);
 		
 		JPanel panelTiempoSesion = new JPanel();
 		panelTiempoSesion.setBorder(new CompoundBorder());
@@ -185,13 +208,19 @@ public class VentanaPrincipal extends JFrame {
         lbl_Tiempo.setFont(new Font("Gill Sans MT", Font.PLAIN, 15));
         lbl_Tiempo.setBounds((int)(1230*widthRatio), (int)(7*heightRatio), (int)(130*widthRatio), (int)(33*heightRatio));
         
+        panelTiempoSesion.add(lbl_Tiempo);
         
-                panelTiempoSesion.add(lbl_Tiempo);
-                
-                JLabel lblNewLabel_1 = new JLabel(Clinica.getInstance().getUsuarioLogueado().getNombreUsuario());
-                lblNewLabel_1.setFont(new Font("Gill Sans MT", Font.PLAIN, (int)(25*widthRatio)));
-                lblNewLabel_1.setBounds((int)(33*widthRatio), (int)(7*heightRatio), (int)(130*widthRatio), (int)(33*heightRatio));
-                panelTiempoSesion.add(lblNewLabel_1);
+        JLabel lblNewLabel_1 = new JLabel(Clinica.getInstance().getUsuarioLogueado().getNombreUsuario());
+        lblNewLabel_1.setFont(new Font("Gill Sans MT", Font.PLAIN, (int)(25*widthRatio)));
+        lblNewLabel_1.setBounds((int)(33*widthRatio), (int)(7*heightRatio), (int)(130*widthRatio), (int)(33*heightRatio));
+        panelTiempoSesion.add(lblNewLabel_1);
+        contentPane.add(mostrarPersona, BorderLayout.CENTER);
+        contentPane.add(mostrarMedico, BorderLayout.CENTER);
+        contentPane.add(mostrarEnfermedad, BorderLayout.CENTER);
+        contentPane.add(mostrarVacuna, BorderLayout.CENTER);
+        contentPane.add(mostrarCita, BorderLayout.CENTER);
+        contentPane.revalidate();
+        contentPane.repaint();
         
         lblRegistro = new JLabel("REGISTRO");
         lblRegistro.addMouseListener(new MouseAdapter() {
@@ -201,14 +230,33 @@ public class VentanaPrincipal extends JFrame {
         			case 1:
         				panelCita.Desaparecer(tiempoAnim);
         				panelFondo2.Desaparecer(tiempoAnim);
+        				mostrarCita.Desaparecer(tiempoAnim);
         				break;
+        				
         			case 2:
         				panelReporte.Desaparecer(tiempoAnim);
         				panelFondo3.Desaparecer(tiempoAnim);
         				break;
+        				
         			case 3:
         				panelGerencia.Desaparecer(tiempoAnim);
         				panelFondo4.Desaparecer(tiempoAnim);
+        				break;
+        				
+        			case 5:
+        				mostrarPersona.Desaparecer(tiempoAnim);
+        				break;
+        				
+        			case 6:
+        				mostrarMedico.Desaparecer(tiempoAnim);
+        				break;
+        				
+        			case 7:
+        				mostrarEnfermedad.Desaparecer(tiempoAnim);
+        				break;
+        				
+        			case 8:
+        				mostrarVacuna.Desaparecer(tiempoAnim);
         				break;
         		}
         		
@@ -255,12 +303,29 @@ public class VentanaPrincipal extends JFrame {
         				panelGerencia.Desaparecer(tiempoAnim);
         				panelFondo4.Desaparecer(tiempoAnim);
         				break;
+        			case 5:
+        				panelRegistro.Desaparecer(tiempoAnim);
+        				mostrarPersona.Desaparecer(tiempoAnim);
+        				break;
+        			case 6:
+        				panelRegistro.Desaparecer(tiempoAnim);
+        				mostrarMedico.Desaparecer(tiempoAnim);
+        				break;
+        			case 7:
+        				panelRegistro.Desaparecer(tiempoAnim);
+        				mostrarEnfermedad.Desaparecer(tiempoAnim);
+        				break;
+        			case 8:
+        				panelRegistro.Desaparecer(tiempoAnim);
+        				mostrarVacuna.Desaparecer(tiempoAnim);
+        				break;
         		}
         		
         		ind = 1;
 				panelCita.setBackground(new Color(81, 137, 252));
 				panelCita.Aparecer(tiempoAnim);
 				panelFondo2.Aparecer(tiempoAnim);
+				mostrarCita.Aparecer(tiempoAnim);
         	}
         });
         lblCita.setBounds(0, (int)(198*heightRatio), (int)(459*widthRatio), (int)(196*heightRatio));
@@ -295,10 +360,27 @@ public class VentanaPrincipal extends JFrame {
         			case 1:
         				panelCita.Desaparecer(tiempoAnim);
         				panelFondo2.Desaparecer(tiempoAnim);
+        				mostrarCita.Desaparecer(tiempoAnim);
         				break;
         			case 3:
         				panelGerencia.Desaparecer(tiempoAnim);
         				panelFondo4.Desaparecer(tiempoAnim);
+        				break;
+        			case 5:
+        				panelRegistro.Desaparecer(tiempoAnim);
+        				mostrarPersona.Desaparecer(tiempoAnim);
+        				break;
+        			case 6:
+        				panelRegistro.Desaparecer(tiempoAnim);
+        				mostrarMedico.Desaparecer(tiempoAnim);
+        				break;
+        			case 7:
+        				panelRegistro.Desaparecer(tiempoAnim);
+        				mostrarEnfermedad.Desaparecer(tiempoAnim);
+        				break;
+        			case 8:
+        				panelRegistro.Desaparecer(tiempoAnim);
+        				mostrarVacuna.Desaparecer(tiempoAnim);
         				break;
         		}
         		
@@ -339,10 +421,27 @@ public class VentanaPrincipal extends JFrame {
         			case 1:
         				panelCita.Desaparecer(tiempoAnim);
         				panelFondo2.Desaparecer(tiempoAnim);
+        				mostrarCita.Desaparecer(tiempoAnim);
         				break;
         			case 2:
         				panelReporte.Desaparecer(tiempoAnim);
         				panelFondo3.Desaparecer(tiempoAnim);
+        				break;
+        			case 5:
+        				panelRegistro.Desaparecer(tiempoAnim);
+        				mostrarPersona.Desaparecer(tiempoAnim);
+        				break;
+        			case 6:
+        				panelRegistro.Desaparecer(tiempoAnim);
+        				mostrarMedico.Desaparecer(tiempoAnim);
+        				break;
+        			case 7:
+        				panelRegistro.Desaparecer(tiempoAnim);
+        				mostrarEnfermedad.Desaparecer(tiempoAnim);
+        				break;
+        			case 8:
+        				panelRegistro.Desaparecer(tiempoAnim);
+        				mostrarVacuna.Desaparecer(tiempoAnim);
         				break;
         		}
         		
@@ -382,6 +481,7 @@ public class VentanaPrincipal extends JFrame {
     			case 1:
     				panelCita.Desaparecer(tiempoAnim);
     				panelFondo2.Desaparecer(tiempoAnim);
+    				mostrarCita.Desaparecer(tiempoAnim);
     				break;
     			case 2:
     				panelReporte.Desaparecer(tiempoAnim);
@@ -391,6 +491,18 @@ public class VentanaPrincipal extends JFrame {
     			case 3:
     				panelGerencia.Desaparecer(tiempoAnim);
     				panelFondo4.Desaparecer(tiempoAnim);
+    				break;
+    			case 5:
+    				mostrarPersona.Desaparecer(tiempoAnim);
+    				break;
+    			case 6:
+    				mostrarMedico.Desaparecer(tiempoAnim);
+    				break;
+    			case 7:
+    				mostrarEnfermedad.Desaparecer(tiempoAnim);
+    				break;
+    			case 8:
+    				mostrarVacuna.Desaparecer(tiempoAnim);
     				break;
         		}
     		
@@ -456,13 +568,14 @@ public class VentanaPrincipal extends JFrame {
         
         lblPersona = new JLabel("PERSONAS");
         lblPersona.setForeground(new Color(255, 255, 255));
-        lblPersona.setFont(new Font("Yu Gothic UI", Font.BOLD, 25));
+        lblPersona.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(25*widthRatio)));
         lblPersona.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
-        		RegPaciente registrarPaciente = new RegPaciente(null, false, false);
-        		registrarPaciente.setModal(true);
-        		registrarPaciente.setVisible(true);
+        		
+        		ind = 5;      		
+        		panelFondo.Desaparecer(tiempoAnim);
+				mostrarPersona.Aparecer(tiempoAnim);
         	}
         });
         lblPersona.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/icons8-person-100.png")));
@@ -485,13 +598,13 @@ public class VentanaPrincipal extends JFrame {
         
         lblMedico = new JLabel("M\u00C9DICOS");
         lblMedico.setForeground(new Color(255, 255, 255));
-        lblMedico.setFont(new Font("Yu Gothic UI", Font.BOLD, 25));
+        lblMedico.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(25*widthRatio)));
         lblMedico.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
-        		RegMedico registrarMedico = new RegMedico(null, false);
-        		registrarMedico.setModal(true);
-        		registrarMedico.setVisible(true);
+        		ind = 6;      		
+        		panelFondo.Desaparecer(tiempoAnim);
+				mostrarMedico.Aparecer(tiempoAnim);
         	}
         });
         lblMedico.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/icons8-medical-doctor-100.png")));
@@ -514,13 +627,13 @@ public class VentanaPrincipal extends JFrame {
         
         lblEnfermedad = new JLabel("ENFERMEDADES");
         lblEnfermedad.setForeground(new Color(255, 255, 255));
-        lblEnfermedad.setFont(new Font("Yu Gothic UI", Font.BOLD, 25));
+        lblEnfermedad.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(25*widthRatio)));
         lblEnfermedad.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
-        		RegEnfermedad regNuevaEnfermedad = new RegEnfermedad(null,false);
-        		regNuevaEnfermedad.setModal(true);
-        		regNuevaEnfermedad.setVisible(true);
+        		ind = 7;      		
+        		panelFondo.Desaparecer(tiempoAnim);
+				mostrarEnfermedad.Aparecer(tiempoAnim);
         	}
         });
         lblEnfermedad.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/icons8-disease-64.png")));
@@ -543,13 +656,13 @@ public class VentanaPrincipal extends JFrame {
         
         lblVacuna = new JLabel("VACUNAS");
         lblVacuna.setForeground(new Color(255, 255, 255));
-        lblVacuna.setFont(new Font("Yu Gothic UI", Font.BOLD, 25));
+        lblVacuna.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(25*widthRatio)));
         lblVacuna.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
-        		RegVacuna nuevaVacuna = new RegVacuna(null);
-        		nuevaVacuna.setModal(true);
-        		nuevaVacuna.setVisible(true);
+        		ind = 8;      		
+        		panelFondo.Desaparecer(tiempoAnim);
+				mostrarVacuna.Aparecer(tiempoAnim);
         	}
         });
         lblVacuna.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/icons8-vaccine-64 (1).png")));
@@ -559,6 +672,7 @@ public class VentanaPrincipal extends JFrame {
         lblVacuna.setBounds(0, 0, (int)(345*widthRatio), (int)(353*heightRatio));
         roundedPanelVacuna.add(lblVacuna);
         
+        
         panelFondo2 = new PanelSimulacionAnim();
         panelFondo2.setBackground(new Color(255, 255, 255));
         panelFondo2.setBounds((int)(458*widthRatio), (int)(0*heightRatio), (int)(1444*widthRatio), (int)(993*heightRatio));
@@ -567,15 +681,22 @@ public class VentanaPrincipal extends JFrame {
         
         panelFondo3 = new PanelSimulacionAnim();
         panelFondo3.setLayout(null);
-        panelFondo3.setBackground(Color.WHITE);
-        panelFondo3.setBounds(458, 0, 1444, 993);
+        panelFondo3.setBackground(new Color(255, 255, 255));
+        panelFondo3.setBounds((int)(458*widthRatio), (int)(0*heightRatio), (int)(1444*widthRatio), (int)(993*heightRatio));
         contentPane.add(panelFondo3);
         
         panelFondo4 = new PanelSimulacionAnim();
         panelFondo4.setLayout(null);
-        panelFondo4.setBackground(Color.WHITE);
-        panelFondo4.setBounds(458, 0, 1444, 993);
+        panelFondo4.setBackground(new Color(255, 255, 255));
+        panelFondo4.setBounds((int)(458*widthRatio), (int)(0*heightRatio), (int)(1444*widthRatio), (int)(993*heightRatio));
         contentPane.add(panelFondo4);
+        
+        panelFondo2.setVisible(false);
+        panelFondo3.setVisible(false);
+        panelFondo4.setVisible(false);
+		panelRegistro.setBackground(new Color(81, 137, 252));
+		panelRegistro.Aparecer(tiempoAnim);
+		panelFondo.Aparecer(tiempoAnim);
         
 
         Thread hilo = new Thread(() -> {
