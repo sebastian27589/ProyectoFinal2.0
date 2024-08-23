@@ -144,6 +144,27 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 		setBorder(null);
 		setLayout(null);
 		
+		RoundedGlowPanel roundedGlowPanelVolver = new RoundedGlowPanel();
+		roundedGlowPanelVolver.setBounds((int)(10*widthRatio),(int)(10*heightRatio), (int)(57*widthRatio),(int)(49*heightRatio));
+		add(roundedGlowPanelVolver);
+		roundedGlowPanelVolver.setLayout(null);
+		roundedGlowPanelVolver.setRoundTopLeft(60);
+		roundedGlowPanelVolver.setGlowColor(Color.CYAN);
+		roundedGlowPanelVolver.setGlowAlpha(170);
+		roundedGlowPanelVolver.setForeground(Color.WHITE);
+		roundedGlowPanelVolver.setBorder(null);
+		roundedGlowPanelVolver.setBackground(Color.WHITE);
+		
+		JLabel lblVolver = new JLabel("");
+		lblVolver.setIcon(new ImageIcon(VisualConsulta.class.getResource("/Imagenes/icons8-left-arrow-25.png")));
+		lblVolver.setHorizontalAlignment(SwingConstants.CENTER);
+		lblVolver.setForeground(new Color(100, 149, 237));
+		lblVolver.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
+		lblVolver.setEnabled(false);
+		lblVolver.setBackground(Color.WHITE);
+		lblVolver.setBounds(0, 0, (int)(57*widthRatio),(int)(49*heightRatio));
+		roundedGlowPanelVolver.add(lblVolver);
+		
 		panelTablaEnfermedad = new JPanel();
 		panelTablaEnfermedad.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panelTablaEnfermedad.setBackground(new Color(255, 255, 255));

@@ -43,12 +43,13 @@ import logico.PanelSimulacionAnim;
 import logico.RoundedGlowPanel;
 import logico.RoundedPanel;
 import javax.swing.SpinnerNumberModel;
+import java.awt.Component;
 
 public class VisualMedico extends PanelSimulacionAnim {
 	
 	private Dimension dim;
 	private static DefaultTableModel model;
-	private PanelSimulacionAnim panelTablaMedico;
+	private PanelSimulacionAnim panelTablaPersona;
 	private JTable tableMedico;
 	private JRadioButton rdbtnMasculino;
 	private JRadioButton rdbtnFemenino;
@@ -106,15 +107,36 @@ public class VisualMedico extends PanelSimulacionAnim {
 		setBorder(null);
 		setLayout(null);
 		
-		panelTablaMedico = new PanelSimulacionAnim();
-		panelTablaMedico.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panelTablaMedico.setBackground(new Color(255, 255, 255));
-		panelTablaMedico.setBounds((int)(814*widthRatio),(int)(13*heightRatio), (int)(555*widthRatio),(int)(515*heightRatio));
-		add(panelTablaMedico);
-		panelTablaMedico.setLayout(null);
+		RoundedGlowPanel roundedGlowPanelVolver = new RoundedGlowPanel();
+		roundedGlowPanelVolver.setBounds((int)(10*widthRatio),(int)(10*heightRatio), (int)(57*widthRatio),(int)(49*heightRatio));
+		add(roundedGlowPanelVolver);
+		roundedGlowPanelVolver.setLayout(null);
+		roundedGlowPanelVolver.setRoundTopLeft(60);
+		roundedGlowPanelVolver.setGlowColor(Color.CYAN);
+		roundedGlowPanelVolver.setGlowAlpha(170);
+		roundedGlowPanelVolver.setForeground(Color.WHITE);
+		roundedGlowPanelVolver.setBorder(null);
+		roundedGlowPanelVolver.setBackground(Color.WHITE);
+		
+		JLabel lblVolver = new JLabel("");
+		lblVolver.setIcon(new ImageIcon(VisualConsulta.class.getResource("/Imagenes/icons8-left-arrow-25.png")));
+		lblVolver.setHorizontalAlignment(SwingConstants.CENTER);
+		lblVolver.setForeground(new Color(100, 149, 237));
+		lblVolver.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
+		lblVolver.setEnabled(false);
+		lblVolver.setBackground(Color.WHITE);
+		lblVolver.setBounds(0, 0, (int)(57*widthRatio),(int)(49*heightRatio));
+		roundedGlowPanelVolver.add(lblVolver);
+		
+		panelTablaPersona = new PanelSimulacionAnim();
+		panelTablaPersona.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panelTablaPersona.setBackground(new Color(255, 255, 255));
+		panelTablaPersona.setBounds((int)(814*widthRatio),(int)(13*heightRatio), (int)(555),(int)(250*heightRatio));
+		add(panelTablaPersona);
+		panelTablaPersona.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane(tableMedico);
-		panelTablaMedico.add(scrollPane);
+		panelTablaPersona.add(scrollPane);
 		
 		tableMedico = new JTable(model);
 		tableMedico.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -492,7 +514,7 @@ public class VisualMedico extends PanelSimulacionAnim {
 			roundedPanel_1.setBounds((int)(0*widthRatio),(int)(512*heightRatio), (int)(790*widthRatio),(int)(209*heightRatio));
 			panelDatosPersona.add(roundedPanel_1);
 			
-			JLabel lblImagen = new JLabel("AQUI VA LA TABLA DE ASIGNAR VACUNAS");
+			JLabel lblImagen = new JLabel("AQUI VA LA TABLA DE ASIGNAR ESPECIALIDADES");
 			lblImagen.setOpaque(true);
 			lblImagen.setHorizontalAlignment(SwingConstants.CENTER);
 			lblImagen.setForeground(new Color(65, 105, 225));
@@ -865,6 +887,17 @@ public class VisualMedico extends PanelSimulacionAnim {
 		});
 		roundedGlowPanelBuscarPaciente.add(txtBuscarPaciente);
 		txtBuscarPaciente.setColumns(10);
+		
+		PanelSimulacionAnim panelTablaMedico = new PanelSimulacionAnim();
+		panelTablaMedico.setLayout(null);
+		panelTablaMedico.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panelTablaMedico.setBackground(Color.WHITE);
+		panelTablaMedico.setBounds((int)(814*widthRatio),(int)(276*heightRatio), (int)(555*widthRatio),(int)(250*heightRatio));
+		add(panelTablaMedico);
+		
+		JScrollPane scrollPane_1 = new JScrollPane((Component) null);
+		scrollPane_1.setBounds(0, 0, 0, 0);
+		panelTablaMedico.add(scrollPane_1);
 			
 	}
 }
