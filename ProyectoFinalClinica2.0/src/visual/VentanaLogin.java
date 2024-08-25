@@ -305,10 +305,11 @@ public class VentanaLogin extends JDialog {
 					
 					password = txtContrasena.getText();
 				}
-				
-				Connection conexion = ConnectionSQL.getConexion();
             	
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                	
+                	Connection conexion = ConnectionSQL.getConexion();
+                	
     				if (Clinica.getInstance().permitirInicioSesion(txtUsuario.getText(), password, conexion)) {
     					
     					VentanaPrincipal ventanaPrincipal = new VentanaPrincipal(conexion);
@@ -336,10 +337,11 @@ public class VentanaLogin extends JDialog {
 					
 					password = txtContrasena.getText();
 				}
-				
-				Connection conexion = ConnectionSQL.getConexion();
             	
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                	
+                	Connection conexion = ConnectionSQL.getConexion();
+                	
     				if (Clinica.getInstance().permitirInicioSesion(txtUsuario.getText(), password, conexion)) {
     					
     					VentanaPrincipal ventanaPrincipal = new VentanaPrincipal(conexion);

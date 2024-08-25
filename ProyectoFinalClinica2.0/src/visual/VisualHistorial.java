@@ -89,8 +89,7 @@ public class VisualHistorial extends JPanel {
 	 */
 	public static void main(String[] args) {
 		try {
-			RegPaciente dialog = new RegPaciente(null, false, false);
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			VisualHistorial dialog = new VisualHistorial();
 			dialog.setVisible(true);
 		} catch (Exception e) {
 			e.printStackTrace();

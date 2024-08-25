@@ -10,7 +10,7 @@ public class ConnectionSQL {
 		// TODO Auto-generated constructor stub
 		
 		String conexionURL = "jdbc:sqlserver://192.168.100.118:1433;"
-                + "database=Hospital_Grupo3;"
+                + "database=Hospital_Crist_Sebas_Grupo3;"
                 + "user=s.rosario;"
                 + "password=cnum27589H;"
                 + "encrypt=true;"

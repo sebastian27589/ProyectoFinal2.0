@@ -796,7 +796,7 @@ public class Clinica implements Serializable{
 		boolean encontrado = false;
 		try {
 			Statement statement = conexion.createStatement();
-            String selectSql = "SELECT Nombre_Usuario, Pass FROM Usuario;";
+            String selectSql = "SELECT Nombre_Usuario, Pass FROM Administrativo;";
             ResultSet resultSet = statement.executeQuery(selectSql);
 
             while (resultSet.next() && encontrado == false) {

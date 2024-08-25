@@ -139,8 +139,7 @@ public class VisualConsulta extends JPanel {
 	 */
 	public static void main(String[] args) {
 		try {
-			RegPaciente dialog = new RegPaciente(null, false, false);
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			VisualConsulta dialog = new VisualConsulta();
 			dialog.setVisible(true);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -362,7 +361,7 @@ public class VisualConsulta extends JPanel {
 			lblRegistroDePersonas.setForeground(new Color(0, 0, 0));
 			lblRegistroDePersonas.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(30*widthRatio)));
 			lblRegistroDePersonas.setBackground(new Color(240, 240, 240));
-			lblRegistroDePersonas.setBounds(248,20, 201,46);
+			lblRegistroDePersonas.setBounds((int)(248*widthRatio),(int)(20*heightRatio), (int)(201*widthRatio), (int)(46*heightRatio));
 			panelDatosPersona.add(lblRegistroDePersonas);
 			
 			cbxTipoSangre = new JComboBox();
