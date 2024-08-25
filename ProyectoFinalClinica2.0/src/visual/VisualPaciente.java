@@ -886,6 +886,32 @@ public class VisualPaciente extends PanelSimulacionAnim {
 		roundedGlowPanelEliminar.add(lblEliminar);
 		
 		RoundedGlowPanel roundedGlowPanelRegistrar = new RoundedGlowPanel();
+		roundedGlowPanelRegistrar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+//				String Doc_Identidad = txtCedula.getText();
+//				String Primer_Nombre = txtPNombre.getText();
+//				String Segundo_Nombre = txtSnombre.getText();
+//				String Primer_Apellido = txtPApellido.getText();
+//				String Segundo_Apellido = txtSApellido.getText();
+//				String Telefono = txtTelefono.getText();
+//				String Direccion = txtareaDireccion.getText();
+//				String Sexo;
+//				Date Fecha_Nacimiento = dateChooserNacim.getDate();
+//				
+//				if(rdbtnMasculino.isSelected()) {
+//					Sexo = "M";
+//				} else if (rdbtnFemenino.isSelected()) {
+//					Sexo = "F";
+//				} 
+//				
+////				try {
+////					
+////				} catch() {
+////					
+////				}
+			}
+		});
 		roundedGlowPanelRegistrar.setBounds((int)(817*widthRatio),(int)(599*heightRatio), (int)(118*widthRatio),(int)(49*heightRatio));
 		add(roundedGlowPanelRegistrar);
 		roundedGlowPanelRegistrar.setLayout(null);

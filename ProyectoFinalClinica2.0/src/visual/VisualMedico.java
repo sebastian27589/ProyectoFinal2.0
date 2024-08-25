@@ -61,10 +61,6 @@ public class VisualMedico extends PanelSimulacionAnim {
 	private JTextField txtCedula;
 	private JTextField txtTelefono;
 	private JTextField txtBuscarPaciente;
-	private JSpinner spnAltura;
-	private JSpinner spnPeso;
-	private JTextArea txtareaAlergias;
-	private JComboBox cbxTipoSangre;
 	private JDateChooser dateChooserNacim;
 	private JTextArea txtareaDireccion;
 	
@@ -180,7 +176,7 @@ public class VisualMedico extends PanelSimulacionAnim {
 					rdbtnFemenino.setSelected(false);
 				}
 			});
-			rdbtnMasculino.setBounds((int)(260*widthRatio),(int)(464*heightRatio), (int)(93*widthRatio),(int)(22*heightRatio));
+			rdbtnMasculino.setBounds((int)(401*widthRatio),(int)(347*heightRatio), (int)(93*widthRatio),(int)(22*heightRatio));
 			panelDatosPersona.add(rdbtnMasculino);
 			rdbtnMasculino.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
 			rdbtnFemenino = new JRadioButton("Mujer");
@@ -190,7 +186,7 @@ public class VisualMedico extends PanelSimulacionAnim {
 					rdbtnMasculino.setSelected(false);
 				}
 			});
-			rdbtnFemenino.setBounds((int)(379*widthRatio),(int)(464*heightRatio), (int)(93*widthRatio),(int)(22*heightRatio));
+			rdbtnFemenino.setBounds((int)(501*widthRatio),(int)(347*heightRatio), (int)(93*widthRatio),(int)(22*heightRatio));
 			panelDatosPersona.add(rdbtnFemenino);
 			rdbtnFemenino.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
 			
@@ -403,56 +399,6 @@ public class VisualMedico extends PanelSimulacionAnim {
 			txtTelefono.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
 			txtTelefono.setColumns(10);
 			
-			RoundedPanel roundedPanelAltura = new RoundedPanel();
-			roundedPanelAltura.setLayout(null);
-			roundedPanelAltura.setRoundTopRight(18);
-			roundedPanelAltura.setRoundTopLeft(18);
-			roundedPanelAltura.setRoundBottomRight(18);
-			roundedPanelAltura.setRoundBottomLeft(18);
-			roundedPanelAltura.setBackground(Color.WHITE);
-			roundedPanelAltura.setBounds((int)(379*widthRatio),(int)(273*heightRatio), (int)(105*widthRatio),(int)(46*heightRatio));
-			panelDatosPersona.add(roundedPanelAltura);
-			
-			JLabel lblAltura = new JLabel("Altura:");
-			lblAltura.setOpaque(true);
-			lblAltura.setHorizontalAlignment(SwingConstants.CENTER);
-			lblAltura.setForeground(new Color(65, 105, 225));
-			lblAltura.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
-			lblAltura.setBackground(Color.WHITE);
-			lblAltura.setBounds((int)(2*widthRatio),(int)(9*heightRatio), (int)(58*widthRatio),(int)(22*heightRatio));
-			roundedPanelAltura.add(lblAltura);
-			
-			spnAltura = new JSpinner();
-			spnAltura.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
-			spnAltura.setBorder(null);
-			spnAltura.setBounds((int)(60*widthRatio),6, (int)(45*widthRatio),(int)(40*heightRatio));
-			roundedPanelAltura.add(spnAltura);
-			
-			RoundedPanel roundedPanelPeso = new RoundedPanel();
-			roundedPanelPeso.setLayout(null);
-			roundedPanelPeso.setRoundTopRight(18);
-			roundedPanelPeso.setRoundTopLeft(18);
-			roundedPanelPeso.setRoundBottomRight(18);
-			roundedPanelPeso.setRoundBottomLeft(18);
-			roundedPanelPeso.setBackground(Color.WHITE);
-			roundedPanelPeso.setBounds((int)(521*widthRatio),(int)(273*heightRatio), (int)(105*widthRatio),(int)(46*heightRatio));
-			panelDatosPersona.add(roundedPanelPeso);
-			
-			JLabel lblPeso = new JLabel("Peso:");
-			lblPeso.setOpaque(true);
-			lblPeso.setHorizontalAlignment(SwingConstants.CENTER);
-			lblPeso.setForeground(new Color(65, 105, 225));
-			lblPeso.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
-			lblPeso.setBackground(Color.WHITE);
-			lblPeso.setBounds((int)(2*widthRatio),(int)(9*heightRatio), (int)(58*widthRatio),(int)(22*heightRatio));
-			roundedPanelPeso.add(lblPeso);
-			
-			spnPeso = new JSpinner();
-			spnPeso.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
-			spnPeso.setBorder(null);
-			spnPeso.setBounds((int)(65*widthRatio),0, (int)(40*widthRatio),(int)(46*heightRatio));
-			roundedPanelPeso.add(spnPeso);
-			
 			RoundedPanel roundedPanelFNac = new RoundedPanel();
 			roundedPanelFNac.setLayout(null);
 			roundedPanelFNac.setRoundTopRight(18);
@@ -471,33 +417,6 @@ public class VisualMedico extends PanelSimulacionAnim {
 			lblFDeNac.setBackground(Color.WHITE);
 			lblFDeNac.setBounds((int)(0*widthRatio),(int)(11*heightRatio), (int)(112*widthRatio),(int)(22*heightRatio));
 			roundedPanelFNac.add(lblFDeNac);
-			
-			RoundedPanel roundedPanelTSangre = new RoundedPanel();
-			roundedPanelTSangre.setLayout(null);
-			roundedPanelTSangre.setRoundTopRight(18);
-			roundedPanelTSangre.setRoundTopLeft(18);
-			roundedPanelTSangre.setRoundBottomRight(18);
-			roundedPanelTSangre.setRoundBottomLeft(18);
-			roundedPanelTSangre.setBackground(Color.WHITE);
-			roundedPanelTSangre.setBounds((int)(379*widthRatio),(int)(329*heightRatio), (int)(105*widthRatio),(int)(46*heightRatio));
-			panelDatosPersona.add(roundedPanelTSangre);
-			
-			JLabel lblTSangre = new JLabel("T. Sangre");
-			lblTSangre.setOpaque(true);
-			lblTSangre.setHorizontalAlignment(SwingConstants.CENTER);
-			lblTSangre.setForeground(new Color(65, 105, 225));
-			lblTSangre.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
-			lblTSangre.setBackground(Color.WHITE);
-			lblTSangre.setBounds((int)(3*widthRatio),(int)(13*heightRatio), (int)(73*widthRatio),(int)(22*heightRatio));
-			roundedPanelTSangre.add(lblTSangre);
-			
-			cbxTipoSangre = new JComboBox();
-			cbxTipoSangre.setBounds((int)(521*widthRatio),(int)(331*heightRatio), (int)(105*widthRatio),(int)(46*heightRatio));
-			panelDatosPersona.add(cbxTipoSangre);
-			cbxTipoSangre.setBorder(null);
-			cbxTipoSangre.setModel(new DefaultComboBoxModel(new String[] {"Elegir", "A+", "A", "B+", "B", "AB+", "AB", "O+", "O"}));
-			cbxTipoSangre.setSelectedIndex(0);
-			cbxTipoSangre.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
 			
 			dateChooserNacim = new JDateChooser();
 			dateChooserNacim.setBounds((int)(521*widthRatio),(int)(211*heightRatio), (int)(118*widthRatio),(int)(46*heightRatio));
@@ -621,100 +540,6 @@ public class VisualMedico extends PanelSimulacionAnim {
 			roundedGlowPanelFNacimiento.setBounds((int)(365*widthRatio),(int)(205*heightRatio), (int)(135*widthRatio),(int)(59*heightRatio));
 			panelDatosPersona.add(roundedGlowPanelFNacimiento);
 			
-			RoundedGlowPanel roundedGlowPanelAltura = new RoundedGlowPanel();
-			roundedGlowPanelAltura.setLayout(null);
-			roundedGlowPanelAltura.setRoundTopRight(60);
-			roundedGlowPanelAltura.setRoundTopLeft(60);
-			roundedGlowPanelAltura.setRoundBottomRight(60);
-			roundedGlowPanelAltura.setRoundBottomLeft(60);
-			roundedGlowPanelAltura.setGlowColor(Color.CYAN);
-			roundedGlowPanelAltura.setGlowAlpha(170);
-			roundedGlowPanelAltura.setForeground(Color.WHITE);
-			roundedGlowPanelAltura.setBorder(null);
-			roundedGlowPanelAltura.setBackground(Color.WHITE);
-			roundedGlowPanelAltura.setBounds((int)(365*widthRatio),(int)(266*heightRatio), (int)(135*widthRatio),(int)(59*heightRatio));
-			panelDatosPersona.add(roundedGlowPanelAltura);
-			
-			RoundedGlowPanel roundedGlowPanelPeso = new RoundedGlowPanel();
-			roundedGlowPanelPeso.setLayout(null);
-			roundedGlowPanelPeso.setRoundTopRight(60);
-			roundedGlowPanelPeso.setRoundTopLeft(60);
-			roundedGlowPanelPeso.setRoundBottomRight(60);
-			roundedGlowPanelPeso.setRoundBottomLeft(60);
-			roundedGlowPanelPeso.setGlowColor(Color.CYAN);
-			roundedGlowPanelPeso.setGlowAlpha(170);
-			roundedGlowPanelPeso.setForeground(Color.WHITE);
-			roundedGlowPanelPeso.setBorder(null);
-			roundedGlowPanelPeso.setBackground(Color.WHITE);
-			roundedGlowPanelPeso.setBounds((int)(507*widthRatio),(int)(266*heightRatio), (int)(135*widthRatio),(int)(59*heightRatio));
-			panelDatosPersona.add(roundedGlowPanelPeso);
-			
-			RoundedGlowPanel roundedGlowPanelTSangre = new RoundedGlowPanel();
-			roundedGlowPanelTSangre.setLayout(null);
-			roundedGlowPanelTSangre.setRoundTopRight(60);
-			roundedGlowPanelTSangre.setRoundTopLeft(60);
-			roundedGlowPanelTSangre.setRoundBottomRight(60);
-			roundedGlowPanelTSangre.setRoundBottomLeft(60);
-			roundedGlowPanelTSangre.setGlowColor(Color.CYAN);
-			roundedGlowPanelTSangre.setGlowAlpha(170);
-			roundedGlowPanelTSangre.setForeground(Color.WHITE);
-			roundedGlowPanelTSangre.setBorder(null);
-			roundedGlowPanelTSangre.setBackground(Color.WHITE);
-			roundedGlowPanelTSangre.setBounds((int)(365*widthRatio),(int)(327*heightRatio), (int)(135*widthRatio),(int)(53*heightRatio));
-			panelDatosPersona.add(roundedGlowPanelTSangre);
-			
-			RoundedPanel roundedPanelDireccion = new RoundedPanel();
-			roundedPanelDireccion.setLayout(null);
-			roundedPanelDireccion.setRoundTopRight(18);
-			roundedPanelDireccion.setRoundTopLeft(18);
-			roundedPanelDireccion.setRoundBottomRight(18);
-			roundedPanelDireccion.setRoundBottomLeft(18);
-			roundedPanelDireccion.setBackground(Color.WHITE);
-			roundedPanelDireccion.setBounds((int)(91*widthRatio),(int)(388*heightRatio), (int)(249*widthRatio),(int)(59*heightRatio));
-			panelDatosPersona.add(roundedPanelDireccion);
-			
-			JLabel lblDireccion = new JLabel("Direcci\u00F3n:");
-			lblDireccion.setOpaque(true);
-			lblDireccion.setHorizontalAlignment(SwingConstants.CENTER);
-			lblDireccion.setForeground(new Color(65, 105, 225));
-			lblDireccion.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
-			lblDireccion.setBackground(Color.WHITE);
-			lblDireccion.setBounds(0,(int)(18*heightRatio), (int)(79*widthRatio),(int)(22*heightRatio));
-			roundedPanelDireccion.add(lblDireccion);
-			
-			txtareaDireccion = new JTextArea();
-			txtareaDireccion.setBounds((int)(86*widthRatio),0, (int)(151*widthRatio),(int)(59*heightRatio));
-			roundedPanelDireccion.add(txtareaDireccion);
-			txtareaDireccion.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
-			txtareaDireccion.setLineWrap(true);
-			txtareaDireccion.setWrapStyleWord(true);
-			
-			RoundedPanel roundedPanelAlergia = new RoundedPanel();
-			roundedPanelAlergia.setLayout(null);
-			roundedPanelAlergia.setRoundTopRight(18);
-			roundedPanelAlergia.setRoundTopLeft(18);
-			roundedPanelAlergia.setRoundBottomRight(18);
-			roundedPanelAlergia.setRoundBottomLeft(18);
-			roundedPanelAlergia.setBackground(Color.WHITE);
-			roundedPanelAlergia.setBounds((int)(379*widthRatio),(int)(388*heightRatio), (int)(249*widthRatio),(int)(59*heightRatio));
-			panelDatosPersona.add(roundedPanelAlergia);
-			
-			JLabel lblAlergia = new JLabel("Alergia:");
-			lblAlergia.setOpaque(true);
-			lblAlergia.setHorizontalAlignment(SwingConstants.CENTER);
-			lblAlergia.setForeground(new Color(65, 105, 225));
-			lblAlergia.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
-			lblAlergia.setBackground(Color.WHITE);
-			lblAlergia.setBounds(0,(int)(18*heightRatio), (int)(67*widthRatio),(int)(22*heightRatio));
-			roundedPanelAlergia.add(lblAlergia);
-			
-			txtareaAlergias = new JTextArea();
-			txtareaAlergias.setBounds((int)(67*widthRatio),0, (int)(170*widthRatio),(int)(59*heightRatio));
-			roundedPanelAlergia.add(txtareaAlergias);
-			txtareaAlergias.setWrapStyleWord(true);
-			txtareaAlergias.setLineWrap(true);
-			txtareaAlergias.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
-			
 			RoundedGlowPanel roundedGlowPanelDireccion = new RoundedGlowPanel();
 			roundedGlowPanelDireccion.setLayout(null);
 			roundedGlowPanelDireccion.setRoundTopRight(60);
@@ -726,22 +551,24 @@ public class VisualMedico extends PanelSimulacionAnim {
 			roundedGlowPanelDireccion.setForeground(Color.WHITE);
 			roundedGlowPanelDireccion.setBorder(null);
 			roundedGlowPanelDireccion.setBackground(Color.WHITE);
-			roundedGlowPanelDireccion.setBounds((int)(77*widthRatio),(int)(383*heightRatio), (int)(277*widthRatio),(int)(70*heightRatio));
+			roundedGlowPanelDireccion.setBounds((int)(362*widthRatio),(int)(268*heightRatio), (int)(277*widthRatio),(int)(70*heightRatio));
 			panelDatosPersona.add(roundedGlowPanelDireccion);
 			
-			RoundedGlowPanel roundedGlowPanel = new RoundedGlowPanel();
-			roundedGlowPanel.setLayout(null);
-			roundedGlowPanel.setRoundTopRight(60);
-			roundedGlowPanel.setRoundTopLeft(60);
-			roundedGlowPanel.setRoundBottomRight(60);
-			roundedGlowPanel.setRoundBottomLeft(60);
-			roundedGlowPanel.setGlowColor(Color.CYAN);
-			roundedGlowPanel.setGlowAlpha(170);
-			roundedGlowPanel.setForeground(Color.WHITE);
-			roundedGlowPanel.setBorder(null);
-			roundedGlowPanel.setBackground(Color.WHITE);
-			roundedGlowPanel.setBounds((int)(363*widthRatio),(int)(383*heightRatio), (int)(277*widthRatio),(int)(70*heightRatio));
-			panelDatosPersona.add(roundedGlowPanel);
+			JLabel lblDireccion = new JLabel("Direcci\u00F3n:");
+			lblDireccion.setBounds((int)(12*widthRatio),(int)(24*heightRatio), (int)(86*widthRatio),(int)(22*heightRatio));
+			roundedGlowPanelDireccion.add(lblDireccion);
+			lblDireccion.setOpaque(true);
+			lblDireccion.setHorizontalAlignment(SwingConstants.CENTER);
+			lblDireccion.setForeground(new Color(65, 105, 225));
+			lblDireccion.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
+			lblDireccion.setBackground(Color.WHITE);
+			
+			txtareaDireccion = new JTextArea();
+			txtareaDireccion.setBounds((int)(97*widthRatio),(int)(6*heightRatio), (int)(164*widthRatio),(int)(59*heightRatio));
+			roundedGlowPanelDireccion.add(txtareaDireccion);
+			txtareaDireccion.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
+			txtareaDireccion.setLineWrap(true);
+			txtareaDireccion.setWrapStyleWord(true);
 			
 
 		}

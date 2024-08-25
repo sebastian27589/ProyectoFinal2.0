@@ -4,10 +4,16 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
+import javax.swing.JOptionPane;
 
 public class Clinica implements Serializable{
 
@@ -784,17 +790,27 @@ public class Clinica implements Serializable{
 	
 	// Funciones para login y control de usuarios
 	
-	public boolean permitirInicioSesion(String nombreUsuario, String contrasena) {
+	public boolean permitirInicioSesion(String nombreUsuario, String contrasena, Connection conexion) {
 		
 		boolean permitir = false;
-		
-		for (Usuario usuario : misUsuarios) {
-			
-			if(usuario.getNombreUsuario().equals(nombreUsuario) && usuario.getContrasena().equals(contrasena)) {
-				
-				usuarioLogueado = usuario;
-				permitir = true;
-			}
+		boolean encontrado = false;
+		try {
+			Statement statement = conexion.createStatement();
+            String selectSql = "SELECT Nombre_Usuario, Pass FROM Usuario;";
+            ResultSet resultSet = statement.executeQuery(selectSql);
+
+            while (resultSet.next() && encontrado == false) {
+                String usuario = resultSet.getString("Nombre_Usuario");
+                String contra = resultSet.getString("Pass");
+                if(usuario.equals(nombreUsuario) && contra.equals(contrasena)) {
+    				usuarioLogueado = new Usuario("", "", null, '\u0000', "", "", "", usuario, "");
+    				permitir = true;
+    				encontrado = true;
+                }
+            }
+
+		} catch(SQLException e) {
+			JOptionPane.showMessageDialog(null, e.toString());
 		}
 		
 		return permitir;

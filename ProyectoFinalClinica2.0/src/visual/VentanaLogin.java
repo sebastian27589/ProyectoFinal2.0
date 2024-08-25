@@ -5,6 +5,9 @@ import java.awt.BorderLayout;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import SQLConnection.ConnectionSQL;
+
 import java.awt.Color;
 
 import logico.Clinica;
@@ -29,6 +32,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.sql.Connection;
 import java.util.Date;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -49,60 +53,73 @@ public class VentanaLogin extends JDialog {
 	 */
 	
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				
-				FileInputStream fclinica;
-				FileOutputStream fclinica2;
-				ObjectInputStream fclinicaRead;
-				ObjectOutputStream fclinicaWrite;
-				
-				try {
-					
-					fclinica = new FileInputStream ("clinica.dat");
-					fclinicaRead = new ObjectInputStream(fclinica);
-					Clinica temp = (Clinica)fclinicaRead.readObject();
-					Clinica.setClinica(temp);
-					fclinica.close();
-					fclinicaRead.close();
-					
-				} catch (FileNotFoundException e) {
-					
-					try {
-						
-						fclinica2 = new  FileOutputStream("clinica.dat");
-						fclinicaWrite = new ObjectOutputStream(fclinica2);
-						Usuario primerUsuario = new Usuario("", "", new Date(), 'M', "", "", "Administrador", "admin", "admin");
-						Clinica.getInstance().registrarUsuario(primerUsuario);;
-						fclinicaWrite.writeObject(Clinica.getInstance());
-						fclinica2.close();
-						fclinicaWrite.close();
-						
-						
-					} catch (FileNotFoundException e1) {
-						
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-					}
-					
-				} catch (IOException e) {
-					
-					
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
-				
-				try {
-					
-					VentanaLogin ventanaLogin = new VentanaLogin();
-					ventanaLogin.setVisible(true);
-					
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+		 
+		try {
+			Usuario admin = new Usuario("123", "", new Date(), 'M', "", "", "Admin", "admin", "admin");
+			Clinica.getInstance().insertarUsuario(admin);
+			VentanaLogin ventanaLogin = new VentanaLogin();
+			ventanaLogin.setVisible(true);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
+	
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				
+//				FileInputStream fclinica;
+//				FileOutputStream fclinica2;
+//				ObjectInputStream fclinicaRead;
+//				ObjectOutputStream fclinicaWrite;
+//				
+//				try {
+//					
+//					fclinica = new FileInputStream ("clinica.dat");
+//					fclinicaRead = new ObjectInputStream(fclinica);
+//					Clinica temp = (Clinica)fclinicaRead.readObject();
+//					Clinica.setClinica(temp);
+//					fclinica.close();
+//					fclinicaRead.close();
+//					
+//				} catch (FileNotFoundException e) {
+//					
+//					try {
+//						
+//						fclinica2 = new  FileOutputStream("clinica.dat");
+//						fclinicaWrite = new ObjectOutputStream(fclinica2);
+//						Usuario primerUsuario = new Usuario("", "", new Date(), 'M', "", "", "Administrador", "admin", "admin");
+//						Clinica.getInstance().registrarUsuario(primerUsuario);;
+//						fclinicaWrite.writeObject(Clinica.getInstance());
+//						fclinica2.close();
+//						fclinicaWrite.close();
+//						
+//						
+//					} catch (FileNotFoundException e1) {
+//						
+//					} catch (IOException e1) {
+//						// TODO Auto-generated catch block
+//					}
+//					
+//				} catch (IOException e) {
+//					
+//					
+//				} catch (ClassNotFoundException e) {
+//					e.printStackTrace();
+//				}
+//				
+//				try {
+//					
+//					VentanaLogin ventanaLogin = new VentanaLogin();
+//					ventanaLogin.setVisible(true);
+//					
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 	
 	/*
 	public static void main(String[] args) {
@@ -288,11 +305,13 @@ public class VentanaLogin extends JDialog {
 					
 					password = txtContrasena.getText();
 				}
+				
+				Connection conexion = ConnectionSQL.getConexion();
             	
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-    				if (Clinica.getInstance().permitirInicioSesion(txtUsuario.getText(), password)) {
+    				if (Clinica.getInstance().permitirInicioSesion(txtUsuario.getText(), password, conexion)) {
     					
-    					VentanaPrincipal ventanaPrincipal = new VentanaPrincipal();
+    					VentanaPrincipal ventanaPrincipal = new VentanaPrincipal(conexion);
     					dispose();
     					ventanaPrincipal.setVisible(true);
     				}
@@ -317,11 +336,13 @@ public class VentanaLogin extends JDialog {
 					
 					password = txtContrasena.getText();
 				}
+				
+				Connection conexion = ConnectionSQL.getConexion();
             	
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-    				if (Clinica.getInstance().permitirInicioSesion(txtUsuario.getText(), password)) {
+    				if (Clinica.getInstance().permitirInicioSesion(txtUsuario.getText(), password, conexion)) {
     					
-    					VentanaPrincipal ventanaPrincipal = new VentanaPrincipal();
+    					VentanaPrincipal ventanaPrincipal = new VentanaPrincipal(conexion);
     					dispose();
     					ventanaPrincipal.setVisible(true);
     				}
@@ -357,9 +378,11 @@ public class VentanaLogin extends JDialog {
 					password = txtContrasena.getText();
 				}
 				
-				if (Clinica.getInstance().permitirInicioSesion(txtUsuario.getText(), password)) {
+				Connection conexion = ConnectionSQL.getConexion();
+				
+				if (Clinica.getInstance().permitirInicioSesion(txtUsuario.getText(), password, conexion)) {
 					
-					VentanaPrincipal ventanaPrincipal = new VentanaPrincipal();
+					VentanaPrincipal ventanaPrincipal = new VentanaPrincipal(conexion);
 					dispose();
 					ventanaPrincipal.setVisible(true);
 				}
