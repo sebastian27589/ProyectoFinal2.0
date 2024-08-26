@@ -12,8 +12,6 @@ import java.awt.Color;
 
 import logico.Clinica;
 import logico.RoundedPanel;
-import logico.Usuario;
-
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
@@ -23,25 +21,18 @@ import javax.swing.JPasswordField;
 import javax.swing.ImageIcon;
 import java.awt.Toolkit;
 import java.awt.Cursor;
-import java.awt.EventQueue;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Date;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class VentanaLogin extends JDialog {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtUsuario;
 	private JPasswordField passwordFieldLogin;

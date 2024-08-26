@@ -854,7 +854,7 @@ public class Clinica implements Serializable{
 		
 		Statement statement;
 		SimpleDateFormat formateador = new SimpleDateFormat("yyyy-MM-dd");  
-		String strDate= formateador.format(fechaDeNacimiento);  
+		String strDate = formateador.format(fechaDeNacimiento);  
 		
 		try {
 			statement = conexion.createStatement();
@@ -866,5 +866,66 @@ public class Clinica implements Serializable{
 			return false;
 		}
 		
-	}	
+	}
+	
+	public Persona buscarPersonaByCode(Connection conexion, String codigo) {
+		
+		Persona personaABuscar = null;
+		boolean encontrado = false;
+		
+		try {
+			Statement statement = conexion.createStatement();
+            String selectSql = "SELECT Doc_Identidad, Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Telefono, Direccion, Sexo, Fecha_Nacimiento FROM Persona;";
+            ResultSet resultSet = statement.executeQuery(selectSql);
+
+            while (resultSet.next() && encontrado == false) {
+            	
+                if(resultSet.getString("Doc_Identidad").equals(codigo)) {
+                	personaABuscar = new Persona(resultSet.getString("Doc_Identidad"), resultSet.getString("Primer_Nombre"), resultSet.getString("Segundo_Nombre"), resultSet.getString("Primer_Apellido"), resultSet.getString("Segundo_Apellido"), resultSet.getString("Telefono"), resultSet.getString("Direccion"), resultSet.getString("Sexo").charAt(0), resultSet.getDate("Fecha_Nacimiento"));
+    				encontrado = true;
+                }
+            }
+
+		} catch(SQLException e) {
+			JOptionPane.showMessageDialog(null, e.toString());
+		}
+		
+		return personaABuscar;
+	}
+
+	public boolean eliminarPersona(Connection conexion, String codigo) {
+		
+		Statement statement;
+		
+		try {
+			statement = conexion.createStatement();
+            String deleteSql = "DELETE FROM Persona WHERE Doc_Identidad = '"+codigo+"';";
+            statement.executeUpdate(deleteSql);
+            return true;
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			return false;
+		}
+		
+	}
+
+	public boolean modificarPersona(Connection conexion, String cedula, String primerNombre, String segundoNombre, String primerApellido,
+									String segundoApellido, String telefono, String direccion, char sexo, Date fechaDeNacimiento) 
+	{
+		
+		Statement statement;
+		SimpleDateFormat formateador = new SimpleDateFormat("yyyy-MM-dd");  
+		String strDate= formateador.format(fechaDeNacimiento);  
+		
+		try {
+			statement = conexion.createStatement();
+			String updateSql = "UPDATE Persona SET Primer_Nombre = '"+primerNombre+"', Segundo_Nombre = '"+segundoNombre+"', Primer_Apellido = '"+primerApellido+"', Segundo_Apellido = '"+segundoApellido+"', Telefono = '"+telefono+"', Direccion = '"+direccion+"', Sexo = '"+sexo+"', Fecha_Nacimiento = '"+strDate+"' WHERE Doc_Identidad = '"+cedula+"';";
+            statement.executeUpdate(updateSql);
+            return true;
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			return false;
+		}
+	}
+	
 }
