@@ -143,28 +143,28 @@ public class VentanaPrincipal extends JFrame {
 		setSize((int)(1920*widthRatio),(int)(1040*heightRatio));
 		setLocationRelativeTo(null);
 		
-		if (Clinica.getInstance().getUsuarioLogueado().getRolUsuario().equalsIgnoreCase("Secretario") ||
-			Clinica.getInstance().getUsuarioLogueado().getRolUsuario().equalsIgnoreCase("Médico")) {
+		if (Clinica.getInstance().getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Secretario") ||
+			Clinica.getInstance().getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Médico")) {
 				
 //			menuItemRegMedico.setEnabled(false);
 //			menuItemRegVacunas.setEnabled(false);
 //			menuItemRegEnfermedad.setEnabled(false);
 //			menuItemRegVivienda.setEnabled(false);
 		}
-		if (Clinica.getInstance().getUsuarioLogueado().getRolUsuario().equalsIgnoreCase("Secretario") ||
-		    Clinica.getInstance().getUsuarioLogueado().getRolUsuario().equalsIgnoreCase("Médico")) {
+		if (Clinica.getInstance().getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Secretario") ||
+		    Clinica.getInstance().getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Médico")) {
 			
 			//menuRecursosHumanos.setEnabled(false);
 		}
-		if (Clinica.getInstance().getUsuarioLogueado().getRolUsuario().equalsIgnoreCase("Secretario")) {
+		if (Clinica.getInstance().getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Secretario")) {
 				
 			//menuDatosMedicos.setEnabled(false);
 		}
-		if (!Clinica.getInstance().getUsuarioLogueado().getRolUsuario().equalsIgnoreCase("Administrador")) {
+		if (!Clinica.getInstance().getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Administrador")) {
 			
 			//menuReportes.setEnabled(false);
 		}
-		if (!Clinica.getInstance().getUsuarioLogueado().getRolUsuario().equalsIgnoreCase("Administrador")) {
+		if (!Clinica.getInstance().getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Administrador")) {
 			
 			//menuGerencia.setEnabled(false);
 		}
@@ -174,7 +174,7 @@ public class VentanaPrincipal extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		VisualPaciente mostrarPersona = new VisualPaciente();
+		VisualPaciente mostrarPersona = new VisualPaciente(conexion);
 		mostrarPersona.setSize((int)(1381*widthRatio), (int)(900*heightRatio));
 		mostrarPersona.setLocation((int)(492*widthRatio), (int)(10*heightRatio));
 		mostrarPersona.setVisible(false);

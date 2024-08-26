@@ -31,6 +31,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.awt.event.ActionEvent;
@@ -57,6 +58,10 @@ import java.awt.Dimension;
 
 public class VisualPaciente extends PanelSimulacionAnim {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static DefaultTableModel model;
 	private Dimension dim;
 	private JTable tablePacientes;
@@ -76,7 +81,6 @@ public class VisualPaciente extends PanelSimulacionAnim {
 	private JRadioButton rdbtnMasculino;
 	private JRadioButton rdbtnFemenino;
 	private JTextArea txtareaDireccion;
-	// Posiblemente haya que cambiar esto a VisualPaciente
 	private Paciente paciente = null;
 	private char sexoPaciente;
 	private JComboBox cbxTipoSangre;
@@ -85,7 +89,7 @@ public class VisualPaciente extends PanelSimulacionAnim {
 	private JButton btnSiguiente;
 	private JButton cancelButton;
 	private JPanel panelDatosPersona;
-	private JTextField txtSnombre;
+	private JTextField txtSNombre;
 	private JTextField txtPApellido;
 	private JLabel lblPApellido;
 	private JTextField txtSApellido;
@@ -119,24 +123,11 @@ public class VisualPaciente extends PanelSimulacionAnim {
 	private JLabel lblRegistrar_1;
 	private JSpinner spnAltura;
 	private JSpinner spnPeso;
-	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			RegPaciente dialog = new RegPaciente(null, false, false);
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	/**
 	 * Create the dialog.
 	 */
-	public VisualPaciente() 
+	public VisualPaciente(Connection conexion) 
 	{
 		dim = getToolkit().getScreenSize();
 		int screenWidthOriginal = 1920;
@@ -311,12 +302,12 @@ public class VisualPaciente extends PanelSimulacionAnim {
 			roundedPanelSNombre.setBounds((int)(91*widthRatio),(int)(209*heightRatio), (int)(249*widthRatio),(int)(46*heightRatio));
 			panelDatosPersona.add(roundedPanelSNombre);
 			
-			txtSnombre = new JTextField();
-			txtSnombre.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
-			txtSnombre.setColumns(10);
-			txtSnombre.setBorder(null);
-			txtSnombre.setBounds((int)(136*widthRatio),0, (int)(101*widthRatio),(int)(46*heightRatio));
-			roundedPanelSNombre.add(txtSnombre);
+			txtSNombre = new JTextField();
+			txtSNombre.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
+			txtSNombre.setColumns(10);
+			txtSNombre.setBorder(null);
+			txtSNombre.setBounds((int)(136*widthRatio),0, (int)(101*widthRatio),(int)(46*heightRatio));
+			roundedPanelSNombre.add(txtSNombre);
 			
 			JLabel lblSNombre = new JLabel("Segundo Nombre:");
 			lblSNombre.setOpaque(true);
@@ -889,27 +880,24 @@ public class VisualPaciente extends PanelSimulacionAnim {
 		roundedGlowPanelRegistrar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-//				String Doc_Identidad = txtCedula.getText();
-//				String Primer_Nombre = txtPNombre.getText();
-//				String Segundo_Nombre = txtSnombre.getText();
-//				String Primer_Apellido = txtPApellido.getText();
-//				String Segundo_Apellido = txtSApellido.getText();
-//				String Telefono = txtTelefono.getText();
-//				String Direccion = txtareaDireccion.getText();
-//				String Sexo;
-//				Date Fecha_Nacimiento = dateChooserNacim.getDate();
-//				
-//				if(rdbtnMasculino.isSelected()) {
-//					Sexo = "M";
-//				} else if (rdbtnFemenino.isSelected()) {
-//					Sexo = "F";
-//				} 
-//				
-////				try {
-////					
-////				} catch() {
-////					
-////				}
+				char sexo = 'X';
+				if(rdbtnMasculino.isSelected()) {
+					sexo = 'M';
+				}
+				else {
+					sexo = 'F';
+				}
+				
+				boolean res = Clinica.getInstance().insertarPersona(conexion, txtCedula.getText(), txtPNombre.getText(), 
+								txtSNombre.getText(), txtPApellido.getText(), txtSApellido.getText(), txtTelefono.getText(), 
+								txtareaDireccion.getText(), sexo, dateChooserNacim.getDate());
+				if(res) {
+					JOptionPane.showMessageDialog(null, "Registrado con éxito", "Registrar Persona", JOptionPane.INFORMATION_MESSAGE);
+				}
+				else {
+					JOptionPane.showMessageDialog(null,"¡No Se Pudo Insertar la Persona!", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+				
 			}
 		});
 		roundedGlowPanelRegistrar.setBounds((int)(817*widthRatio),(int)(599*heightRatio), (int)(118*widthRatio),(int)(49*heightRatio));

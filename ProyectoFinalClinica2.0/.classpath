@@ -8,11 +8,11 @@
 	<classpathentry kind="lib" path="junit-4.6.jar"/>
 	<classpathentry kind="lib" path="swingx-all-1.6.4.jar"/>
 	<classpathentry kind="lib" path="KGradientPanel.jar"/>
-	<classpathentry kind="lib" path="C:/Users/sebas/Downloads/sqljdbc_12.8.1.0_enu/sqljdbc_12.8/enu/jars/mssql-jdbc-12.8.1.jre8.jar"/>
-	<classpathentry kind="lib" path="C:/Users/sebas/Downloads/sqljdbc_12.8.1.0_enu/sqljdbc_12.8/enu/jars/mssql-jdbc-12.8.1.jre8-javadoc.jar"/>
-	<classpathentry kind="lib" path="C:/Users/sebas/Downloads/sqljdbc_12.8.1.0_enu/sqljdbc_12.8/enu/jars/mssql-jdbc-12.8.1.jre8-sources.jar"/>
-	<classpathentry kind="lib" path="C:/Users/sebas/Downloads/sqljdbc_12.8.1.0_enu/sqljdbc_12.8/enu/jars/mssql-jdbc-12.8.1.jre11.jar"/>
-	<classpathentry kind="lib" path="C:/Users/sebas/Downloads/sqljdbc_12.8.1.0_enu/sqljdbc_12.8/enu/jars/mssql-jdbc-12.8.1.jre11-javadoc.jar"/>
-	<classpathentry kind="lib" path="C:/Users/sebas/Downloads/sqljdbc_12.8.1.0_enu/sqljdbc_12.8/enu/jars/mssql-jdbc-12.8.1.jre11-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Cristopher/Downloads/sqljdbc_12.8.1.0_enu/sqljdbc_12.8/enu/jars/mssql-jdbc-12.8.1.jre8.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Cristopher/Downloads/sqljdbc_12.8.1.0_enu/sqljdbc_12.8/enu/jars/mssql-jdbc-12.8.1.jre8-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Cristopher/Downloads/sqljdbc_12.8.1.0_enu/sqljdbc_12.8/enu/jars/mssql-jdbc-12.8.1.jre8-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Cristopher/Downloads/sqljdbc_12.8.1.0_enu/sqljdbc_12.8/enu/jars/mssql-jdbc-12.8.1.jre11.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Cristopher/Downloads/sqljdbc_12.8.1.0_enu/sqljdbc_12.8/enu/jars/mssql-jdbc-12.8.1.jre11-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Cristopher/Downloads/sqljdbc_12.8.1.0_enu/sqljdbc_12.8/enu/jars/mssql-jdbc-12.8.1.jre11-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

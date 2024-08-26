@@ -796,14 +796,15 @@ public class Clinica implements Serializable{
 		boolean encontrado = false;
 		try {
 			Statement statement = conexion.createStatement();
-            String selectSql = "SELECT Nombre_Usuario, Pass FROM Administrativo;";
+            String selectSql = "SELECT Cargo, Nombre_Usuario, Pass FROM Administrativo;";
             ResultSet resultSet = statement.executeQuery(selectSql);
 
             while (resultSet.next() && encontrado == false) {
+            	String cargo = resultSet.getString("Cargo");
                 String usuario = resultSet.getString("Nombre_Usuario");
                 String contra = resultSet.getString("Pass");
                 if(usuario.equals(nombreUsuario) && contra.equals(contrasena)) {
-    				usuarioLogueado = new Usuario("", "", null, '\u0000', "", "", "", usuario, "");
+    				usuarioLogueado = new Usuario("", "", "", "", "", "", "", 'x', null, cargo, usuario, "");
     				permitir = true;
     				encontrado = true;
                 }
@@ -848,6 +849,22 @@ public class Clinica implements Serializable{
 	    return null;
 	}
 
-
-	
+	public boolean insertarPersona(Connection conexion, String cedula, String primerNombre, String segundoNombre, String primerApellido,
+								String segundoApellido, String telefono, String direccion, char sexo, Date fechaDeNacimiento) {
+		
+		Statement statement;
+		SimpleDateFormat formateador = new SimpleDateFormat("yyyy-MM-dd");  
+		String strDate= formateador.format(fechaDeNacimiento);  
+		
+		try {
+			statement = conexion.createStatement();
+            String insertSql = "INSERT INTO Persona VALUES ('"+cedula+"','"+primerNombre+"','"+segundoNombre+"','"+primerApellido+"', '"+segundoApellido+"', '"+telefono+"', '"+direccion+"', '"+sexo+"', '"+strDate+"');";
+            statement.executeUpdate(insertSql);
+            return true;
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			return false;
+		}
+		
+	}	
 }
