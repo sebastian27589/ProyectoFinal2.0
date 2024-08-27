@@ -29,6 +29,7 @@ import javax.swing.JTextArea;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -121,6 +122,8 @@ public class VisualCita extends PanelSimulacionAnim {
 	private RoundedGlowPanel roundedGlowHora;
 	private JTextField txtCodeCita;
 	private JComboBox cbxHora;
+	private JDateChooser dateChooserFechaCita;
+	private RoundedGlowPanel roundedGlowPanelAgendar;
 	
 	/**
 	 * Launch the application.
@@ -268,6 +271,7 @@ public class VisualCita extends PanelSimulacionAnim {
 			panelDatosPersona.add(roundedPanelPNombre);
 			
 			txtPNombre = new JTextField();
+			txtPNombre.setEnabled(false);
 			txtPNombre.setOpaque(false);
 			txtPNombre.setEditable(false);
 			txtPNombre.setBorder(null);
@@ -297,6 +301,7 @@ public class VisualCita extends PanelSimulacionAnim {
 			panelDatosPersona.add(roundedPanelSNombre);
 			
 			txtSnombre = new JTextField();
+			txtSnombre.setEnabled(false);
 			txtSnombre.setOpaque(false);
 			txtSnombre.setEditable(false);
 			txtSnombre.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
@@ -325,6 +330,7 @@ public class VisualCita extends PanelSimulacionAnim {
 			panelDatosPersona.add(roundedPanelPApellido);
 			
 			txtPApellido = new JTextField();
+			txtPApellido.setEnabled(false);
 			txtPApellido.setOpaque(false);
 			txtPApellido.setEditable(false);
 			txtPApellido.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
@@ -353,6 +359,7 @@ public class VisualCita extends PanelSimulacionAnim {
 			panelDatosPersona.add(roundedPanelSApellido);
 			
 			txtSApellido = new JTextField();
+			txtSApellido.setEnabled(false);
 			txtSApellido.setOpaque(false);
 			txtSApellido.setEditable(false);
 			txtSApellido.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
@@ -442,6 +449,7 @@ public class VisualCita extends PanelSimulacionAnim {
 			roundedPanelCedula.add(lblCedula);
 			
 			txtCedula = new JTextField();
+			txtCedula.setEnabled(false);
 			txtCedula.setOpaque(false);
 			txtCedula.setEditable(false);
 			txtCedula.setBorder(null);
@@ -470,6 +478,7 @@ public class VisualCita extends PanelSimulacionAnim {
 			roundedPanelTelefono.add(lblTelefono);
 			
 			txtTelefono = new JTextField();
+			txtTelefono.setEnabled(false);
 			txtTelefono.setOpaque(false);
 			txtTelefono.setEditable(false);
 			txtTelefono.setBorder(null);
@@ -520,7 +529,7 @@ public class VisualCita extends PanelSimulacionAnim {
 			cbxElegirMedico.setBounds((int)(366*widthRatio),(int)(437*heightRatio), (int)(277*widthRatio),(int)(46*heightRatio));
 			panelDatosPersona.add(cbxElegirMedico);
 			cbxElegirMedico.setBorder(null);
-			cbxElegirMedico.setModel(new DefaultComboBoxModel(new String[] {"Elegir M\u00E9dico"}));
+			cbxElegirMedico.setModel(new DefaultComboBoxModel(new String[] {"Elegir M\u00E9dico", "M\u00E9dico 1"}));
 			cbxElegirMedico.setSelectedIndex(0);
 			cbxElegirMedico.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
 			
@@ -742,7 +751,7 @@ public class VisualCita extends PanelSimulacionAnim {
 			lblHora.setBounds((int)(0*widthRatio),(int)(11*heightRatio), (int)(112*widthRatio),(int)(22*heightRatio));
 			roundedPanelHora.add(lblHora);
 			
-			JDateChooser dateChooserFechaCita = new JDateChooser();
+			dateChooserFechaCita = new JDateChooser();
 			dateChooserFechaCita.getCalendarButton().setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
 			dateChooserFechaCita.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
 			dateChooserFechaCita.setBorder(new EmptyBorder(0, 0, 0, 0));
@@ -751,6 +760,7 @@ public class VisualCita extends PanelSimulacionAnim {
 			panelDatosPersona.add(dateChooserFechaCita);
 			
 			cbxHora = new JComboBox();
+			cbxHora.setModel(new DefaultComboBoxModel(new String[] {"Elegir", "00:00"}));
 			//cbxHora.setSelectedIndex(0);
 			cbxHora.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
 			cbxHora.setBorder(null);
@@ -770,6 +780,7 @@ public class VisualCita extends PanelSimulacionAnim {
 		gradientPanel.setLayout(null);
 		
 		RoundedGlowPanel roundedGlowPanelModificar = new RoundedGlowPanel();
+		roundedGlowPanelModificar.setEnabled(false);
 		roundedGlowPanelModificar.setLayout(null);
 		roundedGlowPanelModificar.setRoundTopRight(60);
 		roundedGlowPanelModificar.setRoundTopLeft(60);
@@ -779,7 +790,7 @@ public class VisualCita extends PanelSimulacionAnim {
 		roundedGlowPanelModificar.setGlowAlpha(170);
 		roundedGlowPanelModificar.setForeground(Color.WHITE);
 		roundedGlowPanelModificar.setBorder(null);
-		roundedGlowPanelModificar.setBackground(Color.WHITE);
+		roundedGlowPanelModificar.setBackground(new Color(240,240,240));
 		roundedGlowPanelModificar.setBounds((int)(1107*widthRatio),(int)(599*heightRatio), (int)(118*widthRatio),(int)(49*heightRatio));
 		add(roundedGlowPanelModificar);
 		
@@ -810,6 +821,7 @@ public class VisualCita extends PanelSimulacionAnim {
 		*/
 		
 		roundedGlowPanelEliminar = new RoundedGlowPanel();
+		roundedGlowPanelEliminar.setEnabled(false);
 		roundedGlowPanelEliminar.setLayout(null);
 		roundedGlowPanelEliminar.setRoundTopRight(60);
 		roundedGlowPanelEliminar.setRoundTopLeft(60);
@@ -819,7 +831,7 @@ public class VisualCita extends PanelSimulacionAnim {
 		roundedGlowPanelEliminar.setGlowAlpha(170);
 		roundedGlowPanelEliminar.setForeground(Color.WHITE);
 		roundedGlowPanelEliminar.setBorder(null);
-		roundedGlowPanelEliminar.setBackground(Color.WHITE);
+		roundedGlowPanelEliminar.setBackground(new Color(240,240,240));
 		roundedGlowPanelEliminar.setBounds((int)(1249*widthRatio),(int)(599*heightRatio), (int)(118*widthRatio),(int)(49*heightRatio));
 		add(roundedGlowPanelEliminar);
 		
@@ -854,9 +866,10 @@ public class VisualCita extends PanelSimulacionAnim {
 		
 		*/
 		
-		RoundedGlowPanel roundedGlowPanelAgendar = new RoundedGlowPanel();
+		roundedGlowPanelAgendar = new RoundedGlowPanel();
 		roundedGlowPanelAgendar.setBounds((int)(817*widthRatio),(int)(599*heightRatio), (int)(118*widthRatio),(int)(49*heightRatio));
 		add(roundedGlowPanelAgendar);
+		roundedGlowPanelAgendar.setEnabled(false);
 		roundedGlowPanelAgendar.setLayout(null);
 		roundedGlowPanelAgendar.setRoundTopRight(60);
 		roundedGlowPanelAgendar.setRoundTopLeft(60);
@@ -866,7 +879,7 @@ public class VisualCita extends PanelSimulacionAnim {
 		roundedGlowPanelAgendar.setGlowAlpha(170);
 		roundedGlowPanelAgendar.setForeground(Color.WHITE);
 		roundedGlowPanelAgendar.setBorder(null);
-		roundedGlowPanelAgendar.setBackground(Color.WHITE);
+		roundedGlowPanelAgendar.setBackground(new Color(240,240,240));
 		
 //		lblRegistrar.addMouseListener(new MouseAdapter() {
 //			@Override
@@ -981,6 +994,7 @@ public class VisualCita extends PanelSimulacionAnim {
 		roundedGlowPanelAgendar.add(lblAgendar);
 		
 		roundedGlowConsultar = new RoundedGlowPanel();
+		roundedGlowConsultar.setEnabled(false);
 		roundedGlowConsultar.setLayout(null);
 		roundedGlowConsultar.setRoundTopRight(60);
 		roundedGlowConsultar.setRoundTopLeft(60);
@@ -990,7 +1004,7 @@ public class VisualCita extends PanelSimulacionAnim {
 		roundedGlowConsultar.setGlowAlpha(170);
 		roundedGlowConsultar.setForeground(Color.WHITE);
 		roundedGlowConsultar.setBorder(null);
-		roundedGlowConsultar.setBackground(Color.WHITE);
+		roundedGlowConsultar.setBackground(new Color(240,240,240));
 		roundedGlowConsultar.setBounds((int)(963*widthRatio),(int)(599*heightRatio), (int)(118*widthRatio),(int)(49*heightRatio));
 		add(roundedGlowConsultar);
 		
@@ -1060,6 +1074,33 @@ public class VisualCita extends PanelSimulacionAnim {
 		roundedGlowPanelBuscarPaciente.add(txtBuscarPaciente);
 		txtBuscarPaciente.setColumns(10);
 		
+	    ActionListener cbxListener = new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	            validarCampos();
+	        }
+	    };
+	    
+	    cbxHora.addActionListener(cbxListener);
+	    cbxElegirMedico.addActionListener(cbxListener);
+	    dateChooserFechaCita.addPropertyChangeListener("yyyy-MM-dd", e -> validarCampos());
+	}
 	
+	private void validarCampos() {
+		
+		if((dateChooserFechaCita.getDate() != null) && (cbxHora.getSelectedIndex() != 0) && (cbxElegirMedico.getSelectedIndex() != 0)) {
+												
+		   roundedGlowPanelAgendar.setEnabled(true);
+		   roundedGlowPanelAgendar.setBackground(Color.WHITE);
+		   lblAgendar.setEnabled(true);
+		   
+		} else {
+			
+			roundedGlowPanelAgendar.setEnabled(false);
+			roundedGlowPanelAgendar.setBackground(new Color(240, 240, 240));
+			lblAgendar.setEnabled(false);
+		   
+		}
+		
 	}
 }
