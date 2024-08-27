@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -63,6 +65,8 @@ public class VisualMedico extends PanelSimulacionAnim {
 	private JTextField txtBuscarPaciente;
 	private JDateChooser dateChooserNacim;
 	private JTextArea txtareaDireccion;
+	private RoundedGlowPanel roundedGlowPanelRegistrar;
+	private JLabel lblRegistrar;
 	
 	
 	public VisualMedico() {
@@ -104,6 +108,14 @@ public class VisualMedico extends PanelSimulacionAnim {
 		setLayout(null);
 		
 		RoundedGlowPanel roundedGlowPanelVolver = new RoundedGlowPanel();
+		roundedGlowPanelVolver.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//VentanaPrincipal ventanaPrincipal = obtenerVentanaPrincipal();
+				Desaparecer(20);
+				VentanaPrincipal.mostrarPanelFondo();
+			}
+		});
 		roundedGlowPanelVolver.setBounds((int)(10*widthRatio),(int)(10*heightRatio), (int)(57*widthRatio),(int)(49*heightRatio));
 		add(roundedGlowPanelVolver);
 		roundedGlowPanelVolver.setLayout(null);
@@ -174,6 +186,7 @@ public class VisualMedico extends PanelSimulacionAnim {
 				public void actionPerformed(ActionEvent e) {
 					
 					rdbtnFemenino.setSelected(false);
+					validarCampos();
 				}
 			});
 			rdbtnMasculino.setBounds((int)(401*widthRatio),(int)(347*heightRatio), (int)(93*widthRatio),(int)(22*heightRatio));
@@ -184,6 +197,7 @@ public class VisualMedico extends PanelSimulacionAnim {
 				public void actionPerformed(ActionEvent e) {
 					
 					rdbtnMasculino.setSelected(false);
+					validarCampos();
 				}
 			});
 			rdbtnFemenino.setBounds((int)(501*widthRatio),(int)(347*heightRatio), (int)(93*widthRatio),(int)(22*heightRatio));
@@ -205,6 +219,7 @@ public class VisualMedico extends PanelSimulacionAnim {
 			txtPNombre.setBounds((int)(126*widthRatio),0, (int)(111*widthRatio),(int)(46*heightRatio));
 			roundedPanelPNombre.add(txtPNombre);
 			txtPNombre.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
+
 			txtPNombre.setColumns(10);
 			{
 				JLabel lblPNombre = new JLabel("Primer Nombre:");
@@ -330,12 +345,12 @@ public class VisualMedico extends PanelSimulacionAnim {
 			roundedGlowPanelCodePaciente.setGlowAlpha(170);
 			roundedGlowPanelCodePaciente.setForeground(new Color(255, 255, 255));
 			roundedGlowPanelCodePaciente.setBorder(null);
-			roundedGlowPanelCodePaciente.setGlowColor(new Color(0, 255, 255));
+			roundedGlowPanelCodePaciente.setGlowColor(Color.CYAN);
 			roundedGlowPanelCodePaciente.setRoundTopRight(60);
 			roundedGlowPanelCodePaciente.setRoundTopLeft(60);
 			roundedGlowPanelCodePaciente.setRoundBottomRight(60);
 			roundedGlowPanelCodePaciente.setRoundBottomLeft(60);
-			roundedGlowPanelCodePaciente.setBackground(new Color(255, 255, 255));
+			roundedGlowPanelCodePaciente.setBackground(Color.WHITE);
 			roundedGlowPanelCodePaciente.setLayout(null);
 			
 			JLabel lblRegistroDePersonas = new JLabel("Registro de M\u00E9dicos");
@@ -583,6 +598,7 @@ public class VisualMedico extends PanelSimulacionAnim {
 		gradientPanel.setLayout(null);
 		
 		RoundedGlowPanel roundedGlowPanelModificar = new RoundedGlowPanel();
+		roundedGlowPanelModificar.setEnabled(false);
 		roundedGlowPanelModificar.setLayout(null);
 		roundedGlowPanelModificar.setRoundTopRight(60);
 		roundedGlowPanelModificar.setRoundTopLeft(60);
@@ -592,7 +608,7 @@ public class VisualMedico extends PanelSimulacionAnim {
 		roundedGlowPanelModificar.setGlowAlpha(170);
 		roundedGlowPanelModificar.setForeground(Color.WHITE);
 		roundedGlowPanelModificar.setBorder(null);
-		roundedGlowPanelModificar.setBackground(Color.WHITE);
+		roundedGlowPanelModificar.setBackground(new Color(240, 240, 240));
 		roundedGlowPanelModificar.setBounds((int)(1107*widthRatio),(int)(599*heightRatio), (int)(118*widthRatio),(int)(49*heightRatio));
 		add(roundedGlowPanelModificar);
 		
@@ -606,6 +622,7 @@ public class VisualMedico extends PanelSimulacionAnim {
 		roundedGlowPanelModificar.add(lblModificar);
 		
 		RoundedGlowPanel roundedGlowPanelEliminar = new RoundedGlowPanel();
+		roundedGlowPanelEliminar.setEnabled(false);
 		roundedGlowPanelEliminar.setLayout(null);
 		roundedGlowPanelEliminar.setRoundTopRight(60);
 		roundedGlowPanelEliminar.setRoundTopLeft(60);
@@ -615,7 +632,7 @@ public class VisualMedico extends PanelSimulacionAnim {
 		roundedGlowPanelEliminar.setGlowAlpha(170);
 		roundedGlowPanelEliminar.setForeground(Color.WHITE);
 		roundedGlowPanelEliminar.setBorder(null);
-		roundedGlowPanelEliminar.setBackground(Color.WHITE);
+		roundedGlowPanelEliminar.setBackground(new Color(240, 240, 240));
 		roundedGlowPanelEliminar.setBounds((int)(1249*widthRatio),(int)(599*heightRatio), (int)(118*widthRatio),(int)(49*heightRatio));
 		add(roundedGlowPanelEliminar);
 		
@@ -628,7 +645,8 @@ public class VisualMedico extends PanelSimulacionAnim {
 		lblEliminar.setBounds(0, 0, (int)(118*widthRatio),(int)(49*heightRatio));
 		roundedGlowPanelEliminar.add(lblEliminar);
 		
-		RoundedGlowPanel roundedGlowPanelRegistrar = new RoundedGlowPanel();
+		roundedGlowPanelRegistrar = new RoundedGlowPanel();
+		roundedGlowPanelRegistrar.setEnabled(false);
 		roundedGlowPanelRegistrar.setBounds((int)(817*widthRatio),(int)(599*heightRatio), (int)(118*widthRatio),(int)(49*heightRatio));
 		add(roundedGlowPanelRegistrar);
 		roundedGlowPanelRegistrar.setLayout(null);
@@ -640,30 +658,32 @@ public class VisualMedico extends PanelSimulacionAnim {
 		roundedGlowPanelRegistrar.setGlowAlpha(170);
 		roundedGlowPanelRegistrar.setForeground(Color.WHITE);
 		roundedGlowPanelRegistrar.setBorder(null);
-		roundedGlowPanelRegistrar.setBackground(Color.WHITE);
+		roundedGlowPanelRegistrar.setBackground(new Color(240, 240, 240));
+	
 		
-		JLabel lblRegistrar_1 = new JLabel("Registrar");
-		lblRegistrar_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblRegistrar_1.setForeground(new Color(100, 149, 237));
-		lblRegistrar_1.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
-		lblRegistrar_1.setEnabled(false);
-		lblRegistrar_1.setBackground(Color.WHITE);
-		lblRegistrar_1.setBounds(0, 0, (int)(118*widthRatio),(int)(49*heightRatio));
-		roundedGlowPanelRegistrar.add(lblRegistrar_1);
+		lblRegistrar = new JLabel("Registrar");
+		lblRegistrar.setEnabled(false);
+		lblRegistrar.setHorizontalAlignment(SwingConstants.CENTER);
+		lblRegistrar.setForeground(new Color(100, 149, 237));
+		lblRegistrar.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
+		lblRegistrar.setBackground(Color.WHITE);
+		lblRegistrar.setBounds(0, 0, (int)(118*widthRatio),(int)(49*heightRatio));
+		roundedGlowPanelRegistrar.add(lblRegistrar);
 		
-		RoundedGlowPanel roundedGlowHistorial = new RoundedGlowPanel();
-		roundedGlowHistorial.setLayout(null);
-		roundedGlowHistorial.setRoundTopRight(60);
-		roundedGlowHistorial.setRoundTopLeft(60);
-		roundedGlowHistorial.setRoundBottomRight(60);
-		roundedGlowHistorial.setRoundBottomLeft(60);
-		roundedGlowHistorial.setGlowColor(Color.CYAN);
-		roundedGlowHistorial.setGlowAlpha(170);
-		roundedGlowHistorial.setForeground(Color.WHITE);
-		roundedGlowHistorial.setBorder(null);
-		roundedGlowHistorial.setBackground(Color.WHITE);
-		roundedGlowHistorial.setBounds((int)(963*widthRatio),(int)(599*heightRatio), (int)(118*widthRatio),(int)(49*heightRatio));
-		add(roundedGlowHistorial);
+		RoundedGlowPanel roundedGlowCitasPendientes = new RoundedGlowPanel();
+		roundedGlowCitasPendientes.setEnabled(false);
+		roundedGlowCitasPendientes.setLayout(null);
+		roundedGlowCitasPendientes.setRoundTopRight(60);
+		roundedGlowCitasPendientes.setRoundTopLeft(60);
+		roundedGlowCitasPendientes.setRoundBottomRight(60);
+		roundedGlowCitasPendientes.setRoundBottomLeft(60);
+		roundedGlowCitasPendientes.setGlowColor(Color.CYAN);
+		roundedGlowCitasPendientes.setGlowAlpha(170);
+		roundedGlowCitasPendientes.setForeground(Color.WHITE);
+		roundedGlowCitasPendientes.setBorder(null);
+		roundedGlowCitasPendientes.setBackground(new Color(240, 240, 240));
+		roundedGlowCitasPendientes.setBounds((int)(963*widthRatio),(int)(599*heightRatio), (int)(118*widthRatio),(int)(49*heightRatio));
+		add(roundedGlowCitasPendientes);
 		
 		JLabel lblHistorial = new JLabel("Citas");
 		lblHistorial.setEnabled(false);
@@ -672,7 +692,7 @@ public class VisualMedico extends PanelSimulacionAnim {
 		lblHistorial.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
 		lblHistorial.setBackground(Color.WHITE);
 		lblHistorial.setBounds(0, 0, (int)(118*widthRatio),(int)(49*heightRatio));
-		roundedGlowHistorial.add(lblHistorial);
+		roundedGlowCitasPendientes.add(lblHistorial);
 		
 		RoundedGlowPanel roundedGlowPanelBuscarPaciente = new RoundedGlowPanel();
 		roundedGlowPanelBuscarPaciente.setLayout(null);
@@ -726,5 +746,45 @@ public class VisualMedico extends PanelSimulacionAnim {
 		scrollPane_1.setBounds(0, 0, 0, 0);
 		panelTablaMedico.add(scrollPane_1);
 			
+		KeyListener campoListener = new KeyAdapter() {
+	        @Override
+	        public void keyReleased(KeyEvent e) {
+	        	validarCampos();
+	        }
+	    };
+	    
+	    
+	    txtPNombre.addKeyListener(campoListener);
+	    txtSnombre.addKeyListener(campoListener);
+	    txtPApellido.addKeyListener(campoListener);
+	    txtSApellido.addKeyListener(campoListener);
+	    txtCedula.addKeyListener(campoListener);
+	    txtTelefono.addKeyListener(campoListener);
+	    txtareaDireccion.addKeyListener(campoListener);
+	    dateChooserNacim.addPropertyChangeListener("yyyy-MM-dd", e -> validarCampos());
+
 	}
+
+
+	private void validarCampos() {
+		// TODO Auto-generated method stub
+		
+		if(!txtPNombre.getText().isEmpty() && !txtSnombre.getText().isEmpty() && !txtPApellido.getText().isEmpty() && !txtSApellido.getText().isEmpty()
+		   && !txtCedula.getText().isEmpty() && !txtTelefono.getText().isEmpty() && (dateChooserNacim.getDate() != null) && !txtareaDireccion.getText().isEmpty()
+		   && (rdbtnMasculino.isSelected() || rdbtnFemenino.isSelected())) {
+												
+		   roundedGlowPanelRegistrar.setEnabled(true);
+		   roundedGlowPanelRegistrar.setBackground(Color.WHITE);
+		   lblRegistrar.setEnabled(true);
+		   
+		} else {
+			
+		   roundedGlowPanelRegistrar.setEnabled(false);
+		   roundedGlowPanelRegistrar.setBackground(new Color(240, 240, 240));
+		   lblRegistrar.setEnabled(false);
+		   
+		}
+		
+	}
+
 }

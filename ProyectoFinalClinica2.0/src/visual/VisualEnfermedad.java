@@ -29,6 +29,7 @@ import javax.swing.JTextArea;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -86,6 +87,7 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 	private JLabel lblRegistroDeEnfermedad;
 	private JCheckBox chbxVigilancia;
 	private JComboBox cbxSintomas;
+	private RoundedGlowPanel roundedGlowPanelRegistrar;
 	
 	/**
 	 * Launch the application.
@@ -145,6 +147,13 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 		setLayout(null);
 		
 		RoundedGlowPanel roundedGlowPanelVolver = new RoundedGlowPanel();
+		roundedGlowPanelVolver.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Desaparecer(20);
+				VentanaPrincipal.mostrarPanelFondo();
+			}
+		});
 		roundedGlowPanelVolver.setBounds((int)(10*widthRatio),(int)(10*heightRatio), (int)(57*widthRatio),(int)(49*heightRatio));
 		add(roundedGlowPanelVolver);
 		roundedGlowPanelVolver.setLayout(null);
@@ -390,7 +399,7 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 			cbxTipoEnfermedad.setBounds((int)(229*widthRatio),(int)(328*heightRatio), (int)(216*widthRatio),(int)(46*heightRatio));
 			panelDatosEnfermedad.add(cbxTipoEnfermedad);
 			cbxTipoEnfermedad.setBorder(null);
-			cbxTipoEnfermedad.setModel(new DefaultComboBoxModel(new String[] {"Alergia", "Enf. Autoinmune", "Enf. Cardiovascular", "Enf. de la Mujer", "Enf. de la Sangre", "Enf. Mentales", "Enf. infecciosa"}));
+			cbxTipoEnfermedad.setModel(new DefaultComboBoxModel(new String[] {"Elegir", "Alergia", "Enf. Autoinmune", "Enf. Cardiovascular", "Enf. de la Mujer", "Enf. de la Sangre", "Enf. Mentales", "Enf. infecciosa"}));
 			cbxTipoEnfermedad.setSelectedIndex(0);
 			cbxTipoEnfermedad.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
 			
@@ -473,6 +482,7 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 			panelDatosEnfermedad.add(chbxVigilancia);
 			
 			cbxSintomas = new JComboBox();
+			cbxSintomas.setModel(new DefaultComboBoxModel(new String[] {"Elegir", "Tos"}));
 			//cbxSintomas.setSelectedIndex(0);
 			cbxSintomas.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
 			cbxSintomas.setBorder(null);
@@ -576,7 +586,8 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 		
 		*/
 		
-		RoundedGlowPanel roundedGlowPanelRegistrar = new RoundedGlowPanel();
+		roundedGlowPanelRegistrar = new RoundedGlowPanel();
+		roundedGlowPanelRegistrar.setEnabled(false);
 		roundedGlowPanelRegistrar.setBounds((int)(961*widthRatio),(int)(599*heightRatio), (int)(132*widthRatio),(int)(49*heightRatio));
 		add(roundedGlowPanelRegistrar);
 		roundedGlowPanelRegistrar.setLayout(null);
@@ -588,7 +599,7 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 		roundedGlowPanelRegistrar.setGlowAlpha(170);
 		roundedGlowPanelRegistrar.setForeground(Color.WHITE);
 		roundedGlowPanelRegistrar.setBorder(null);
-		roundedGlowPanelRegistrar.setBackground(Color.WHITE);
+		roundedGlowPanelRegistrar.setBackground(new Color(240,240,240));
 
 //		lblRegistrar.addMouseListener(new MouseAdapter() {
 //			@Override
@@ -694,10 +705,10 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 //		});
 		
 		lblRegistrar_1 = new JLabel("Registrar");
+		lblRegistrar_1.setEnabled(false);
 		lblRegistrar_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblRegistrar_1.setForeground(new Color(100, 149, 237));
 		lblRegistrar_1.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
-		lblRegistrar_1.setEnabled(false);
 		lblRegistrar_1.setBackground(Color.WHITE);
 		lblRegistrar_1.setBounds(0, 0, (int)(132*widthRatio),(int)(49*heightRatio));
 		roundedGlowPanelRegistrar.add(lblRegistrar_1);
@@ -758,6 +769,42 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 		});
 		roundedGlowPanelBuscarEnfermedad.add(txtBuscarEnfermedad);
 		txtBuscarEnfermedad.setColumns(10);
+		
+		KeyListener campoListener = new KeyAdapter() {
+	        @Override
+	        public void keyReleased(KeyEvent e) {
+	        	validarCampos();
+	        }
+	    };
+	    
+	    ActionListener cbxListener = new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	            validarCampos();
+	        }
+	    };
+	    
+	    txtNombreEnfermedad.addKeyListener(campoListener);
+	    cbxSintomas.addActionListener(cbxListener);
+	    cbxTipoEnfermedad.addActionListener(cbxListener);
+	    
+	}
+
+	private void validarCampos() {
+		
+		if(!txtNombreEnfermedad.getText().isEmpty() && (cbxSintomas.getSelectedIndex() != 0) && (cbxTipoEnfermedad.getSelectedIndex() != 0)) {
+												
+		   roundedGlowPanelRegistrar.setEnabled(true);
+		   roundedGlowPanelRegistrar.setBackground(Color.WHITE);
+		   lblRegistrar_1.setEnabled(true);
+		   
+		} else {
+			
+		   roundedGlowPanelRegistrar.setEnabled(false);
+		   roundedGlowPanelRegistrar.setBackground(new Color(240, 240, 240));
+		   lblRegistrar_1.setEnabled(false);
+		   
+		}
 		
 	}
 }

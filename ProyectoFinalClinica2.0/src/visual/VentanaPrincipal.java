@@ -76,7 +76,7 @@ public class VentanaPrincipal extends JFrame {
 	private JLabel lblPersona;
 	private JLabel lblEnfermedad;
 	private JLabel lblVacuna;
-	private PanelSimulacionAnim panelFondo;
+	private static PanelSimulacionAnim panelFondo;
 	private PanelSimulacionAnim panelFondo2;
 	private PanelSimulacionAnim panelFondo3;
 	private PanelSimulacionAnim panelFondo4;
@@ -700,5 +700,11 @@ public class VentanaPrincipal extends JFrame {
         });
 
         hilo.start();
+	}
+
+	public static void mostrarPanelFondo() {
+		// TODO Auto-generated method stub
+		panelFondo.setVisible(true);
+		
 	}
 }

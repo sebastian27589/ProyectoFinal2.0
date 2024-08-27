@@ -29,6 +29,7 @@ import javax.swing.JTextArea;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ import com.toedter.calendar.JDateChooser;
 import exception.ValidarCampo;
 import logico.Clinica;
 import logico.Paciente;
+import logico.PanelSimulacionAnim;
 import logico.Persona;
 import logico.RoundedGlowPanel;
 import logico.RoundedPanel;
@@ -54,8 +56,10 @@ import javax.swing.border.BevelBorder;
 import javax.swing.ImageIcon;
 import java.awt.Dimension;
 import java.awt.Component;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 
-public class VisualConsulta extends JPanel {
+public class VisualConsulta extends PanelSimulacionAnim {
 
 	private static DefaultTableModel model;
 	private Dimension dim;
@@ -80,7 +84,7 @@ public class VisualConsulta extends JPanel {
 	private Paciente paciente = null;
 	private char sexoPaciente;
 	private JComboBox cbxTipoSangre;
-	private JTextArea txtareaAlergias;
+	private JTextArea txtareaAlergia;
 	public static String codePacienteRegistrado = null;
 	private JButton btnSiguiente;
 	private JButton cancelButton;
@@ -133,6 +137,8 @@ public class VisualConsulta extends JPanel {
 	private JLabel lblEnfermedad;
 	private JLabel lblAnalisis;
 	private JLabel lblVacuna;
+	private RoundedGlowPanel roundedGlowPanelRealizar;
+	private JTextArea textAreaDiagnostico;
 	
 	/**
 	 * Launch the application.
@@ -192,6 +198,13 @@ public class VisualConsulta extends JPanel {
 		contentPanel.setLayout(null);
 		
 		RoundedGlowPanel roundedGlowPanelVolver = new RoundedGlowPanel();
+		roundedGlowPanelVolver.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Desaparecer(20);
+				VentanaPrincipal.mostrarPanelFondo();
+			}
+		});
 		roundedGlowPanelVolver.setBounds((int)(64*widthRatio),(int)(11*heightRatio), (int)(57*widthRatio),(int)(49*heightRatio));
 		contentPanel.add(roundedGlowPanelVolver);
 		roundedGlowPanelVolver.setLayout(null);
@@ -365,7 +378,7 @@ public class VisualConsulta extends JPanel {
 			panelDatosPersona.add(lblRegistroDePersonas);
 			
 			cbxTipoSangre = new JComboBox();
-			cbxTipoSangre.setEnabled(false);
+			cbxTipoSangre.setEditable(true);
 			cbxTipoSangre.setBounds((int)(511*widthRatio),(int)(355*heightRatio), (int)(105*widthRatio),(int)(46*heightRatio));
 			panelDatosPersona.add(cbxTipoSangre);
 			cbxTipoSangre.setBorder(null);
@@ -623,10 +636,14 @@ public class VisualConsulta extends JPanel {
 			lblAltura.setBackground(Color.WHITE);
 			
 			spnAltura = new JSpinner();
+			spnAltura.addChangeListener(new ChangeListener() {
+				public void stateChanged(ChangeEvent e) {
+					validarCampos();
+				}
+			});
 			spnAltura.setBackground(Color.WHITE);
 			spnAltura.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
 			spnAltura.setForeground(Color.WHITE);
-			spnAltura.setEnabled(false);
 			spnAltura.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 			spnAltura.setOpaque(false);
 			spnAltura.setBounds((int)(75*widthRatio),(int)(5*heightRatio), (int)(40*widthRatio),(int)(46*heightRatio));
@@ -656,11 +673,15 @@ public class VisualConsulta extends JPanel {
 			lblPeso.setBackground(Color.WHITE);
 			
 			spnPeso = new JSpinner();
+			spnPeso.addChangeListener(new ChangeListener() {
+				public void stateChanged(ChangeEvent e) {
+					validarCampos();
+				}
+			});
 			spnPeso.setBackground(Color.WHITE);
 			spnPeso.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
 			spnPeso.setForeground(Color.WHITE);
 			spnPeso.setOpaque(false);
-			spnPeso.setEnabled(false);
 			spnPeso.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 			spnPeso.setBounds((int)(75*widthRatio),(int)(5*heightRatio), (int)(40*widthRatio),(int)(46*heightRatio));
 			roundedGlowPanelPeso.add(spnPeso);
@@ -742,15 +763,13 @@ public class VisualConsulta extends JPanel {
 			lblAlergia.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
 			lblAlergia.setBackground(Color.WHITE);
 			
-			txtareaAlergias = new JTextArea();
-			txtareaAlergias.setEnabled(false);
-			txtareaAlergias.setEditable(false);
-			txtareaAlergias.setOpaque(false);
-			txtareaAlergias.setBounds((int)(79*widthRatio),(int)(6*heightRatio), (int)(460*widthRatio),(int)(59*heightRatio));
-			roundedGlowPanelAlergia.add(txtareaAlergias);
-			txtareaAlergias.setWrapStyleWord(true);
-			txtareaAlergias.setLineWrap(true);
-			txtareaAlergias.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
+			txtareaAlergia = new JTextArea();
+			txtareaAlergia.setOpaque(false);
+			txtareaAlergia.setBounds((int)(79*widthRatio),(int)(6*heightRatio), (int)(460*widthRatio),(int)(59*heightRatio));
+			roundedGlowPanelAlergia.add(txtareaAlergia);
+			txtareaAlergia.setWrapStyleWord(true);
+			txtareaAlergia.setLineWrap(true);
+			txtareaAlergia.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
 			
 			roundedGlowPanelDiagnostico = new RoundedGlowPanel();
 			roundedGlowPanelDiagnostico.setLayout(null);
@@ -774,13 +793,13 @@ public class VisualConsulta extends JPanel {
 			lblDiagnstico.setBounds((int)(14*widthRatio),(int)(22*heightRatio), (int)(85*widthRatio),(int)(22*heightRatio));
 			roundedGlowPanelDiagnostico.add(lblDiagnstico);
 			
-			JTextArea textArea = new JTextArea();
-			textArea.setWrapStyleWord(true);
-			textArea.setOpaque(false);
-			textArea.setLineWrap(true);
-			textArea.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
-			textArea.setBounds((int)(107*widthRatio),(int)(6*heightRatio), (int)(426*widthRatio),(int)(59*heightRatio));
-			roundedGlowPanelDiagnostico.add(textArea);
+			textAreaDiagnostico = new JTextArea();
+			textAreaDiagnostico.setWrapStyleWord(true);
+			textAreaDiagnostico.setOpaque(false);
+			textAreaDiagnostico.setLineWrap(true);
+			textAreaDiagnostico.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
+			textAreaDiagnostico.setBounds((int)(107*widthRatio),(int)(6*heightRatio), (int)(426*widthRatio),(int)(59*heightRatio));
+			roundedGlowPanelDiagnostico.add(textAreaDiagnostico);
 			
 			roundedGlowPanelBuscarPaciente = new RoundedGlowPanel();
 			roundedGlowPanelBuscarPaciente.setBounds((int)(67*widthRatio),(int)(761*heightRatio), (int)(277*widthRatio),(int)(49*heightRatio));
@@ -823,7 +842,7 @@ public class VisualConsulta extends JPanel {
 			roundedGlowPanelBuscarPaciente.add(txtBuscarPaciente);
 			txtBuscarPaciente.setColumns(10);	
 			
-			RoundedGlowPanel roundedGlowPanelRealizar = new RoundedGlowPanel();
+			roundedGlowPanelRealizar = new RoundedGlowPanel();
 			roundedGlowPanelRealizar.setBounds((int)(355*widthRatio),(int)(761*heightRatio), (int)(132*widthRatio),(int)(49*heightRatio));
 			panelDatosPersona.add(roundedGlowPanelRealizar);
 			roundedGlowPanelRealizar.setLayout(null);
@@ -835,14 +854,14 @@ public class VisualConsulta extends JPanel {
 			roundedGlowPanelRealizar.setGlowAlpha(170);
 			roundedGlowPanelRealizar.setForeground(Color.WHITE);
 			roundedGlowPanelRealizar.setBorder(null);
-			roundedGlowPanelRealizar.setBackground(Color.WHITE);
+			roundedGlowPanelRealizar.setBackground(new Color(240,240,240));
 			roundedGlowPanelRealizar.add(lblRegistrar);
 			
 			lblRealizar = new JLabel("Realizar");
+			lblRealizar.setEnabled(false);
 			lblRealizar.setHorizontalAlignment(SwingConstants.CENTER);
 			lblRealizar.setForeground(new Color(100, 149, 237));
 			lblRealizar.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
-			lblRealizar.setEnabled(false);
 			lblRealizar.setBackground(Color.WHITE);
 			lblRealizar.setBounds(0, 0, (int)(132*widthRatio),(int)(49*heightRatio));
 			roundedGlowPanelRealizar.add(lblRealizar);
@@ -1088,6 +1107,45 @@ public class VisualConsulta extends JPanel {
 		});
 		
 		*/
+		
+		KeyListener campoListener = new KeyAdapter() {
+	        @Override
+	        public void keyReleased(KeyEvent e) {
+	        	validarCampos();
+	        }
+	    };
+	    
+	    ActionListener cbxListener = new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	            validarCampos();
+	        }
+	    };
+	    
+	    txtareaAlergia.addKeyListener(campoListener);
+	    textAreaDiagnostico.addKeyListener(campoListener);
+	    cbxTipoSangre.addActionListener(cbxListener);
+	    
 	
+	}
+	
+	private void validarCampos() {
+		// TODO Auto-generated method stub
+		
+		if(!txtareaAlergia.getText().isEmpty() && !textAreaDiagnostico.getText().isEmpty() && (cbxTipoSangre.getSelectedIndex() != 0)
+			&& (new Integer(spnPeso.getValue().toString()) != 0) && (new Integer(spnAltura.getValue().toString()) != 0) ) {
+												
+		   roundedGlowPanelRealizar.setEnabled(true);
+		   roundedGlowPanelRealizar.setBackground(Color.WHITE);
+		   lblRealizar.setEnabled(true);
+		   
+		} else {
+			
+		   roundedGlowPanelRealizar.setEnabled(false);
+		   roundedGlowPanelRealizar.setBackground(new Color(240, 240, 240));
+		   lblRealizar.setEnabled(false);
+		   
+		}
+		
 	}
 }

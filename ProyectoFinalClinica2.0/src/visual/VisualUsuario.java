@@ -29,6 +29,7 @@ import javax.swing.JTextArea;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -88,7 +89,7 @@ public class VisualUsuario extends PanelSimulacionAnim {
 	private JLabel lblEliminar;
 	private JLabel lblModificar;
 	private JLabel lblRegistrar;
-	private RoundedGlowPanel roundedGlowConsultar;
+	private RoundedGlowPanel roundedGlowRegistrar;
 	private JLabel lblRegistrar1;
 	private RoundedGlowPanel roundedGlowPanelBuscarPaciente;
 	private JLabel lblBuscar;
@@ -381,7 +382,7 @@ public class VisualUsuario extends PanelSimulacionAnim {
 			lblCargo.setBackground(Color.WHITE);
 			
 			cbxCargo = new JComboBox();
-			cbxCargo.setModel(new DefaultComboBoxModel(new String[] {"Secretario", "M\u00E9dico", "Admin"}));
+			cbxCargo.setModel(new DefaultComboBoxModel(new String[] {"Elegir", "Secretario", "M\u00E9dico", "Admin"}));
 			//cbxHora.setSelectedIndex(0);
 			cbxCargo.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
 			cbxCargo.setBorder(null);
@@ -463,19 +464,20 @@ public class VisualUsuario extends PanelSimulacionAnim {
 		lblEliminar.setBounds(0, 0, (int)(118*widthRatio),(int)(49*heightRatio));
 		roundedGlowPanelEliminar.add(lblEliminar);
 		
-		roundedGlowConsultar = new RoundedGlowPanel();
-		roundedGlowConsultar.setLayout(null);
-		roundedGlowConsultar.setRoundTopRight(60);
-		roundedGlowConsultar.setRoundTopLeft(60);
-		roundedGlowConsultar.setRoundBottomRight(60);
-		roundedGlowConsultar.setRoundBottomLeft(60);
-		roundedGlowConsultar.setGlowColor(Color.CYAN);
-		roundedGlowConsultar.setGlowAlpha(170);
-		roundedGlowConsultar.setForeground(Color.WHITE);
-		roundedGlowConsultar.setBorder(null);
-		roundedGlowConsultar.setBackground(Color.WHITE);
-		roundedGlowConsultar.setBounds((int)(963*widthRatio),(int)(599*heightRatio), (int)(118*widthRatio),(int)(49*heightRatio));
-		add(roundedGlowConsultar);
+		roundedGlowRegistrar = new RoundedGlowPanel();
+		roundedGlowRegistrar.setEnabled(false);
+		roundedGlowRegistrar.setLayout(null);
+		roundedGlowRegistrar.setRoundTopRight(60);
+		roundedGlowRegistrar.setRoundTopLeft(60);
+		roundedGlowRegistrar.setRoundBottomRight(60);
+		roundedGlowRegistrar.setRoundBottomLeft(60);
+		roundedGlowRegistrar.setGlowColor(Color.CYAN);
+		roundedGlowRegistrar.setGlowAlpha(170);
+		roundedGlowRegistrar.setForeground(Color.WHITE);
+		roundedGlowRegistrar.setBorder(null);
+		roundedGlowRegistrar.setBackground(new Color(240,240,240));
+		roundedGlowRegistrar.setBounds((int)(963*widthRatio),(int)(599*heightRatio), (int)(118*widthRatio),(int)(49*heightRatio));
+		add(roundedGlowRegistrar);
 		
 		lblRegistrar1 = new JLabel("Registrar");
 		lblRegistrar1.setEnabled(false);
@@ -484,7 +486,7 @@ public class VisualUsuario extends PanelSimulacionAnim {
 		lblRegistrar1.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
 		lblRegistrar1.setBackground(Color.WHITE);
 		lblRegistrar1.setBounds(0, 0, (int)(118*widthRatio),(int)(49*heightRatio));
-		roundedGlowConsultar.add(lblRegistrar1);
+		roundedGlowRegistrar.add(lblRegistrar1);
 		
 		/*RECORDAR CAMBIAR ESTO POR EL LABEL DE HISTORIAL, ADEMAS HAY QUE CREAR UN NUEVO PANEL QUE MUESTRE
 		 *EL HISTORIAL DE LA PERSONA SELECCIONADA.
@@ -543,6 +545,41 @@ public class VisualUsuario extends PanelSimulacionAnim {
 		roundedGlowPanelBuscarPaciente.add(txtBuscarPaciente);
 		txtBuscarPaciente.setColumns(10);
 		
+		KeyListener campoListener = new KeyAdapter() {
+	        @Override
+	        public void keyReleased(KeyEvent e) {
+	        	validarCampos();
+	        }
+	    };
+	    
+	    ActionListener cbxListener = new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	            validarCampos();
+	        }
+	    };
+	    
+	    txtUsuario.addKeyListener(campoListener);
+	    txtPassword.addKeyListener(campoListener);
+	    cbxCargo.addActionListener(cbxListener);
 	
+	}
+	
+	private void validarCampos() {
+		
+		if(!txtUsuario.getText().isEmpty() && !txtPassword.getText().isEmpty() && (cbxCargo.getSelectedIndex() != 0)) {
+												
+		   roundedGlowRegistrar.setEnabled(true);
+		   roundedGlowRegistrar.setBackground(Color.WHITE);
+		   lblRegistrar1.setEnabled(true);
+		   
+		} else {
+			
+		   roundedGlowRegistrar.setEnabled(false);
+		   roundedGlowRegistrar.setBackground(new Color(240, 240, 240));
+		   lblRegistrar1.setEnabled(false);
+		   
+		}
+		
 	}
 }

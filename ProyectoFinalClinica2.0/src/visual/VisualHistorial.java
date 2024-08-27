@@ -40,6 +40,7 @@ import com.toedter.calendar.JDateChooser;
 import exception.ValidarCampo;
 import logico.Clinica;
 import logico.Paciente;
+import logico.PanelSimulacionAnim;
 import logico.Persona;
 import logico.RoundedGlowPanel;
 import logico.RoundedPanel;
@@ -57,7 +58,7 @@ import javax.swing.JCheckBox;
 import javax.swing.border.EtchedBorder;
 import java.awt.Component;
 
-public class VisualHistorial extends JPanel {
+public class VisualHistorial extends PanelSimulacionAnim {
 
 	private static DefaultTableModel model;
 	private Dimension dim;

@@ -29,6 +29,7 @@ import javax.swing.JTextArea;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
@@ -157,6 +158,13 @@ public class VisualPaciente extends PanelSimulacionAnim {
 		setLayout(null);
 		
 		RoundedGlowPanel roundedGlowPanelVolver = new RoundedGlowPanel();
+		roundedGlowPanelVolver.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Desaparecer(20);
+				VentanaPrincipal.mostrarPanelFondo();
+			}
+		});
 		roundedGlowPanelVolver.setBounds((int)(10*widthRatio),(int)(10*heightRatio), (int)(57*widthRatio),(int)(49*heightRatio));
 		add(roundedGlowPanelVolver);
 		roundedGlowPanelVolver.setLayout(null);
@@ -260,6 +268,7 @@ public class VisualPaciente extends PanelSimulacionAnim {
 			public void actionPerformed(ActionEvent e) {
 				
 				rdbtnFemenino.setSelected(false);
+				validarCampos();
 			}
 		});
 		rdbtnMasculino.setBounds((int)(260*widthRatio),(int)(464*heightRatio), (int)(93*widthRatio),(int)(22*heightRatio));
@@ -270,6 +279,7 @@ public class VisualPaciente extends PanelSimulacionAnim {
 			public void actionPerformed(ActionEvent e) {
 				
 				rdbtnMasculino.setSelected(false);
+				validarCampos();
 			}
 		});
 		rdbtnFemenino.setBounds((int)(379*widthRatio),(int)(464*heightRatio), (int)(93*widthRatio),(int)(22*heightRatio));
@@ -943,6 +953,7 @@ public class VisualPaciente extends PanelSimulacionAnim {
 		roundedGlowPanelEliminar.add(lblEliminar);
 		
 		roundedGlowPanelRegistrar = new RoundedGlowPanel();
+		roundedGlowPanelRegistrar.setEnabled(false);
 		roundedGlowPanelRegistrar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -979,13 +990,13 @@ public class VisualPaciente extends PanelSimulacionAnim {
 		roundedGlowPanelRegistrar.setGlowAlpha(170);
 		roundedGlowPanelRegistrar.setForeground(Color.WHITE);
 		roundedGlowPanelRegistrar.setBorder(null);
-		roundedGlowPanelRegistrar.setBackground(Color.WHITE);
+		roundedGlowPanelRegistrar.setBackground(new Color(240,240,240));
 		
 		lblRegistrar_1 = new JLabel("Registrar");
+		lblRegistrar_1.setEnabled(false);
 		lblRegistrar_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblRegistrar_1.setForeground(new Color(100, 149, 237));
 		lblRegistrar_1.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
-		lblRegistrar_1.setEnabled(false);
 		lblRegistrar_1.setBackground(Color.WHITE);
 		lblRegistrar_1.setBounds(0, 0, (int)(118*widthRatio),(int)(49*heightRatio));
 		roundedGlowPanelRegistrar.add(lblRegistrar_1);
@@ -1057,7 +1068,42 @@ public class VisualPaciente extends PanelSimulacionAnim {
 		roundedGlowPanelModificar.setEnabled(false);
 		roundedGlowPanelEliminar.setEnabled(false);
 		roundedGlowHistorial.setEnabled(false);
+		
+		KeyListener campoListener = new KeyAdapter() {
+	        @Override
+	        public void keyReleased(KeyEvent e) {
+	        	validarCampos();
+	        }
+	    };
+	    
+	    txtPNombre.addKeyListener(campoListener);
+	    txtSNombre.addKeyListener(campoListener);
+	    txtPApellido.addKeyListener(campoListener);
+	    txtSApellido.addKeyListener(campoListener);
+	    txtCedula.addKeyListener(campoListener);
+	    txtTelefono.addKeyListener(campoListener);
+	    txtareaDireccion.addKeyListener(campoListener);
+	    dateChooserNacim.addPropertyChangeListener("yyyy-MM-dd", e -> validarCampos());
+
 		loadPersonas(conexion);
+	}
+
+	private void validarCampos() {
+		// TODO Auto-generated method stub
+		if(!txtPNombre.getText().isEmpty() && !txtSNombre.getText().isEmpty() && !txtPApellido.getText().isEmpty() && !txtSApellido.getText().isEmpty()
+			&& !txtCedula.getText().isEmpty() && !txtTelefono.getText().isEmpty() && (dateChooserNacim.getDate() != null) && !txtareaDireccion.getText().isEmpty()
+			&& (rdbtnMasculino.isSelected() || rdbtnFemenino.isSelected())) {
+														
+			roundedGlowPanelRegistrar.setEnabled(true);
+			roundedGlowPanelRegistrar.setBackground(Color.WHITE);
+			lblRegistrar_1.setEnabled(true);
+				   
+		} else {
+					
+			roundedGlowPanelRegistrar.setEnabled(false);
+			roundedGlowPanelRegistrar.setBackground(new Color(240, 240, 240));
+			lblRegistrar_1.setEnabled(false);    
+		}
 	}
 
 	protected void limpiarDatos() {
@@ -1071,6 +1117,9 @@ public class VisualPaciente extends PanelSimulacionAnim {
 		rdbtnMasculino.setSelected(false);
 		rdbtnFemenino.setSelected(false);
 		dateChooserNacim.setDate(null);
+		roundedGlowPanelRegistrar.setEnabled(false);
+		roundedGlowPanelRegistrar.setBackground(new Color(240, 240, 240));
+		lblRegistrar_1.setEnabled(false);
 	}
 	
 	public static void loadPersonas(Connection conexion) {
