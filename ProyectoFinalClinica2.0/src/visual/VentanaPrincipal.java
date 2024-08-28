@@ -153,6 +153,12 @@ public class VentanaPrincipal extends JFrame {
 		mostrarCita.setLocation((int)(492*widthRatio), (int)(10*heightRatio));
 		mostrarCita.setVisible(false);
 		
+		VisualUsuario mostrarUsuario = new VisualUsuario(conexion);
+        mostrarUsuario.setSize((int)(1381*widthRatio), (int)(900*heightRatio));
+        mostrarUsuario.setLocation((int)(492*widthRatio), (int)(10*heightRatio));
+        mostrarUsuario.setVisible(false);
+        contentPane.add(mostrarUsuario, BorderLayout.CENTER);
+		
 		JPanel panelTiempoSesion = new JPanel();
 		panelTiempoSesion.setBorder(new CompoundBorder());
 		panelTiempoSesion.setBounds((int)(492*widthRatio), (int)(920*heightRatio), (int)(1381*widthRatio), (int)(46*heightRatio));
@@ -198,6 +204,7 @@ public class VentanaPrincipal extends JFrame {
 	        			case 3:
 	        				panelGerencia.Desaparecer(tiempoAnim);
 	        				panelFondo4.Desaparecer(tiempoAnim);
+	        				mostrarUsuario.Desaparecer(tiempoAnim);
 	        				break;
 	        				
 	        			case 5:
@@ -259,6 +266,7 @@ public class VentanaPrincipal extends JFrame {
         			case 3:
         				panelGerencia.Desaparecer(tiempoAnim);
         				panelFondo4.Desaparecer(tiempoAnim);
+        				mostrarUsuario.Desaparecer(tiempoAnim);
         				break;
         			case 5:
         				panelRegistro.Desaparecer(tiempoAnim);
@@ -324,6 +332,7 @@ public class VentanaPrincipal extends JFrame {
         			case 3:
         				panelGerencia.Desaparecer(tiempoAnim);
         				panelFondo4.Desaparecer(tiempoAnim);
+        				mostrarUsuario.Desaparecer(tiempoAnim);
         				break;
         			case 5:
         				panelRegistro.Desaparecer(tiempoAnim);
@@ -409,6 +418,7 @@ public class VentanaPrincipal extends JFrame {
 					panelGerencia.setBackground(new Color(81, 137, 252));
 					panelGerencia.Aparecer(tiempoAnim);
 					panelFondo4.Aparecer(tiempoAnim);
+					mostrarUsuario.Aparecer(tiempoAnim);
         		}
         	}
         });
@@ -450,6 +460,7 @@ public class VentanaPrincipal extends JFrame {
     			case 3:
     				panelGerencia.Desaparecer(tiempoAnim);
     				panelFondo4.Desaparecer(tiempoAnim);
+    				mostrarUsuario.Desaparecer(tiempoAnim);
     				break;
     			case 5:
     				mostrarPersona.Desaparecer(tiempoAnim);

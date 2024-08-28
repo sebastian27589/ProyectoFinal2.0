@@ -38,9 +38,10 @@ public class Clinica implements Serializable{
 	public static int generadorCodeVacuna = 1;
 	public static int generadorNumCita = 1;
 	public static int generadorCodeEnfermedad = 1;
+	public static int generadorCodeUsuario = 1;
 	public static Clinica clinica = null; 
 	private static Usuario usuarioLogueado; 
-	
+
 	private void writeObject(ObjectOutputStream out) throws IOException {
         out.writeInt(generadorCodePaciente);
         out.writeInt(generadorCodeMedico);
@@ -104,6 +105,14 @@ public class Clinica implements Serializable{
 		return misViviendas;
 	}
 	
+    public static int getGeneradorCodeUsuario() {
+        return generadorCodeUsuario;
+    }
+
+    public static void setGeneradorCodeUsuario(int generadorCodeUsuario) {
+        Clinica.generadorCodeUsuario = generadorCodeUsuario;
+    }
+    
 	public void setMisViviendas(ArrayList<Vivienda> misViviendas) {
 		this.misViviendas = misViviendas;
 	}
@@ -1404,13 +1413,92 @@ public boolean insertarSintomas(Connection conexion, int ID_enfermedad, ArrayLis
 		}
 	}
 
-
-
 	public boolean eliminarVacuna(Connection conexion, int idVacuna) {
 		
 		try {
 			Statement statement = conexion.createStatement();
 			String deleteSQL = "DELETE FROM Vacuna WHERE ID_Vacuna = " + idVacuna + ";";	
+			statement.executeUpdate(deleteSQL);
+			return true;
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean insertarUsuarioSQL(Connection conexion, String doc_identidad, String usuario, String password, String cargo) {
+		
+		Statement statement;
+
+		try {
+			statement = conexion.createStatement();
+            String insertSql = "INSERT INTO Administrativo VALUES ('"+doc_identidad+"','"+cargo+"','"+usuario+"','"+password+"');";
+            statement.executeUpdate(insertSql);
+            return true;
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			return false;
+		}
+
+	}
+	
+	public boolean insertarUsuarioSQL2(Connection conexion, String doc_identidad, String usuario, String password, String cargo) {
+		
+		Statement statement;
+
+		try {
+			statement = conexion.createStatement();
+            String insertSql = "UPDATE Medico SET Nombre_Usuario = '"+usuario+"', Pass = '"+password+"' WHERE Doc_Identidad = '"+doc_identidad+"';";
+            statement.executeUpdate(insertSql);
+            return true;
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			return false;
+		}
+	}
+	
+	public Usuario buscarAdmByCode(Connection conexion, int ID_Usuario) {
+		
+		Usuario admAbuscar = null;
+		
+		try {
+			Statement statement = conexion.createStatement();
+			String selectSQL = "SELECT Persona.Doc_Identidad, Administrativo.ID_Administrativo, Administrativo.Cargo, Administrativo.Nombre_Usuario, Administrativo.Pass, Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Telefono, Direccion, Sexo, Fecha_Nacimiento FROM Persona INNER JOIN Administrativo ON Persona.Doc_Identidad = Administrativo.Doc_Identidad;";
+			ResultSet resultSet = statement.executeQuery(selectSQL);
+			
+			while(resultSet.next()) {
+				if(resultSet.getInt("ID_Administrativo") == ID_Usuario) {
+					admAbuscar = new Usuario(resultSet.getString("Doc_Identidad"), resultSet.getString("Primer_Nombre"), resultSet.getString("Segundo_Nombre"), resultSet.getString("Primer_Apellido"), resultSet.getString("Segundo_Apellido"), 
+											 resultSet.getString("Telefono"), resultSet.getString("Direccion"), resultSet.getString("Sexo").charAt(0), resultSet.getDate("Fecha_Nacimiento"), resultSet.getString("Cargo"), resultSet.getString("Nombre_Usuario"), 
+											 resultSet.getString("Pass"));
+					break;
+				}
+			}
+		} catch(SQLException e) {
+			JOptionPane.showMessageDialog(null, e.toString());
+		}
+		
+		return admAbuscar;
+	}
+	
+	public boolean modificarUsuario(Connection conexion, String idAdministrativo, String usuario, String pass, String cargo) {
+		
+		try {
+			Statement statement = conexion.createStatement();
+			String updateSql = "UPDATE Administrativo SET Cargo = '"+cargo+"', Nombre_Usuario = '"+usuario+"', Pass = '"+pass+"' WHERE ID_Administrativo = '"+idAdministrativo+"';";
+            statement.executeUpdate(updateSql);
+            return true;
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			return false;
+		}
+	}
+
+	public boolean eliminarUsuarioSQL(Connection conexion, int idAdministrativo) {
+		
+		try {
+			Statement statement = conexion.createStatement();
+			String deleteSQL = "DELETE FROM Administrativo WHERE ID_Administrativo = " + idAdministrativo + ";";	
 			statement.executeUpdate(deleteSQL);
 			return true;
 		} catch (SQLException e1) {
