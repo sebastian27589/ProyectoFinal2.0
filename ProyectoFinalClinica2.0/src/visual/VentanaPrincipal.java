@@ -81,7 +81,7 @@ public class VentanaPrincipal extends JFrame {
 	private PanelSimulacionAnim panelFondo3;
 	private PanelSimulacionAnim panelFondo4;
 	private int ind = 0;
-	private int tiempoAnim = 20;
+	private static int tiempoAnim = 20;
 
 	/**
 	 * Create the frame.
@@ -163,12 +163,12 @@ public class VentanaPrincipal extends JFrame {
 		mostrarPersona.setLocation((int)(492*widthRatio), (int)(10*heightRatio));
 		mostrarPersona.setVisible(false);
         
-		VisualMedico mostrarMedico = new VisualMedico();
+		VisualMedico mostrarMedico = new VisualMedico(conexion);
 		mostrarMedico.setSize((int)(1381*widthRatio), (int)(900*heightRatio));
 		mostrarMedico.setLocation((int)(492*widthRatio), (int)(10*heightRatio));
         mostrarMedico.setVisible(false);
         
-		VisualEnfermedad mostrarEnfermedad = new VisualEnfermedad();
+		VisualEnfermedad mostrarEnfermedad = new VisualEnfermedad(conexion);
 		mostrarEnfermedad.setSize((int)(1381*widthRatio), (int)(900*heightRatio));
 		mostrarEnfermedad.setLocation((int)(492*widthRatio), (int)(10*heightRatio));
 		mostrarEnfermedad.setVisible(false);
@@ -703,8 +703,7 @@ public class VentanaPrincipal extends JFrame {
 	}
 
 	public static void mostrarPanelFondo() {
-		// TODO Auto-generated method stub
-		panelFondo.setVisible(true);
+		panelFondo.Aparecer(tiempoAnim);
 		
 	}
 }

@@ -12,17 +12,17 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
-import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -40,48 +40,80 @@ import com.toedter.calendar.JDateChooser;
 import keeptoo.KGradientPanel;
 import logico.Clinica;
 import logico.Medico;
-import logico.Paciente;
 import logico.PanelSimulacionAnim;
+import logico.Persona;
 import logico.RoundedGlowPanel;
 import logico.RoundedPanel;
-import javax.swing.SpinnerNumberModel;
 import java.awt.Component;
+import java.awt.FlowLayout;
+import javax.swing.table.TableModel;
 
 public class VisualMedico extends PanelSimulacionAnim {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private static ArrayList<Integer> selectedEsp = new ArrayList<Integer>();
+	private static int indexEsp = 0;
+	private int lugar = 0;
+	private Persona selected;
+	private Medico selectedMedico;
 	private Dimension dim;
+	private static Object[] row;
 	private static DefaultTableModel model;
+	private static DefaultTableModel modelMedico;
+	private static DefaultTableModel modelEspecialidad;
 	private PanelSimulacionAnim panelTablaPersona;
+	private JTable tablePersona;
 	private JTable tableMedico;
+	private static JTable tableEspecialidad;
 	private JRadioButton rdbtnMasculino;
 	private JRadioButton rdbtnFemenino;
 	private JTextField txtPNombre;
-	private JTextField txtSnombre;
+	private JTextField txtSNombre;
 	private JTextField txtPApellido;
 	private JTextField txtSApellido;
-	private JTextField txtCodePaciente;
+	private static JTextField txtCodeMedicos;
 	private JTextField txtCedula;
 	private JTextField txtTelefono;
 	private JTextField txtBuscarPaciente;
 	private JDateChooser dateChooserNacim;
 	private JTextArea txtareaDireccion;
 	private RoundedGlowPanel roundedGlowPanelRegistrar;
+	private RoundedGlowPanel roundedGlowCitasPendientes;
+	private RoundedGlowPanel roundedGlowPanelModificar;
+	private RoundedGlowPanel roundedGlowPanelEliminar;
 	private JLabel lblRegistrar;
+	private JLabel lblEliminar;
+	private JLabel lblModificar;
+	private JLabel lblCitas;
+	private Color colorDeshabilitado = new Color(240, 240, 240);
 	
 	
-	public VisualMedico() {
+	public VisualMedico(Connection conexion) {
 		dim = getToolkit().getScreenSize();
 		int screenWidthOriginal = 1920;
 		int screenHeightOriginal = 1080;
 		double widthRatio = (double) dim.width / screenWidthOriginal;
 		double heightRatio = (double) dim.height / screenHeightOriginal;
 		
-		Object[] header = {"Código", "Cédula", "Nombre", "Sexo", "Teléfono", "Ver más"};
-		model = new DefaultTableModel() {
+		Object[] header = {"Doc_Identidad", "P_Nombre", "S_Nombre", "P_Apellido", "S_Apellido"};
+		Object[] headerEspecialidad = {"Código", "Nombre_Especialidad", "Elegir"};
+		model = new DefaultTableModel();
+		model.setColumnIdentifiers(header);
+		modelMedico = new DefaultTableModel();
+		modelMedico.setColumnIdentifiers(header);
+		modelEspecialidad = new DefaultTableModel() {
 			
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public Class getColumnClass(int column) {
 				
-				if (column == 5) {
+				if (column == 2) {
 					return Boolean.class;
 				}
 				else {
@@ -91,7 +123,7 @@ public class VisualMedico extends PanelSimulacionAnim {
 			
 			public boolean isCellEditable(int row, int column) {       
 			       
-			       if (row >= 0 && column == 5) {
+			       if (row >= 0 && column == 2) {
 			    	   return true;
 			       }
 			       else {
@@ -99,7 +131,7 @@ public class VisualMedico extends PanelSimulacionAnim {
 			       }
 			}
 		};
-		model.setColumnIdentifiers(header);
+		modelEspecialidad.setColumnIdentifiers(headerEspecialidad);
 		
 		setBounds(100, 100, 1444, 993);
 		setSize(new Dimension((int)(1381*widthRatio),(int)(900*heightRatio)));
@@ -111,7 +143,6 @@ public class VisualMedico extends PanelSimulacionAnim {
 		roundedGlowPanelVolver.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				//VentanaPrincipal ventanaPrincipal = obtenerVentanaPrincipal();
 				Desaparecer(20);
 				VentanaPrincipal.mostrarPanelFondo();
 			}
@@ -139,37 +170,71 @@ public class VisualMedico extends PanelSimulacionAnim {
 		panelTablaPersona = new PanelSimulacionAnim();
 		panelTablaPersona.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panelTablaPersona.setBackground(new Color(255, 255, 255));
-		panelTablaPersona.setBounds((int)(814*widthRatio),(int)(13*heightRatio), (int)(555),(int)(250*heightRatio));
+		panelTablaPersona.setBounds((int)(814*widthRatio),(int)(13*heightRatio), (int)(555*widthRatio),(int)(250*heightRatio));
 		add(panelTablaPersona);
-		panelTablaPersona.setLayout(null);
+		panelTablaPersona.setLayout(new BorderLayout(0, 0));
 		
-		JScrollPane scrollPane = new JScrollPane(tableMedico);
+		JScrollPane scrollPane = new JScrollPane(tablePersona);
 		panelTablaPersona.add(scrollPane);
 		
-		tableMedico = new JTable(model);
-		tableMedico.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tableMedico.getTableHeader().setResizingAllowed(false);
-		tableMedico.getTableHeader().setReorderingAllowed(false);
-		DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
-		cellRenderer.setHorizontalAlignment(JLabel.CENTER);
-		
-		for (int index = 0; index < tableMedico.getColumnCount(); index++) {
-			
-			if (index != 5) {
+		tablePersona = new JTable(model);
+		tablePersona.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
 				
-				tableMedico.getColumnModel().getColumn(index).setCellRenderer(cellRenderer);
+				loadEspecialidad(conexion);
+				selectedEsp.clear();
+				indexEsp = 0;
+				lugar = 0;
+				tableMedico.clearSelection();
+				selectedMedico = null;
+				selected = Clinica.getInstance().buscarPersonaByCode(conexion, tablePersona.getValueAt(tablePersona.getSelectedRow(), 0).toString());
+				
+				rdbtnMasculino.setSelected(false);
+				rdbtnFemenino.setSelected(false);
+				
+				txtCedula.setText(selected.getCedula());
+				txtPNombre.setText(selected.getPrimerNombre());
+				txtSNombre.setText(selected.getSegundoNombre()); 
+				txtPApellido.setText(selected.getPrimerApellido()); 
+				txtSApellido.setText(selected.getSegundoApellido()); 
+				txtTelefono.setText(selected.getTelefono()); 
+				txtareaDireccion.setText(selected.getDireccion());
+				
+				if(selected.getSexo() == 'M') {
+					rdbtnMasculino.setSelected(true);
+				} else {
+					rdbtnFemenino.setSelected(true);
+				}
+				
+				dateChooserNacim.setDate(selected.getFechaDeNacimiento());
+				txtCodeMedicos.setText("M-"+(Clinica.getGeneradorCodeMedico()+1));
+				validarCampos();
+				
+				roundedGlowPanelEliminar.setEnabled(false);
+				roundedGlowPanelEliminar.setBackground(colorDeshabilitado);
+				lblEliminar.setEnabled(false);
+				roundedGlowPanelModificar.setEnabled(false);
+				roundedGlowPanelModificar.setBackground(colorDeshabilitado);
+				lblModificar.setEnabled(false);
+				roundedGlowCitasPendientes.setEnabled(false);
+				roundedGlowCitasPendientes.setBackground(colorDeshabilitado);
+				lblCitas.setEnabled(false);
 			}
-		}
-		
-		tableMedico.getColumnModel().getColumn(0).setPreferredWidth(5);
-		tableMedico.getColumnModel().getColumn(1).setPreferredWidth(25);
-		tableMedico.getColumnModel().getColumn(2).setPreferredWidth(100);
-		tableMedico.getColumnModel().getColumn(3).setPreferredWidth(5);
-		tableMedico.getColumnModel().getColumn(4).setPreferredWidth(25);
-		tableMedico.getColumnModel().getColumn(5).setPreferredWidth(5);
-		tableMedico.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
-		tableMedico.setFillsViewportHeight(true);
-		scrollPane.setViewportView(tableMedico);
+		});
+		tablePersona.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tablePersona.getTableHeader().setResizingAllowed(false);
+		tablePersona.getTableHeader().setReorderingAllowed(false);
+		DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
+		cellRenderer.setHorizontalAlignment(JLabel.CENTER);		
+		tablePersona.getColumnModel().getColumn(0).setPreferredWidth(25);
+		tablePersona.getColumnModel().getColumn(1).setPreferredWidth(25);
+		tablePersona.getColumnModel().getColumn(2).setPreferredWidth(25);
+		tablePersona.getColumnModel().getColumn(3).setPreferredWidth(25);
+		tablePersona.getColumnModel().getColumn(4).setPreferredWidth(25);
+		tablePersona.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
+		tablePersona.setFillsViewportHeight(true);
+		scrollPane.setViewportView(tablePersona);
 		{
 			RoundedPanel panelDatosPersona = new RoundedPanel();
 			panelDatosPersona.setRoundTopRight(35);
@@ -178,7 +243,7 @@ public class VisualMedico extends PanelSimulacionAnim {
 			panelDatosPersona.setRoundBottomLeft(35);
 			panelDatosPersona.setBounds((int)(12*widthRatio),(int)(13*heightRatio), (int)(790*widthRatio),(int)(721*heightRatio));
 			add(panelDatosPersona);
-			panelDatosPersona.setBackground(new Color(240, 240, 240));
+			panelDatosPersona.setBackground(colorDeshabilitado);
 			panelDatosPersona.setLayout(null);
 			
 			rdbtnMasculino = new JRadioButton("Hombre");
@@ -242,12 +307,12 @@ public class VisualMedico extends PanelSimulacionAnim {
 			roundedPanelSNombre.setBounds((int)(91*widthRatio),(int)(209*heightRatio), (int)(249*widthRatio),(int)(46*heightRatio));
 			panelDatosPersona.add(roundedPanelSNombre);
 			
-			txtSnombre = new JTextField();
-			txtSnombre.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
-			txtSnombre.setColumns(10);
-			txtSnombre.setBorder(null);
-			txtSnombre.setBounds((int)(136*widthRatio),0, (int)(101*widthRatio),(int)(46*heightRatio));
-			roundedPanelSNombre.add(txtSnombre);
+			txtSNombre = new JTextField();
+			txtSNombre.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
+			txtSNombre.setColumns(10);
+			txtSNombre.setBorder(null);
+			txtSNombre.setBounds((int)(136*widthRatio),0, (int)(101*widthRatio),(int)(46*heightRatio));
+			roundedPanelSNombre.add(txtSNombre);
 			
 			JLabel lblSNombre = new JLabel("Segundo Nombre:");
 			lblSNombre.setOpaque(true);
@@ -329,15 +394,15 @@ public class VisualMedico extends PanelSimulacionAnim {
 			lblCdigo.setBounds((int)(4*widthRatio),(int)(11*heightRatio), (int)(76*widthRatio),(int)(22*heightRatio));
 			roundedPanelCodePaciente.add(lblCdigo);
 			
-			txtCodePaciente = new JTextField();
-			txtCodePaciente.setBackground(new Color(255, 255, 255));
-			txtCodePaciente.setBounds((int)(92*widthRatio),(int)(14*heightRatio), (int)(62*widthRatio),(int)(22*heightRatio));
-			roundedPanelCodePaciente.add(txtCodePaciente);
-			txtCodePaciente.setBorder(null);
-			txtCodePaciente.setEditable(false);
-			txtCodePaciente.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
-			txtCodePaciente.setColumns(10);
-			txtCodePaciente.setText("P-"+Clinica.getInstance().getGeneradorCodeMedico());
+			txtCodeMedicos = new JTextField();
+			txtCodeMedicos.setBackground(new Color(255, 255, 255));
+			txtCodeMedicos.setBounds((int)(92*widthRatio),(int)(14*heightRatio), (int)(62*widthRatio),(int)(22*heightRatio));
+			roundedPanelCodePaciente.add(txtCodeMedicos);
+			txtCodeMedicos.setBorder(null);
+			txtCodeMedicos.setEditable(false);
+			txtCodeMedicos.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
+			txtCodeMedicos.setColumns(10);
+			txtCodeMedicos.setText("M-"+(Clinica.getInstance().getGeneradorCodeMedico()+1));
 			
 			RoundedGlowPanel roundedGlowPanelCodePaciente = new RoundedGlowPanel();
 			roundedGlowPanelCodePaciente.setBounds((int)(184*widthRatio),(int)(79*heightRatio), (int)(170*widthRatio),(int)(61*heightRatio));
@@ -358,7 +423,7 @@ public class VisualMedico extends PanelSimulacionAnim {
 			lblRegistroDePersonas.setHorizontalAlignment(SwingConstants.CENTER);
 			lblRegistroDePersonas.setForeground(new Color(0, 0, 0));
 			lblRegistroDePersonas.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(30*widthRatio)));
-			lblRegistroDePersonas.setBackground(new Color(240, 240, 240));
+			lblRegistroDePersonas.setBackground(colorDeshabilitado);
 			lblRegistroDePersonas.setBounds((int)(157*widthRatio),(int)(20*heightRatio), (int)(416*widthRatio),(int)(46*heightRatio));
 			panelDatosPersona.add(lblRegistroDePersonas);
 			
@@ -442,20 +507,58 @@ public class VisualMedico extends PanelSimulacionAnim {
 			dateChooserNacim.setBorder(new EmptyBorder(0, 0, 0, 0));
 			dateChooserNacim.getCalendarButton().setFont(new Font("Yu Gothic UI", Font.PLAIN, 15));
 			
-			RoundedPanel roundedPanel_1 = new RoundedPanel();
-			roundedPanel_1.setLayout(null);
-			roundedPanel_1.setBackground(Color.WHITE);
-			roundedPanel_1.setBounds((int)(0*widthRatio),(int)(512*heightRatio), (int)(790*widthRatio),(int)(209*heightRatio));
-			panelDatosPersona.add(roundedPanel_1);
+			RoundedPanel panelTablaEspecialidad = new RoundedPanel();
+			panelTablaEspecialidad.setBackground(Color.WHITE);
+			panelTablaEspecialidad.setBounds((int)(0*widthRatio),(int)(512*heightRatio), (int)(790*widthRatio),(int)(209*heightRatio));
+			panelDatosPersona.add(panelTablaEspecialidad);
+			panelTablaEspecialidad.setLayout(new BorderLayout(0, 0));
 			
-			JLabel lblImagen = new JLabel("AQUI VA LA TABLA DE ASIGNAR ESPECIALIDADES");
-			lblImagen.setOpaque(true);
-			lblImagen.setHorizontalAlignment(SwingConstants.CENTER);
-			lblImagen.setForeground(new Color(65, 105, 225));
-			lblImagen.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
-			lblImagen.setBackground(Color.WHITE);
-			lblImagen.setBounds((int)(203*widthRatio),(int)(101*heightRatio), (int)(348*widthRatio),(int)(22*heightRatio));
-			roundedPanel_1.add(lblImagen);
+			JScrollPane scrollPane_Esp = new JScrollPane((Component) null);
+			panelTablaEspecialidad.add(scrollPane_Esp);
+			
+			tableEspecialidad = new JTable(modelEspecialidad);
+			tableEspecialidad.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					
+					int rowIndex = tableEspecialidad.getSelectedRow(), colIndex = tableEspecialidad.getSelectedColumn();
+					
+					if (rowIndex >= 0) {
+						
+						if (colIndex == 2) {
+							if(tableEspecialidad.getValueAt(rowIndex, colIndex) == Boolean.TRUE) {
+								selectedEsp.add(Integer.valueOf((tableEspecialidad.getValueAt(rowIndex, colIndex-2).toString())));
+								indexEsp++;
+							} else {
+								selectedEsp.remove(Integer.valueOf((tableEspecialidad.getValueAt(rowIndex, colIndex-2).toString())));
+								indexEsp--;
+							}
+						}
+					}
+					
+					validarCampos();
+				}
+			});
+			tableEspecialidad.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			tableEspecialidad.getTableHeader().setResizingAllowed(false);
+			tableEspecialidad.getTableHeader().setReorderingAllowed(false);
+			cellRenderer.setHorizontalAlignment(JLabel.CENTER);	
+			
+			for (int index = 0; index < tableEspecialidad.getColumnCount(); index++) {
+				
+				if (index != 2) {
+					
+					tableEspecialidad.getColumnModel().getColumn(index).setCellRenderer(cellRenderer);
+				}
+			}
+			
+			tableEspecialidad.getColumnModel().getColumn(0).setPreferredWidth(25);
+			tableEspecialidad.getColumnModel().getColumn(1).setPreferredWidth(25);
+			tableEspecialidad.getColumnModel().getColumn(2).setPreferredWidth(25);
+			tableEspecialidad.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
+			tableEspecialidad.setFillsViewportHeight(true);
+			scrollPane_Esp.setViewportView(tableEspecialidad);
+			
 			
 			RoundedGlowPanel roundedGlowPanelPNombre = new RoundedGlowPanel();
 			roundedGlowPanelPNombre.setLayout(null);
@@ -597,7 +700,65 @@ public class VisualMedico extends PanelSimulacionAnim {
 		add(gradientPanel);
 		gradientPanel.setLayout(null);
 		
-		RoundedGlowPanel roundedGlowPanelModificar = new RoundedGlowPanel();
+		roundedGlowPanelModificar = new RoundedGlowPanel();
+		roundedGlowPanelModificar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				if(roundedGlowPanelModificar.isEnabled()) {
+					
+					int Option = JOptionPane.showConfirmDialog(null, "¿Está seguro de modificar los datos del Medico con la Cédula <" + selectedMedico.getCedula() + "> y cuyo nombre es: <" + selectedMedico.getPrimerNombre() + ">?", "Modificar Medico", JOptionPane.OK_CANCEL_OPTION);
+					
+					if (Option == JOptionPane.OK_OPTION) {
+						
+						boolean modEspecialidad = Clinica.getInstance().modificarEspecialidades(conexion, selectedMedico.getID_Medico(), selectedEsp, indexEsp);
+						
+						if(modEspecialidad == true) {
+							
+							char sexo;
+							
+							if(rdbtnMasculino.isSelected()) {
+								sexo = 'M';
+							}
+							
+							else {
+								sexo = 'F';
+							}
+							
+							boolean mod = Clinica.getInstance().modificarPersona(conexion, txtCedula.getText(), txtPNombre.getText(), txtSNombre.getText(), txtPApellido.getText(), txtSApellido.getText(), txtTelefono.getText(), txtareaDireccion.getText(), sexo, dateChooserNacim.getDate());
+							
+							if(mod == true) {
+								JOptionPane.showMessageDialog(null, "Modificado con éxito", "Modificar Medico", JOptionPane.INFORMATION_MESSAGE);
+								
+								selectedEsp.clear();
+								indexEsp = 0;
+								limpiarDatos();
+								loadPersonas(conexion);
+								loadMedicos(conexion);
+								loadEspecialidad(conexion);
+								
+								roundedGlowPanelEliminar.setEnabled(false);
+								roundedGlowPanelEliminar.setBackground(colorDeshabilitado);
+								lblEliminar.setEnabled(false);
+								roundedGlowPanelModificar.setEnabled(false);
+								roundedGlowPanelModificar.setBackground(colorDeshabilitado);
+								lblModificar.setEnabled(false);
+								roundedGlowCitasPendientes.setEnabled(false);
+								roundedGlowCitasPendientes.setBackground(colorDeshabilitado);
+								lblCitas.setEnabled(false);
+							}
+							else {
+								JOptionPane.showMessageDialog(null,"¡No Se Pudo Modificar el Médico!", "Error", JOptionPane.ERROR_MESSAGE);
+							}
+						} 
+						else {
+							JOptionPane.showMessageDialog(null,"¡Hubo un Error al Modificar Las Especialidades del Médico!", "Error", JOptionPane.ERROR_MESSAGE);
+						}
+					}
+				}
+				
+			}
+		});
 		roundedGlowPanelModificar.setEnabled(false);
 		roundedGlowPanelModificar.setLayout(null);
 		roundedGlowPanelModificar.setRoundTopRight(60);
@@ -608,11 +769,11 @@ public class VisualMedico extends PanelSimulacionAnim {
 		roundedGlowPanelModificar.setGlowAlpha(170);
 		roundedGlowPanelModificar.setForeground(Color.WHITE);
 		roundedGlowPanelModificar.setBorder(null);
-		roundedGlowPanelModificar.setBackground(new Color(240, 240, 240));
+		roundedGlowPanelModificar.setBackground(colorDeshabilitado);
 		roundedGlowPanelModificar.setBounds((int)(1107*widthRatio),(int)(599*heightRatio), (int)(118*widthRatio),(int)(49*heightRatio));
 		add(roundedGlowPanelModificar);
 		
-		JLabel lblModificar = new JLabel("Modificar");
+		lblModificar = new JLabel("Modificar");
 		lblModificar.setEnabled(false);
 		lblModificar.setHorizontalAlignment(SwingConstants.CENTER);
 		lblModificar.setForeground(new Color(60, 179, 113));
@@ -621,7 +782,69 @@ public class VisualMedico extends PanelSimulacionAnim {
 		lblModificar.setBounds(0, 0, (int)(118*widthRatio),(int)(49*heightRatio));
 		roundedGlowPanelModificar.add(lblModificar);
 		
-		RoundedGlowPanel roundedGlowPanelEliminar = new RoundedGlowPanel();
+		roundedGlowPanelEliminar = new RoundedGlowPanel();
+		roundedGlowPanelEliminar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				if(roundedGlowPanelEliminar.isEnabled()) {
+					int Option = JOptionPane.showConfirmDialog(null, "¿Está seguro de eliminar al Medico con la Cédula <" + selectedMedico.getCedula() + "> y cuyo nombre es: <" + selectedMedico.getPrimerNombre() + ">?", "Eliminar Medico", JOptionPane.OK_CANCEL_OPTION);
+					
+					if (Option == JOptionPane.OK_OPTION) {
+						
+						boolean elimEspecialidad = Clinica.getInstance().eliminarEspecialidades(conexion, selectedMedico.getID_Medico());
+						
+						if(elimEspecialidad == true) {
+							
+							boolean elim = Clinica.getInstance().eliminarMedico(conexion, selectedMedico.getID_Medico());
+							
+							if(elim == true) {
+								
+								JOptionPane.showMessageDialog(null, "Eliminado con éxito", "Eliminar Medico", JOptionPane.INFORMATION_MESSAGE);
+								
+								Option = JOptionPane.showConfirmDialog(null, "¿Desea Eliminar También a la Persona con la Cédula: <" + selectedMedico.getCedula() + "> y cuyo nombre es: <" + selectedMedico.getPrimerNombre() + ">?", "Eliminar Antigüo Medico", JOptionPane.OK_CANCEL_OPTION);
+								
+								if (Option == JOptionPane.OK_OPTION) {
+									
+									boolean elimPersona = Clinica.getInstance().eliminarPersona(conexion, selectedMedico.getCedula());
+									
+									if(elimPersona == true) {
+										JOptionPane.showMessageDialog(null, "Eliminado con éxito", "Eliminar Persona", JOptionPane.INFORMATION_MESSAGE);
+									}
+									else {
+										JOptionPane.showMessageDialog(null,"¡No Se Pudo Eliminar la Persona!", "Error", JOptionPane.ERROR_MESSAGE);
+									}
+								}
+								
+								selectedEsp.clear();
+								indexEsp = 0;
+								limpiarDatos();
+								loadPersonas(conexion);
+								loadMedicos(conexion);
+								loadEspecialidad(conexion);
+								
+								roundedGlowPanelEliminar.setEnabled(false);
+								roundedGlowPanelEliminar.setBackground(colorDeshabilitado);
+								lblEliminar.setEnabled(false);
+								roundedGlowPanelModificar.setEnabled(false);
+								roundedGlowPanelModificar.setBackground(colorDeshabilitado);
+								lblModificar.setEnabled(false);
+								roundedGlowCitasPendientes.setEnabled(false);
+								roundedGlowCitasPendientes.setBackground(colorDeshabilitado);
+								lblCitas.setEnabled(false);
+							}
+							else {
+								JOptionPane.showMessageDialog(null,"¡No Se Pudo Eliminar al Medico!", "Error", JOptionPane.ERROR_MESSAGE);
+							}	
+						}
+						else {
+							JOptionPane.showMessageDialog(null,"¡Ocurrió un Error Al Eliminar las Especialidades del Médico!", "Error", JOptionPane.ERROR_MESSAGE);
+						}
+					}
+					
+				}
+			}
+		});
 		roundedGlowPanelEliminar.setEnabled(false);
 		roundedGlowPanelEliminar.setLayout(null);
 		roundedGlowPanelEliminar.setRoundTopRight(60);
@@ -632,11 +855,11 @@ public class VisualMedico extends PanelSimulacionAnim {
 		roundedGlowPanelEliminar.setGlowAlpha(170);
 		roundedGlowPanelEliminar.setForeground(Color.WHITE);
 		roundedGlowPanelEliminar.setBorder(null);
-		roundedGlowPanelEliminar.setBackground(new Color(240, 240, 240));
+		roundedGlowPanelEliminar.setBackground(colorDeshabilitado);
 		roundedGlowPanelEliminar.setBounds((int)(1249*widthRatio),(int)(599*heightRatio), (int)(118*widthRatio),(int)(49*heightRatio));
 		add(roundedGlowPanelEliminar);
 		
-		JLabel lblEliminar = new JLabel("Eliminar");
+		lblEliminar = new JLabel("Eliminar");
 		lblEliminar.setEnabled(false);
 		lblEliminar.setHorizontalAlignment(SwingConstants.CENTER);
 		lblEliminar.setForeground(new Color(220, 20, 60));
@@ -646,6 +869,38 @@ public class VisualMedico extends PanelSimulacionAnim {
 		roundedGlowPanelEliminar.add(lblEliminar);
 		
 		roundedGlowPanelRegistrar = new RoundedGlowPanel();
+		roundedGlowPanelRegistrar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				if(roundedGlowPanelRegistrar.isEnabled()) {
+					
+					boolean res = Clinica.getInstance().insertarMedico(conexion, txtCedula.getText(), null, null);
+					
+					if(res) {
+						
+						boolean res2 = Clinica.getInstance().insertarEspecialidades(conexion, (Clinica.getGeneradorCodeMedico()+1), selectedEsp, indexEsp);
+						
+						if(res2) {
+							JOptionPane.showMessageDialog(null, "Registrado con éxito", "Registrar Medico", JOptionPane.INFORMATION_MESSAGE);
+							
+							limpiarDatos();
+						    loadPersonas(conexion);
+						    loadMedicos(conexion);
+						    loadEspecialidad(conexion);
+						    indexEsp = 0;
+						    selectedEsp.clear();
+						    
+						} else {
+							JOptionPane.showMessageDialog(null,"¡No Se Pudieron Insertar las Especialidades!", "Error", JOptionPane.ERROR_MESSAGE);
+						}
+					}
+					else {
+						JOptionPane.showMessageDialog(null,"¡No Se Pudo Insertar al Medico!", "Error", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			}
+		});
 		roundedGlowPanelRegistrar.setEnabled(false);
 		roundedGlowPanelRegistrar.setBounds((int)(817*widthRatio),(int)(599*heightRatio), (int)(118*widthRatio),(int)(49*heightRatio));
 		add(roundedGlowPanelRegistrar);
@@ -658,7 +913,7 @@ public class VisualMedico extends PanelSimulacionAnim {
 		roundedGlowPanelRegistrar.setGlowAlpha(170);
 		roundedGlowPanelRegistrar.setForeground(Color.WHITE);
 		roundedGlowPanelRegistrar.setBorder(null);
-		roundedGlowPanelRegistrar.setBackground(new Color(240, 240, 240));
+		roundedGlowPanelRegistrar.setBackground(colorDeshabilitado);
 	
 		
 		lblRegistrar = new JLabel("Registrar");
@@ -670,7 +925,7 @@ public class VisualMedico extends PanelSimulacionAnim {
 		lblRegistrar.setBounds(0, 0, (int)(118*widthRatio),(int)(49*heightRatio));
 		roundedGlowPanelRegistrar.add(lblRegistrar);
 		
-		RoundedGlowPanel roundedGlowCitasPendientes = new RoundedGlowPanel();
+		roundedGlowCitasPendientes = new RoundedGlowPanel();
 		roundedGlowCitasPendientes.setEnabled(false);
 		roundedGlowCitasPendientes.setLayout(null);
 		roundedGlowCitasPendientes.setRoundTopRight(60);
@@ -681,18 +936,18 @@ public class VisualMedico extends PanelSimulacionAnim {
 		roundedGlowCitasPendientes.setGlowAlpha(170);
 		roundedGlowCitasPendientes.setForeground(Color.WHITE);
 		roundedGlowCitasPendientes.setBorder(null);
-		roundedGlowCitasPendientes.setBackground(new Color(240, 240, 240));
+		roundedGlowCitasPendientes.setBackground(colorDeshabilitado);
 		roundedGlowCitasPendientes.setBounds((int)(963*widthRatio),(int)(599*heightRatio), (int)(118*widthRatio),(int)(49*heightRatio));
 		add(roundedGlowCitasPendientes);
 		
-		JLabel lblHistorial = new JLabel("Citas");
-		lblHistorial.setEnabled(false);
-		lblHistorial.setHorizontalAlignment(SwingConstants.CENTER);
-		lblHistorial.setForeground(new Color(100, 149, 237));
-		lblHistorial.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
-		lblHistorial.setBackground(Color.WHITE);
-		lblHistorial.setBounds(0, 0, (int)(118*widthRatio),(int)(49*heightRatio));
-		roundedGlowCitasPendientes.add(lblHistorial);
+		lblCitas = new JLabel("Citas");
+		lblCitas.setEnabled(false);
+		lblCitas.setHorizontalAlignment(SwingConstants.CENTER);
+		lblCitas.setForeground(new Color(100, 149, 237));
+		lblCitas.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
+		lblCitas.setBackground(Color.WHITE);
+		lblCitas.setBounds(0, 0, (int)(118*widthRatio),(int)(49*heightRatio));
+		roundedGlowCitasPendientes.add(lblCitas);
 		
 		RoundedGlowPanel roundedGlowPanelBuscarPaciente = new RoundedGlowPanel();
 		roundedGlowPanelBuscarPaciente.setLayout(null);
@@ -726,25 +981,96 @@ public class VisualMedico extends PanelSimulacionAnim {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				
-				DefaultTableModel searchModel1 = (DefaultTableModel) tableMedico.getModel();
+				DefaultTableModel searchModel1 = (DefaultTableModel) tablePersona.getModel();
 				TableRowSorter<DefaultTableModel> searchModel2 = new TableRowSorter<DefaultTableModel>(searchModel1);
-				tableMedico.setRowSorter(searchModel2);
+				tablePersona.setRowSorter(searchModel2);
 				searchModel2.setRowFilter(RowFilter.regexFilter("(?i)" + txtBuscarPaciente.getText()));
+				
+				DefaultTableModel searchModel3 = (DefaultTableModel) tableMedico.getModel();
+				TableRowSorter<DefaultTableModel> searchModel4 = new TableRowSorter<DefaultTableModel>(searchModel3);
+				tableMedico.setRowSorter(searchModel4);
+				searchModel4.setRowFilter(RowFilter.regexFilter("(?i)" + txtBuscarPaciente.getText()));
+				
+				DefaultTableModel searchModel5 = (DefaultTableModel) tableEspecialidad.getModel();
+				TableRowSorter<DefaultTableModel> searchModel6 = new TableRowSorter<DefaultTableModel>(searchModel5);
+				tableEspecialidad.setRowSorter(searchModel6);
+				searchModel6.setRowFilter(RowFilter.regexFilter("(?i)" + txtBuscarPaciente.getText()));
 			}
 		});
 		roundedGlowPanelBuscarPaciente.add(txtBuscarPaciente);
 		txtBuscarPaciente.setColumns(10);
 		
 		PanelSimulacionAnim panelTablaMedico = new PanelSimulacionAnim();
-		panelTablaMedico.setLayout(null);
 		panelTablaMedico.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panelTablaMedico.setBackground(Color.WHITE);
 		panelTablaMedico.setBounds((int)(814*widthRatio),(int)(276*heightRatio), (int)(555*widthRatio),(int)(250*heightRatio));
 		add(panelTablaMedico);
+		panelTablaMedico.setLayout(new BorderLayout(0, 0));
 		
-		JScrollPane scrollPane_1 = new JScrollPane((Component) null);
-		scrollPane_1.setBounds(0, 0, 0, 0);
+		JScrollPane scrollPane_1 = new JScrollPane(tableMedico);
 		panelTablaMedico.add(scrollPane_1);
+		
+		tableMedico = new JTable(modelMedico);
+		tableMedico.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				loadEspecialidad(conexion);
+				selectedEsp.clear();
+				indexEsp = 0;
+				lugar = 1;
+				tablePersona.clearSelection();
+				selected = null;
+				selectedMedico = Clinica.getInstance().buscarMedicoByCode(conexion, tableMedico.getValueAt(tableMedico.getSelectedRow(), 0).toString());
+				
+				rdbtnMasculino.setSelected(false);
+				rdbtnFemenino.setSelected(false);
+				
+				txtCedula.setText(selectedMedico.getCedula());
+				txtPNombre.setText(selectedMedico.getPrimerNombre());
+				txtSNombre.setText(selectedMedico.getSegundoNombre()); 
+				txtPApellido.setText(selectedMedico.getPrimerApellido()); 
+				txtSApellido.setText(selectedMedico.getSegundoApellido()); 
+				txtTelefono.setText(selectedMedico.getTelefono()); 
+				txtareaDireccion.setText(selectedMedico.getDireccion());
+				
+				if(selectedMedico.getSexo() == 'M') {
+					rdbtnMasculino.setSelected(true);
+				} else {
+					rdbtnFemenino.setSelected(true);
+				}
+				
+				dateChooserNacim.setDate(selectedMedico.getFechaDeNacimiento());
+				txtCodeMedicos.setText("M-"+ selectedMedico.getID_Medico());
+				loadEspecialidadMed(conexion, selectedMedico.getID_Medico());
+				
+				roundedGlowPanelEliminar.setEnabled(true);
+				roundedGlowPanelEliminar.setBackground(Color.WHITE);
+				lblEliminar.setEnabled(true);
+				roundedGlowPanelModificar.setEnabled(true);
+				roundedGlowPanelModificar.setBackground(Color.WHITE);
+				lblModificar.setEnabled(true);
+				roundedGlowCitasPendientes.setEnabled(true);
+				roundedGlowCitasPendientes.setBackground(Color.WHITE);
+				lblCitas.setEnabled(true);
+				roundedGlowPanelRegistrar.setEnabled(false);
+				validarCampos();
+			}
+		});
+		tableMedico.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableMedico.getTableHeader().setResizingAllowed(false);
+		tableMedico.getTableHeader().setReorderingAllowed(false);
+		cellRenderer.setHorizontalAlignment(JLabel.CENTER);		
+		tableMedico.getColumnModel().getColumn(0).setPreferredWidth(25);
+		tableMedico.getColumnModel().getColumn(1).setPreferredWidth(25);
+		tableMedico.getColumnModel().getColumn(2).setPreferredWidth(25);
+		tableMedico.getColumnModel().getColumn(3).setPreferredWidth(25);
+		tableMedico.getColumnModel().getColumn(4).setPreferredWidth(25);
+		tableMedico.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
+		tableMedico.setFillsViewportHeight(true);
+		scrollPane_1.setViewportView(tableMedico);
+		
+		
 			
 		KeyListener campoListener = new KeyAdapter() {
 	        @Override
@@ -755,22 +1081,24 @@ public class VisualMedico extends PanelSimulacionAnim {
 	    
 	    
 	    txtPNombre.addKeyListener(campoListener);
-	    txtSnombre.addKeyListener(campoListener);
+	    txtSNombre.addKeyListener(campoListener);
 	    txtPApellido.addKeyListener(campoListener);
 	    txtSApellido.addKeyListener(campoListener);
 	    txtCedula.addKeyListener(campoListener);
 	    txtTelefono.addKeyListener(campoListener);
 	    txtareaDireccion.addKeyListener(campoListener);
 	    dateChooserNacim.addPropertyChangeListener("yyyy-MM-dd", e -> validarCampos());
-
+	    
+	    loadPersonas(conexion);
+	    loadMedicos(conexion);
+	    loadEspecialidad(conexion);
 	}
 
 
 	private void validarCampos() {
-		// TODO Auto-generated method stub
 		
-		if(!txtPNombre.getText().isEmpty() && !txtSnombre.getText().isEmpty() && !txtPApellido.getText().isEmpty() && !txtSApellido.getText().isEmpty()
-		   && !txtCedula.getText().isEmpty() && !txtTelefono.getText().isEmpty() && (dateChooserNacim.getDate() != null) && !txtareaDireccion.getText().isEmpty()
+		if(!txtPNombre.getText().isEmpty() && !txtSNombre.getText().isEmpty() && !txtPApellido.getText().isEmpty() && !txtSApellido.getText().isEmpty()
+		   && !txtCedula.getText().isEmpty() && !txtTelefono.getText().isEmpty() && lugar == 0 && (dateChooserNacim.getDate() != null) && !selectedEsp.isEmpty() && !txtareaDireccion.getText().isEmpty()
 		   && (rdbtnMasculino.isSelected() || rdbtnFemenino.isSelected())) {
 												
 		   roundedGlowPanelRegistrar.setEnabled(true);
@@ -780,11 +1108,122 @@ public class VisualMedico extends PanelSimulacionAnim {
 		} else {
 			
 		   roundedGlowPanelRegistrar.setEnabled(false);
-		   roundedGlowPanelRegistrar.setBackground(new Color(240, 240, 240));
+		   roundedGlowPanelRegistrar.setBackground(colorDeshabilitado);
 		   lblRegistrar.setEnabled(false);
 		   
 		}
 		
 	}
+	
+	public static void loadPersonas(Connection conexion) {
+		
+		model.setRowCount(0);
+		row = new Object[model.getColumnCount()];
+		
+		try {
+			Statement statement = conexion.createStatement();
+            String selectSql = "SELECT Persona.Doc_Identidad, Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido FROM Persona LEFT JOIN Medico ON Persona.Doc_Identidad = Medico.Doc_Identidad LEFT JOIN Paciente ON Persona.Doc_Identidad = Paciente.Doc_Identidad LEFT JOIN Administrativo ON Persona.Doc_Identidad = Administrativo.Doc_Identidad WHERE Medico.Doc_Identidad IS NULL AND Administrativo.Doc_Identidad IS NULL AND Paciente.Doc_Identidad IS NULL;";
+            ResultSet resultSet = statement.executeQuery(selectSql);
 
+            while (resultSet.next()) {
+            	row[0] = resultSet.getString("Doc_Identidad");
+            	row[1] = resultSet.getString("Primer_Nombre");
+            	row[2] = resultSet.getString("Segundo_Nombre");
+            	row[3] = resultSet.getString("Primer_Apellido");
+            	row[4] = resultSet.getString("Segundo_Apellido");
+            	model.addRow(row);
+            }
+
+		} catch(SQLException e) {
+			JOptionPane.showMessageDialog(null, e.toString());
+		}
+	}
+	
+	public static void loadMedicos(Connection conexion) {
+		
+		modelMedico.setRowCount(0);
+		row = new Object[modelMedico.getColumnCount()];
+		
+		try {
+			Statement statement = conexion.createStatement();
+            String selectSql = "SELECT Persona.Doc_Identidad, Medico.ID_Medico, Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido FROM Persona INNER JOIN Medico ON Persona.Doc_Identidad = Medico.Doc_Identidad;";
+            ResultSet resultSet = statement.executeQuery(selectSql);
+
+            while (resultSet.next()) {
+            	row[0] = resultSet.getString("Doc_Identidad");
+            	row[1] = resultSet.getString("Primer_Nombre");
+            	row[2] = resultSet.getString("Segundo_Nombre");
+            	row[3] = resultSet.getString("Primer_Apellido");
+            	row[4] = resultSet.getString("Segundo_Apellido");
+            	modelMedico.addRow(row);
+            	
+				Clinica.setGeneradorCodeMedico(resultSet.getInt("ID_Medico"));
+				txtCodeMedicos.setText("M-"+(Clinica.getGeneradorCodeMedico()+1));
+            }
+
+		} catch(SQLException e) {
+			JOptionPane.showMessageDialog(null, e.toString());
+		}
+	}
+	
+	public static void loadEspecialidad(Connection conexion) {
+		
+		modelEspecialidad.setRowCount(0);
+		row = new Object[modelEspecialidad.getColumnCount()];
+		
+		try {
+			Statement statement = conexion.createStatement();
+            String selectSql = "SELECT ID_Especialidad, Nombre_Especialidad FROM Especialidad;";
+            ResultSet resultSet = statement.executeQuery(selectSql);
+
+            while (resultSet.next()) {
+            	row[0] = resultSet.getString("ID_Especialidad");
+            	row[1] = resultSet.getString("Nombre_Especialidad");
+            	modelEspecialidad.addRow(row);
+            }
+
+		} catch(SQLException e) {
+			JOptionPane.showMessageDialog(null, e.toString());
+		}
+	}
+	
+	public static void loadEspecialidadMed(Connection conexion, int idMedico) {
+		
+		int filasTot = tableEspecialidad.getRowCount();
+		indexEsp = 0;
+		
+		try {
+			Statement statement = conexion.createStatement();
+            String selectSql = "SELECT Medico.ID_Medico, Especialidad.ID_Especialidad, Especialidad.Nombre_Especialidad FROM Medico INNER JOIN Med_Especialidad ON Medico.ID_Medico = Med_Especialidad.ID_Medico INNER JOIN Especialidad ON Med_Especialidad.ID_Especialidad = Especialidad.ID_Especialidad WHERE Medico.ID_Medico = "+idMedico+";";
+            ResultSet resultSet = statement.executeQuery(selectSql);
+
+            while (resultSet.next()) {
+            	row[0] = resultSet.getString("ID_Especialidad");
+            	row[1] = resultSet.getString("Nombre_Especialidad");
+            	for(int ind = 0; ind < filasTot; ind++) {
+            		if(tableEspecialidad.getValueAt(ind, 0).toString().equals(resultSet.getString("ID_Especialidad"))) {
+            			tableEspecialidad.setValueAt(Boolean.TRUE, ind, 2);
+            			selectedEsp.add(Integer.valueOf(tableEspecialidad.getValueAt(ind, 0).toString()));
+            			indexEsp++;
+            		}
+            	}
+            }
+
+		} catch(SQLException e) {
+			JOptionPane.showMessageDialog(null, e.toString());
+		}
+	}
+	
+	protected void limpiarDatos() {
+		txtCedula.setText("");
+		txtPNombre.setText("");
+		txtSNombre.setText(""); 
+		txtPApellido.setText(""); 
+		txtSApellido.setText(""); 
+		txtTelefono.setText(""); 
+		txtareaDireccion.setText(""); 
+		rdbtnMasculino.setSelected(false);
+		rdbtnFemenino.setSelected(false);
+	}
+	
 }

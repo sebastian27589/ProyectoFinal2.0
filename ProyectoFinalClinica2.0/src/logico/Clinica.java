@@ -233,14 +233,6 @@ public class Clinica implements Serializable{
 		System.out.println(misPersonas.size()+" pacientes");
 	}
 	
-	public void insertarMedico(Medico medico) {
-		
-		misPersonas.add(medico);
-		generadorCodeMedico++;
-		// Sysout de verificación [[Borrar más tarde]]
-		System.out.println(misPersonas.size()+" medicos");
-	}
-	
 	public void insertarEnfermedad(Enfermedad nuevaEnfermedad) {
 		
 		misEnfermedades.add(nuevaEnfermedad);
@@ -466,29 +458,6 @@ public class Clinica implements Serializable{
 		}
 		
 		return pacienteABuscar;
-	}
-	
-	public Medico buscarMedicoByCode(String codigo) {
-		
-		Medico medicoABuscar = null;
-		boolean encontrado = false;
-		int index = 0;
-		
-		while (!encontrado && index < misPersonas.size()) {
-			
-			if (misPersonas.get(index) instanceof Medico) {
-				
-				if (((Medico) misPersonas.get(index)).getCodeMedico().equalsIgnoreCase(codigo)) {
-					medicoABuscar  = (Medico) misPersonas.get(index);
-					encontrado = true;
-				}
-				
-			}
-			
-			index++;
-		}
-		
-		return medicoABuscar;
 	}
 	
 	public Usuario buscarUsuario(String nombreUsuario) {
@@ -788,35 +757,6 @@ public class Clinica implements Serializable{
 		return citasPendientes;
 	}
 	
-	// Funciones para login y control de usuarios
-	
-	public boolean permitirInicioSesion(String nombreUsuario, String contrasena, Connection conexion) {
-		
-		boolean permitir = false;
-		boolean encontrado = false;
-		try {
-			Statement statement = conexion.createStatement();
-            String selectSql = "SELECT Cargo, Nombre_Usuario, Pass FROM Administrativo;";
-            ResultSet resultSet = statement.executeQuery(selectSql);
-
-            while (resultSet.next() && encontrado == false) {
-            	String cargo = resultSet.getString("Cargo");
-                String usuario = resultSet.getString("Nombre_Usuario");
-                String contra = resultSet.getString("Pass");
-                if(usuario.equals(nombreUsuario) && contra.equals(contrasena)) {
-    				usuarioLogueado = new Usuario("", "", "", "", "", "", "", 'x', null, cargo, usuario, "");
-    				permitir = true;
-    				encontrado = true;
-                }
-            }
-
-		} catch(SQLException e) {
-			JOptionPane.showMessageDialog(null, e.toString());
-		}
-		
-		return permitir;
-	}
-	
 	public void registrarUsuario(Usuario usuario) {
 		
 		misUsuarios.add(usuario);
@@ -848,6 +788,35 @@ public class Clinica implements Serializable{
 	    }
 	    return null;
 	}
+	
+	//Estas son las funciones nuevas. Las demas probablemente tengamos que borrarlas.
+	
+	public boolean permitirInicioSesion(String nombreUsuario, String contrasena, Connection conexion) {
+		
+		boolean permitir = false;
+		boolean encontrado = false;
+		try {
+			Statement statement = conexion.createStatement();
+            String selectSql = "SELECT Cargo, Nombre_Usuario, Pass FROM Administrativo;";
+            ResultSet resultSet = statement.executeQuery(selectSql);
+
+            while (resultSet.next() && encontrado == false) {
+            	String cargo = resultSet.getString("Cargo");
+                String usuario = resultSet.getString("Nombre_Usuario");
+                String contra = resultSet.getString("Pass");
+                if(usuario.equals(nombreUsuario) && contra.equals(contrasena)) {
+    				usuarioLogueado = new Usuario("", "", "", "", "", "", "", 'x', null, cargo, usuario, "");
+    				permitir = true;
+    				encontrado = true;
+                }
+            }
+
+		} catch(SQLException e) {
+			JOptionPane.showMessageDialog(null, e.toString());
+		}
+		
+		return permitir;
+	}
 
 	public boolean insertarPersona(Connection conexion, String cedula, String primerNombre, String segundoNombre, String primerApellido,
 								String segundoApellido, String telefono, String direccion, char sexo, Date fechaDeNacimiento) {
@@ -866,6 +835,21 @@ public class Clinica implements Serializable{
 			return false;
 		}
 		
+	}
+	
+	public boolean insertarMedico(Connection conexion, String cedula, String nombreUsuario, String pass) {
+		
+		Statement statement;
+		
+		try {
+			statement = conexion.createStatement();
+            String insertSql = "INSERT INTO Medico (Doc_Identidad, Nombre_Usuario, Pass) VALUES ('"+cedula+"', "+nombreUsuario+", "+pass+");";
+            statement.executeUpdate(insertSql);
+            return true;
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			return false;
+		}
 	}
 	
 	public Persona buscarPersonaByCode(Connection conexion, String codigo) {
@@ -892,6 +876,31 @@ public class Clinica implements Serializable{
 		
 		return personaABuscar;
 	}
+	
+	public Medico buscarMedicoByCode(Connection conexion, String codigo) {
+		
+		Medico MedicoABuscar = null;
+		boolean encontrado = false;
+		
+		try {
+			Statement statement = conexion.createStatement();
+            String selectSql = "SELECT Persona.Doc_Identidad, Medico.ID_Medico, Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Telefono, Direccion, Sexo, Fecha_Nacimiento FROM Persona INNER JOIN Medico ON Persona.Doc_Identidad = Medico.Doc_Identidad;";
+            ResultSet resultSet = statement.executeQuery(selectSql);
+
+            while (resultSet.next() && encontrado == false) {
+            	
+                if(resultSet.getString("Doc_Identidad").equals(codigo)) {
+                	MedicoABuscar = new Medico(resultSet.getString("Doc_Identidad"), resultSet.getString("Primer_Nombre"), resultSet.getString("Segundo_Nombre"), resultSet.getString("Primer_Apellido"), resultSet.getString("Segundo_Apellido"), resultSet.getString("Telefono"), resultSet.getString("Direccion"), resultSet.getString("Sexo").charAt(0), resultSet.getDate("Fecha_Nacimiento"), resultSet.getInt("ID_Medico"), null, null);
+    				encontrado = true;
+                }
+            }
+
+		} catch(SQLException e) {
+			JOptionPane.showMessageDialog(null, e.toString());
+		}
+		
+		return MedicoABuscar;
+	}
 
 	public boolean eliminarPersona(Connection conexion, String codigo) {
 		
@@ -900,6 +909,22 @@ public class Clinica implements Serializable{
 		try {
 			statement = conexion.createStatement();
             String deleteSql = "DELETE FROM Persona WHERE Doc_Identidad = '"+codigo+"';";
+            statement.executeUpdate(deleteSql);
+            return true;
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			return false;
+		}
+		
+	}
+	
+	public boolean eliminarMedico(Connection conexion, int codigo) {
+		
+		Statement statement;
+		
+		try {
+			statement = conexion.createStatement();
+            String deleteSql = "DELETE FROM Medico WHERE ID_Medico = '"+codigo+"';";
             statement.executeUpdate(deleteSql);
             return true;
 		} catch (SQLException e1) {
@@ -926,6 +951,109 @@ public class Clinica implements Serializable{
 			e1.printStackTrace();
 			return false;
 		}
+	}
+	
+	public int obtenerIdTipoEnfermedad(Connection conexion, String tipoEnfermedad) {
+
+		int idTipoEnfermedad = -1;
+		String nombreTipoEnfermedad;
+
+		try {
+			Statement statement = conexion.createStatement();
+			String selectSQL = "SELECT ID_Tipo_Enfermedad, Nombre_Tipo_Enfermedad FROM Tipo_Enfermedad";
+			ResultSet resultSet = statement.executeQuery(selectSQL);
+	
+			while (resultSet.next()) {
+	            nombreTipoEnfermedad = resultSet.getString("Nombre_Tipo_Enfermedad");
+	            
+	            if(nombreTipoEnfermedad.equals(tipoEnfermedad)) {
+		            idTipoEnfermedad = resultSet.getInt("ID_Tipo_Enfermedad");
+		            break;
+	            }
+			}
+		} catch(SQLException e) {
+			JOptionPane.showMessageDialog(null, "Error al obtener el tipo de enfermedad: "+e.getMessage());
+			e.printStackTrace();
+		}
+
+		return idTipoEnfermedad;
+	}
+	
+	public boolean insertarEnfermedad(Connection conexion, String tipoEnfermedad, String nombreEnfermedad, boolean vigilancia, Integer mortalidad) 
+	{
+		int idTipoEnfermedad = obtenerIdTipoEnfermedad(conexion, tipoEnfermedad);
+
+		if(idTipoEnfermedad == -1) {
+			return false;
+		}
+		
+		Statement statement;
+
+		try {
+			statement = conexion.createStatement();
+            String insertSql = "INSERT INTO Enfermedad VALUES ('"+idTipoEnfermedad+"','"+nombreEnfermedad+"','"+vigilancia+"','"+mortalidad+"');";
+            statement.executeUpdate(insertSql);
+            
+            return true;
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			return false;
+		}
+
+	}
+
+	public boolean insertarEspecialidades(Connection conexion, int ID_Medico, ArrayList<Integer> selectedEsp, int tamArr) {
+		
+		Statement statement;
+		
+		try {
+			statement = conexion.createStatement();
+			for(int ind = 0; ind < tamArr; ind++) {
+	            String insertSql = "INSERT INTO Med_Especialidad (ID_Medico, ID_Especialidad) VALUES ("+ID_Medico+", "+selectedEsp.get(ind)+");";
+	            statement.executeUpdate(insertSql);
+			}
+            return true;
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean eliminarEspecialidades(Connection conexion, int codigoMedico) {
+		
+		Statement statement;
+		
+		try {
+			statement = conexion.createStatement();
+			String deleteSql = "DELETE FROM Med_Especialidad WHERE ID_Medico = "+codigoMedico+";";
+            statement.executeUpdate(deleteSql);
+            return true;
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			return false;
+		}
+		
+	}
+	
+	public boolean modificarEspecialidades(Connection conexion, int ID_Medico, ArrayList<Integer> selectedEsp, int tamArr) {
+		
+		boolean elim = eliminarEspecialidades(conexion, ID_Medico);
+		
+		if(elim == true) {
+			
+			elim  = insertarEspecialidades(conexion, ID_Medico, selectedEsp, tamArr);
+			
+			if(elim == true) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			return false;
+		}
+		
 	}
 	
 }

@@ -953,30 +953,35 @@ public class VisualPaciente extends PanelSimulacionAnim {
 		roundedGlowPanelEliminar.add(lblEliminar);
 		
 		roundedGlowPanelRegistrar = new RoundedGlowPanel();
-		roundedGlowPanelRegistrar.setEnabled(false);
 		roundedGlowPanelRegistrar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				char sexo;
-				if(rdbtnMasculino.isSelected()) {
-					sexo = 'M';
-				}
 				
-				else {
-					sexo = 'F';
-				}
-				
-				boolean res = Clinica.getInstance().insertarPersona(conexion, txtCedula.getText(), txtPNombre.getText(), 
-								txtSNombre.getText(), txtPApellido.getText(), txtSApellido.getText(), txtTelefono.getText(), 
-								txtareaDireccion.getText(), sexo, dateChooserNacim.getDate());
-				if(res) {
-					JOptionPane.showMessageDialog(null, "Registrado con éxito", "Registrar Persona", JOptionPane.INFORMATION_MESSAGE);
+				if(roundedGlowPanelRegistrar.isEnabled()) {
+					
+					char sexo;
+					if(rdbtnMasculino.isSelected()) {
+						sexo = 'M';
+					}
+					
+					else {
+						sexo = 'F';
+					}
+					
+					boolean res = Clinica.getInstance().insertarPersona(conexion, txtCedula.getText(), txtPNombre.getText(), 
+									txtSNombre.getText(), txtPApellido.getText(), txtSApellido.getText(), txtTelefono.getText(), 
+									txtareaDireccion.getText(), sexo, dateChooserNacim.getDate());
+					if(res) {
+						JOptionPane.showMessageDialog(null, "Registrado con éxito", "Registrar Persona", JOptionPane.INFORMATION_MESSAGE);
+						limpiarDatos();
+					}
+					else {
+						JOptionPane.showMessageDialog(null,"¡No Se Pudo Insertar la Persona!", "Error", JOptionPane.ERROR_MESSAGE);
+					}
+					
 					limpiarDatos();
+					loadPersonas(conexion);
 				}
-				else {
-					JOptionPane.showMessageDialog(null,"¡No Se Pudo Insertar la Persona!", "Error", JOptionPane.ERROR_MESSAGE);
-				}
-				
 			}
 		});
 		roundedGlowPanelRegistrar.setBounds((int)(817*widthRatio),(int)(599*heightRatio), (int)(118*widthRatio),(int)(49*heightRatio));
@@ -1067,6 +1072,7 @@ public class VisualPaciente extends PanelSimulacionAnim {
 		
 		roundedGlowPanelModificar.setEnabled(false);
 		roundedGlowPanelEliminar.setEnabled(false);
+		roundedGlowPanelRegistrar.setEnabled(false);
 		roundedGlowHistorial.setEnabled(false);
 		
 		KeyListener campoListener = new KeyAdapter() {
@@ -1089,7 +1095,6 @@ public class VisualPaciente extends PanelSimulacionAnim {
 	}
 
 	private void validarCampos() {
-		// TODO Auto-generated method stub
 		if(!txtPNombre.getText().isEmpty() && !txtSNombre.getText().isEmpty() && !txtPApellido.getText().isEmpty() && !txtSApellido.getText().isEmpty()
 			&& !txtCedula.getText().isEmpty() && !txtTelefono.getText().isEmpty() && (dateChooserNacim.getDate() != null) && !txtareaDireccion.getText().isEmpty()
 			&& (rdbtnMasculino.isSelected() || rdbtnFemenino.isSelected())) {
@@ -1098,8 +1103,7 @@ public class VisualPaciente extends PanelSimulacionAnim {
 			roundedGlowPanelRegistrar.setBackground(Color.WHITE);
 			lblRegistrar_1.setEnabled(true);
 				   
-		} else {
-					
+		} else {	
 			roundedGlowPanelRegistrar.setEnabled(false);
 			roundedGlowPanelRegistrar.setBackground(new Color(240, 240, 240));
 			lblRegistrar_1.setEnabled(false);    
@@ -1116,10 +1120,6 @@ public class VisualPaciente extends PanelSimulacionAnim {
 		txtareaDireccion.setText(""); 
 		rdbtnMasculino.setSelected(false);
 		rdbtnFemenino.setSelected(false);
-		dateChooserNacim.setDate(null);
-		roundedGlowPanelRegistrar.setEnabled(false);
-		roundedGlowPanelRegistrar.setBackground(new Color(240, 240, 240));
-		lblRegistrar_1.setEnabled(false);
 	}
 	
 	public static void loadPersonas(Connection conexion) {

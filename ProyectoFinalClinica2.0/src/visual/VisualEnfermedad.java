@@ -32,6 +32,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.awt.event.ActionEvent;
@@ -85,26 +89,25 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 	private JLabel lblRegistrar_1;
 	private JSpinner spnMortalidad;
 	private JLabel lblRegistroDeEnfermedad;
-	private JCheckBox chbxVigilancia;
-	private JComboBox cbxSintomas;
 	private RoundedGlowPanel roundedGlowPanelRegistrar;
+	private JCheckBox chbxVigilancia;
 	
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		try {
-			VisualEnfermedad dialog = new VisualEnfermedad();
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+//	public static void main(String[] args) {
+//		try {
+//			VisualEnfermedad dialog = new VisualEnfermedad();
+//			dialog.setVisible(true);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	/**
 	 * Create the dialog.
 	 */
-	public VisualEnfermedad() 
+	public VisualEnfermedad(Connection conexion) 
 	{
 		dim = getToolkit().getScreenSize();
 		int screenWidthOriginal = 1920;
@@ -270,7 +273,7 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 			txtNombreEnfermedad.setColumns(10);
 			{
 				JLabel lblPNombreEnfermedad = new JLabel("Nombre:");
-				lblPNombreEnfermedad.setBounds(4,11, 74,22);
+				lblPNombreEnfermedad.setBounds((int)(4*widthRatio),(int)(11*heightRatio),  (int)(74*widthRatio),(int)(22*heightRatio));
 				roundedPanelPNombreEnfermedad.add(lblPNombreEnfermedad);
 				lblPNombreEnfermedad.setOpaque(true);
 				lblPNombreEnfermedad.setHorizontalAlignment(SwingConstants.CENTER);
@@ -278,25 +281,6 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 				lblPNombreEnfermedad.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
 				lblPNombreEnfermedad.setBackground(Color.WHITE);
 			}
-			
-			RoundedPanel roundedPanelSintoma = new RoundedPanel();
-			roundedPanelSintoma.setLayout(null);
-			roundedPanelSintoma.setRoundTopRight(18);
-			roundedPanelSintoma.setRoundTopLeft(18);
-			roundedPanelSintoma.setRoundBottomRight(18);
-			roundedPanelSintoma.setRoundBottomLeft(18);
-			roundedPanelSintoma.setBackground(Color.WHITE);
-			roundedPanelSintoma.setBounds((int)(93*widthRatio),(int)(412*heightRatio),  (int)(105*widthRatio),(int)(46*heightRatio));
-			panelDatosEnfermedad.add(roundedPanelSintoma);
-			
-			JLabel lblSintomas = new JLabel("S\u00EDntomas");
-			lblSintomas.setOpaque(true);
-			lblSintomas.setHorizontalAlignment(SwingConstants.CENTER);
-			lblSintomas.setForeground(new Color(65, 105, 225));
-			lblSintomas.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
-			lblSintomas.setBackground(Color.WHITE);
-			lblSintomas.setBounds((int)(4*widthRatio),(int)(11*heightRatio), (int)(77*widthRatio),(int)(22*heightRatio));
-			roundedPanelSintoma.add(lblSintomas);
 			
 			RoundedPanel roundedPanelCodeEnfermedad = new RoundedPanel();
 			roundedPanelCodeEnfermedad.setLayout(null);
@@ -399,7 +383,7 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 			cbxTipoEnfermedad.setBounds((int)(229*widthRatio),(int)(328*heightRatio), (int)(216*widthRatio),(int)(46*heightRatio));
 			panelDatosEnfermedad.add(cbxTipoEnfermedad);
 			cbxTipoEnfermedad.setBorder(null);
-			cbxTipoEnfermedad.setModel(new DefaultComboBoxModel(new String[] {"Elegir", "Alergia", "Enf. Autoinmune", "Enf. Cardiovascular", "Enf. de la Mujer", "Enf. de la Sangre", "Enf. Mentales", "Enf. infecciosa"}));
+			cbxTipoEnfermedad.setModel(new DefaultComboBoxModel(new String[] {"Elegir"}));
 			cbxTipoEnfermedad.setSelectedIndex(0);
 			cbxTipoEnfermedad.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
 			
@@ -432,20 +416,6 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 			roundedGlowPanelNombreEnfermedad.setBounds((int)(77*widthRatio),(int)(161*heightRatio),  (int)(562*widthRatio),(int)(59*heightRatio));
 			panelDatosEnfermedad.add(roundedGlowPanelNombreEnfermedad);
 			
-			RoundedGlowPanel roundedGlowPanelSintoma = new RoundedGlowPanel();
-			roundedGlowPanelSintoma.setLayout(null);
-			roundedGlowPanelSintoma.setRoundTopRight(60);
-			roundedGlowPanelSintoma.setRoundTopLeft(60);
-			roundedGlowPanelSintoma.setRoundBottomRight(60);
-			roundedGlowPanelSintoma.setRoundBottomLeft(60);
-			roundedGlowPanelSintoma.setGlowColor(Color.CYAN);
-			roundedGlowPanelSintoma.setGlowAlpha(170);
-			roundedGlowPanelSintoma.setForeground(Color.WHITE);
-			roundedGlowPanelSintoma.setBorder(null);
-			roundedGlowPanelSintoma.setBackground(Color.WHITE);
-			roundedGlowPanelSintoma.setBounds((int)(77*widthRatio),(int)(405*heightRatio), (int)(140*widthRatio),(int)(59*heightRatio));
-			panelDatosEnfermedad.add(roundedGlowPanelSintoma);
-			
 			RoundedGlowPanel roundedGlowPanelMortalidad = new RoundedGlowPanel();
 			roundedGlowPanelMortalidad.setLayout(null);
 			roundedGlowPanelMortalidad.setRoundTopRight(60);
@@ -474,20 +444,10 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 			roundedGlowPanelTEnfermedad.setBounds((int)(77*widthRatio),(int)(324*heightRatio),  (int)(140*widthRatio),(int)(53*heightRatio));
 			panelDatosEnfermedad.add(roundedGlowPanelTEnfermedad);
 			
-			chbxVigilancia = new JCheckBox("Bajo Vigilancia");
-			chbxVigilancia.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
-			chbxVigilancia.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-			chbxVigilancia.setBackground(Color.WHITE);
-			chbxVigilancia.setBounds((int)(275*widthRatio),(int)(2662*heightRatio), (int)(163*widthRatio),(int)(22*heightRatio));
-			panelDatosEnfermedad.add(chbxVigilancia);
-			
-			cbxSintomas = new JComboBox();
-			cbxSintomas.setModel(new DefaultComboBoxModel(new String[] {"Elegir", "Tos"}));
-			//cbxSintomas.setSelectedIndex(0);
-			cbxSintomas.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
-			cbxSintomas.setBorder(null);
-			cbxSintomas.setBounds((int)(229*widthRatio),(int)(412*heightRatio), (int)(216*widthRatio), (int)(46*heightRatio));
-			panelDatosEnfermedad.add(cbxSintomas);
+			chbxVigilancia = new JCheckBox("Vigilancia");
+            chbxVigilancia.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
+            chbxVigilancia.setBounds((int)(91*widthRatio),(int)(401*heightRatio), (int)(129*widthRatio),(int)(25*heightRatio));
+            panelDatosEnfermedad.add(chbxVigilancia);
 			
 
 		}
@@ -524,23 +484,6 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 		lblModificar.setBounds(0, 0, (int)(132*widthRatio),(int)(49*heightRatio));
 		roundedGlowPanelModificar.add(lblModificar);
 		
-		/* RECORDAR CAMBIAR ESTO POR EL LABEL DE MODIFICAR, ADEMAS HAY QUE CAMBIAR LA ESTRUCTURA PARA QUE PONGA LOS DATOS DE LA
-		 * PERSONA EN LOS CAMPOS DEL MISMO PANEL.
-		 
-		
-		btnModificar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				RegPaciente mod_verPaciente = new RegPaciente(selected, false, false);
-				mod_verPaciente.setModal(true);
-				mod_verPaciente.setVisible(true);
-				loadPacientes();
-				JOptionPane.showMessageDialog(null, "Modificado con éxito", "Modificar Paciente", JOptionPane.INFORMATION_MESSAGE);
-			}
-		});
-		
-		*/
-		
 		RoundedGlowPanel roundedGlowPanelEliminar = new RoundedGlowPanel();
 		roundedGlowPanelEliminar.setLayout(null);
 		roundedGlowPanelEliminar.setRoundTopRight(60);
@@ -564,29 +507,28 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 		lblEliminar.setBounds(0, 0, (int)(132*widthRatio),(int)(49*heightRatio));
 		roundedGlowPanelEliminar.add(lblEliminar);
 		
-		/* RECORDAR CAMBIAR ESTO POR EL LABEL DE ELIMINAR, CREO QUE NO HAY QUE HACER CAMBIOS EN LA ESTRUCTURA PERO
-		 * VERIFICAR.
-		  
-		btnEliminar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		roundedGlowPanelRegistrar = new RoundedGlowPanel();
+		roundedGlowPanelRegistrar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
 				
-				int Option = JOptionPane.showConfirmDialog(null, "¿Está seguro de eliminar al Paciente con código: <" + selected.getCodePaciente() + ">?", "Eliminar Paciente", JOptionPane.OK_CANCEL_OPTION);
+				boolean vigilancia;
+				if(chbxVigilancia.isSelected())
+					vigilancia = true;
+				else
+					vigilancia = false;
 				
-				if (Option == JOptionPane.OK_OPTION) {
-					
-					Clinica.getInstance().eliminarPaciente(selected);
-					loadPacientes();
-					btnEliminar.setEnabled(false);
-					btnModificar.setEnabled(false);
-					btnVerHistMed.setEnabled(false);
+				boolean res = Clinica.getInstance().insertarEnfermedad(conexion, cbxTipoEnfermedad.getSelectedItem().toString(), 
+								txtNombreEnfermedad.getText(), vigilancia, new Integer(spnMortalidad.getValue().toString()));
+				if(res) {
+					JOptionPane.showMessageDialog(null, "Registrado con éxito", "Registrar Enfermedad", JOptionPane.INFORMATION_MESSAGE);
+					limpiarDatos();
 				}
-				
+				else {
+					JOptionPane.showMessageDialog(null,"¡No Se Pudo Insertar la Enfermedad!", "Error", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
-		
-		*/
-		
-		roundedGlowPanelRegistrar = new RoundedGlowPanel();
 		roundedGlowPanelRegistrar.setEnabled(false);
 		roundedGlowPanelRegistrar.setBounds((int)(961*widthRatio),(int)(599*heightRatio), (int)(132*widthRatio),(int)(49*heightRatio));
 		add(roundedGlowPanelRegistrar);
@@ -600,109 +542,6 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 		roundedGlowPanelRegistrar.setForeground(Color.WHITE);
 		roundedGlowPanelRegistrar.setBorder(null);
 		roundedGlowPanelRegistrar.setBackground(new Color(240,240,240));
-
-//		lblRegistrar.addMouseListener(new MouseAdapter() {
-//			@Override
-//			public void mouseClicked(MouseEvent e) {
-//				try {
-//					if (paciente == null) {
-//						
-//						if (rdbtnMasculino.isSelected()) {
-//							
-//							sexoPaciente = 'M';
-//						}
-//						else {
-//							
-//							sexoPaciente = 'F';
-//						}
-//						
-//						nombre = txtNombre.getText();
-//						cedula = txtCedula.getText();
-//						telefono = txtTelefono.getText();
-//						fechaNacimiento = dateChooserNacim.getDate();
-//						peso = Float.parseFloat(txtPeso.getText());
-//						altura = Float.parseFloat(txtAltura.getText());
-//						
-//						if (nombre.isEmpty() || cedula.isEmpty() || telefono.isEmpty()) {
-//							throw new ValidarCampo("Debe llenar los campos obligatorios.");
-//						}
-//						
-//						if (fechaNacimiento == null) {
-//							throw new ValidarCampo("No ha seleccionado una fecha de nacimiento.");
-//						}
-//						
-//						if (cbxTipoSangre.getSelectedIndex() == 0) {
-//							throw new ValidarCampo("No ha seleccionado un tipo de sangre.");
-//						}
-//						
-//						if (peso <= 0 || altura <= 0) {
-//							throw new ValidarCampo("Las entradas del peso o la altura no pueden ser negativas.");
-//						} 
-//						
-//						if (!rdbtnMasculino.isSelected() && !rdbtnFemenino.isSelected()) {
-//							throw new ValidarCampo("Debe seleccionar un sexo.");
-//						}
-//						
-//						Paciente nuevoPaciente = new Paciente(txtCedula.getText(), txtNombre.getText(), dateChooserNacim.getDate(),
-//								 sexoPaciente, txtTelefono.getText(), txtareaDireccion.getText(), txtCodePaciente.getText(),
-//								 cbxTipoSangre.getSelectedItem().toString(), new Float(txtAltura.getText()), new Float(txtPeso.getText()),
-//								 txtareaAlergias.getText(), txtareaInfoRelevante.getText());
-//						
-//						codePacienteRegistrado = nuevoPaciente.getCodePaciente();
-//						ElegirVacunaPaciente elegirVacunas = new ElegirVacunaPaciente(null);
-//						elegirVacunas.setModal(true);
-//						elegirVacunas.setVisible(true);
-//						nuevoPaciente.getMisVacunas().addAll(elegirVacunas.extraerVacunasElegidas());
-//						Clinica.getInstance().insertarPaciente(nuevoPaciente);
-//						JOptionPane.showMessageDialog(null, "Registrado con éxito", "Registrar Paciente", JOptionPane.INFORMATION_MESSAGE);
-//						
-//						if (regUnSoloPaciente) {
-//							
-//							dispose();
-//						}
-//						else {
-//							clean();
-//						}
-//						
-//					}
-//					else {
-//				
-//						if (rdbtnMasculino.isSelected()) {
-//							
-//							sexoPaciente = 'M';
-//						}
-//						else {
-//							
-//							sexoPaciente = 'F';
-//						}
-//						
-//						paciente.setTipoDeSangre(cbxTipoSangre.getSelectedItem().toString());
-//						paciente.setAltura(new Float(txtAltura.getText()));
-//						paciente.setPeso(new Float(txtPeso.getText()));
-//						paciente.setTelefono(txtTelefono.getText());
-//						paciente.setDireccion(txtareaDireccion.getText());
-//						paciente.setAlergias(txtareaAlergias.getText());
-//						
-//						ElegirVacunaPaciente elegirVacunas = new ElegirVacunaPaciente(paciente);
-//						elegirVacunas.setModal(true);
-//						elegirVacunas.setVisible(true);
-//						paciente.getMisVacunas().clear();
-//						paciente.getMisVacunas().addAll(elegirVacunas.extraerVacunasElegidas());							
-//						Clinica.getInstance().actualizarPaciente(paciente);
-//						dispose();
-//					}
-//				} catch (ValidarCampo e2) {
-//					JOptionPane.showMessageDialog(null, e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-//					e2.printStackTrace();
-//					txtNombre.grabFocus();
-//				}
-//				catch (NumberFormatException e3) {
-//					JOptionPane.showMessageDialog(null, "Ingrese datos válidos para la altura y el peso.", "Error", JOptionPane.ERROR_MESSAGE);
-//					txtPeso.grabFocus();
-//				}
-//				
-//			}
-//		});
 		
 		lblRegistrar_1 = new JLabel("Registrar");
 		lblRegistrar_1.setEnabled(false);
@@ -780,19 +619,44 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 	    ActionListener cbxListener = new ActionListener() {
 	        @Override
 	        public void actionPerformed(ActionEvent e) {
-	            validarCampos();
 	        }
 	    };
 	    
 	    txtNombreEnfermedad.addKeyListener(campoListener);
-	    cbxSintomas.addActionListener(cbxListener);
 	    cbxTipoEnfermedad.addActionListener(cbxListener);
 	    
+	    llenarComboBoxBD(conexion, cbxTipoEnfermedad);
+	}
+
+	private void llenarComboBoxBD(Connection conexion, JComboBox cbxTipoEnfermedad) {
+		Statement statement;
+		
+		try {
+			statement = conexion.createStatement();
+			String selectSql = "SELECT Nombre_Tipo_Enfermedad FROM Tipo_Enfermedad";
+			ResultSet resulSet = statement.executeQuery(selectSql);
+			
+			while(resulSet.next()) {
+				cbxTipoEnfermedad.addItem(resulSet.getString("Nombre_Tipo_Enfermedad"));
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected void limpiarDatos() {
+		chbxVigilancia.setSelected(false);
+		cbxTipoEnfermedad.setSelectedIndex(0);
+		spnMortalidad.setValue(0);
+		txtNombreEnfermedad.setText("");
+		roundedGlowPanelRegistrar.setEnabled(false);
+		roundedGlowPanelRegistrar.setBackground(new Color(240, 240, 240));
+		lblRegistrar_1.setEnabled(false);
 	}
 
 	private void validarCampos() {
 		
-		if(!txtNombreEnfermedad.getText().isEmpty() && (cbxSintomas.getSelectedIndex() != 0) && (cbxTipoEnfermedad.getSelectedIndex() != 0)) {
+		if(!txtNombreEnfermedad.getText().isEmpty() && (cbxTipoEnfermedad.getSelectedIndex() != 0)) {
 												
 		   roundedGlowPanelRegistrar.setEnabled(true);
 		   roundedGlowPanelRegistrar.setBackground(Color.WHITE);
