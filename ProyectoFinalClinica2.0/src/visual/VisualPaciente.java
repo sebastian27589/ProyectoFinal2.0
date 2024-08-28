@@ -878,7 +878,14 @@ public class VisualPaciente extends PanelSimulacionAnim {
 				}
 				
 				limpiarDatos();
-				loadPersonas(conexion);
+				if (Clinica.getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Administrador")) {
+					loadPersonas(conexion);
+				}
+				
+				if (Clinica.getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Secretario")) {
+					loadPersonasEspecificas(conexion);
+				}
+				
 				roundedGlowPanelModificar.setEnabled(false);
 				roundedGlowPanelEliminar.setEnabled(false);
 				roundedGlowHistorial.setEnabled(false);
@@ -924,7 +931,14 @@ public class VisualPaciente extends PanelSimulacionAnim {
 				}
 				
 				limpiarDatos();
-				loadPersonas(conexion);
+				if (Clinica.getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Administrador")) {
+					loadPersonas(conexion);
+				}
+				
+				if (Clinica.getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Secretario")) {
+					loadPersonasEspecificas(conexion);
+				}
+				
 				roundedGlowPanelModificar.setEnabled(false);
 				roundedGlowPanelEliminar.setEnabled(false);
 				roundedGlowHistorial.setEnabled(false);
@@ -980,7 +994,13 @@ public class VisualPaciente extends PanelSimulacionAnim {
 					}
 					
 					limpiarDatos();
-					loadPersonas(conexion);
+					if (Clinica.getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Administrador")) {
+						loadPersonas(conexion);
+					}
+					
+					if (Clinica.getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Secretario")) {
+						loadPersonasEspecificas(conexion);
+					}
 				}
 			}
 		});
@@ -1091,7 +1111,13 @@ public class VisualPaciente extends PanelSimulacionAnim {
 	    txtareaDireccion.addKeyListener(campoListener);
 	    dateChooserNacim.addPropertyChangeListener("yyyy-MM-dd", e -> validarCampos());
 
-		loadPersonas(conexion);
+		if (Clinica.getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Administrador")) {
+			loadPersonas(conexion);
+		}
+		
+		if (Clinica.getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Secretario")) {
+			loadPersonasEspecificas(conexion);
+		}
 	}
 
 	private void validarCampos() {
@@ -1130,6 +1156,30 @@ public class VisualPaciente extends PanelSimulacionAnim {
 		try {
 			Statement statement = conexion.createStatement();
             String selectSql = "SELECT Doc_Identidad, Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido FROM Persona;";
+            ResultSet resultSet = statement.executeQuery(selectSql);
+
+            while (resultSet.next()) {
+            	row[0] = resultSet.getString("Doc_Identidad");
+            	row[1] = resultSet.getString("Primer_Nombre");
+            	row[2] = resultSet.getString("Segundo_Nombre");
+            	row[3] = resultSet.getString("Primer_Apellido");
+            	row[4] = resultSet.getString("Segundo_Apellido");
+            	model.addRow(row);
+            }
+
+		} catch(SQLException e) {
+			JOptionPane.showMessageDialog(null, e.toString());
+		}
+	}
+	
+	public static void loadPersonasEspecificas(Connection conexion) {
+		
+		model.setRowCount(0);
+		row = new Object[model.getColumnCount()];
+		
+		try {
+			Statement statement = conexion.createStatement();
+            String selectSql = "SELECT Persona.Doc_Identidad, Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido FROM Persona LEFT JOIN Medico ON Persona.Doc_Identidad = Medico.Doc_Identidad LEFT JOIN Paciente ON Persona.Doc_Identidad = Paciente.Doc_Identidad LEFT JOIN Administrativo ON Persona.Doc_Identidad = Administrativo.Doc_Identidad WHERE Medico.Doc_Identidad IS NULL AND Administrativo.Doc_Identidad IS NULL AND Paciente.Doc_Identidad IS NULL;";
             ResultSet resultSet = statement.executeQuery(selectSql);
 
             while (resultSet.next()) {

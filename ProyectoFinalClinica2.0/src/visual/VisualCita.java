@@ -529,42 +529,61 @@ public class VisualCita extends PanelSimulacionAnim {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					
-					lugar = 0;
-					tablePersona.clearSelection();
-					selectedCita = Clinica.getInstance().buscarCitaByCode(conexion, Integer.valueOf(tableCita.getValueAt(tableCita.getSelectedRow(), 0).toString()));
-					selectedMedico = Clinica.getInstance().buscarMedicoByID(conexion, selectedCita.getID_Medico());
-					selected = Clinica.getInstance().buscarPersonaByCode(conexion, tableCita.getValueAt(tableCita.getSelectedRow(), 1).toString());
-					
-					int filaSel = -1;
+					if(Clinica.getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Médico")) {
+						
+						selectedCita = Clinica.getInstance().buscarCitaByCode(conexion, Integer.valueOf(tableCita.getValueAt(tableCita.getSelectedRow(), 0).toString()));
+						selected = Clinica.getInstance().buscarPersonaByCode(conexion, tableCita.getValueAt(tableCita.getSelectedRow(), 1).toString());
+						txtHora.setText(selectedCita.getHoraCita().toString());
+						dateChooserFechaCita.setDate(selectedCita.getFechaCita());
+						
+						txtCedula.setText(selected.getCedula());
+						txtPNombre.setText(selected.getPrimerNombre());
+						txtSNombre.setText(selected.getSegundoNombre()); 
+						txtPApellido.setText(selected.getPrimerApellido()); 
+						txtSApellido.setText(selected.getSegundoApellido()); 
+						txtTelefono.setText(selected.getTelefono()); 
+						
+						roundedGlowConsultar.setEnabled(true);
+						roundedGlowConsultar.setBackground(Color.WHITE);
+						lblConsultar.setEnabled(true);
+					} else {
+						lugar = 0;
+						tablePersona.clearSelection();
+						selectedCita = Clinica.getInstance().buscarCitaByCode(conexion, Integer.valueOf(tableCita.getValueAt(tableCita.getSelectedRow(), 0).toString()));
+						selectedMedico = Clinica.getInstance().buscarMedicoByID(conexion, selectedCita.getID_Medico());
+						selected = Clinica.getInstance().buscarPersonaByCode(conexion, tableCita.getValueAt(tableCita.getSelectedRow(), 1).toString());
+						
+						int filaSel = -1;
 
-					for (int ind = 0; ind < tableMedico.getRowCount(); ind++) {
-					    if (tableMedico.getValueAt(ind, 0).equals(selectedMedico.getCedula())) {
-					    	filaSel = ind;
-					        break;
-					    }
-					}
+						for (int ind = 0; ind < tableMedico.getRowCount(); ind++) {
+						    if (tableMedico.getValueAt(ind, 0).equals(selectedMedico.getCedula())) {
+						    	filaSel = ind;
+						        break;
+						    }
+						}
 
-					if (filaSel != -1) {
-						tableMedico.setRowSelectionInterval(filaSel, filaSel);
+						if (filaSel != -1) {
+							tableMedico.setRowSelectionInterval(filaSel, filaSel);
+						}
+						
+						txtHora.setText(selectedCita.getHoraCita().toString());
+						dateChooserFechaCita.setDate(selectedCita.getFechaCita());
+						
+						txtCedula.setText(selected.getCedula());
+						txtPNombre.setText(selected.getPrimerNombre());
+						txtSNombre.setText(selected.getSegundoNombre()); 
+						txtPApellido.setText(selected.getPrimerApellido()); 
+						txtSApellido.setText(selected.getSegundoApellido()); 
+						txtTelefono.setText(selected.getTelefono()); 
+						
+						roundedGlowPanelEliminar.setEnabled(true);
+						roundedGlowPanelEliminar.setBackground(Color.WHITE);
+						lblEliminar.setEnabled(true);
+						roundedGlowPanelModificar.setEnabled(true);
+						roundedGlowPanelModificar.setBackground(Color.WHITE);
+						lblModificar.setEnabled(true);
+						validarCampos();
 					}
-					
-					txtHora.setText(selectedCita.getHoraCita().toString());
-					dateChooserFechaCita.setDate(selectedCita.getFechaCita());
-					
-					txtCedula.setText(selected.getCedula());
-					txtPNombre.setText(selected.getPrimerNombre());
-					txtSNombre.setText(selected.getSegundoNombre()); 
-					txtPApellido.setText(selected.getPrimerApellido()); 
-					txtSApellido.setText(selected.getSegundoApellido()); 
-					txtTelefono.setText(selected.getTelefono()); 
-					
-					roundedGlowPanelEliminar.setEnabled(true);
-					roundedGlowPanelEliminar.setBackground(Color.WHITE);
-					lblEliminar.setEnabled(true);
-					roundedGlowPanelModificar.setEnabled(true);
-					roundedGlowPanelModificar.setBackground(Color.WHITE);
-					lblModificar.setEnabled(true);
-					validarCampos();
 				}
 			});
 			tableCita.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -1074,11 +1093,27 @@ public class VisualCita extends PanelSimulacionAnim {
 	    dateChooserNacim.addPropertyChangeListener("yyyy-MM-dd", e -> validarCampos());
 	    dateChooserFechaCita.addPropertyChangeListener("yyyy-MM-dd", e -> validarCampos());
 	    
-	    loadPersonas(conexion);
-	    loadMedicos(conexion);
-	    loadCitas(conexion);
+	    if(Clinica.getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Administrador") || Clinica.getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Secretario")) {
+		    loadPersonas(conexion);
+		    loadMedicos(conexion);
+		    loadCitas(conexion);
+	    }
+	    
+	    if(Clinica.getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Médico")) {
+	    	panelTablaPersona.setEnabled(false);
+	    	panelTablaPersona.setVisible(false);
+	    	panelTablaMedico.setEnabled(false);
+	    	panelTablaMedico.setVisible(false);
+	    	lblTituloPersona.setVisible(false);
+	    	lblTituloMedico.setVisible(false);
+			txtHora.setEditable(false);
+			dateChooserNacim.setEnabled(false);
+			dateChooserFechaCita.setEnabled(false);
+	    	loadCitasEspecificas(conexion);
+	    }
+	    
 	}
-	
+
 	private void validarCampos() {
 		
 		if(!txtPNombre.getText().isEmpty() && !txtSNombre.getText().isEmpty() && !txtPApellido.getText().isEmpty() && !txtSApellido.getText().isEmpty()
@@ -1185,4 +1220,32 @@ public class VisualCita extends PanelSimulacionAnim {
 			JOptionPane.showMessageDialog(null, e.toString());
 		}
 	}
+	
+	private void loadCitasEspecificas(Connection conexion) {
+		modelCita.setRowCount(0);
+		row = new Object[modelCita.getColumnCount()];
+		
+		try {
+			Statement statement = conexion.createStatement();
+            String selectSql = "SELECT Cita.ID_Cita, Cita.Doc_Identidad, Paciente.Primer_Nombre AS NombrePaciente, MedicoPersona.Primer_Nombre AS NombreMedico, Cita.Fecha_Cita FROM Cita JOIN Persona AS Paciente ON Cita.Doc_Identidad = Paciente.Doc_Identidad JOIN Medico ON Cita.ID_Medico = Medico.ID_Medico JOIN Persona AS MedicoPersona ON Medico.Doc_Identidad = MedicoPersona.Doc_Identidad WHERE Medico.ID_Medico = "+Clinica.getInstance().getIdUsuarioLogueado()+";";
+            ResultSet resultSet = statement.executeQuery(selectSql);
+
+            while (resultSet.next()) {
+            	row[0] = resultSet.getString("ID_Cita");
+            	row[1] = resultSet.getString("Doc_Identidad");
+            	row[2] = resultSet.getString("NombrePaciente");
+            	row[3] = resultSet.getString("NombreMedico");
+            	row[4] = resultSet.getString("Fecha_Cita");
+            	modelCita.addRow(row);
+            	
+            	Clinica.setGeneradorNumCita(resultSet.getInt("ID_Cita"));
+            	txtCodeCita.setText("M-"+(Clinica.getGeneradorNumCita()+1));
+            }
+
+		} catch(SQLException e) {
+			JOptionPane.showMessageDialog(null, e.toString());
+		}
+		
+	}
+	
 }

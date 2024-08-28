@@ -748,17 +748,18 @@ public class Clinica implements Serializable{
 		int encontrado = -1;
 		try {
 			Statement statement = conexion.createStatement();
-            String selectSql = "SELECT ID_Administrativo, Cargo, Nombre_Usuario, Pass FROM Administrativo;";
+            String selectSql = "SELECT ID_Administrativo, Persona.Doc_Identidad, CONCAT(Persona.Primer_Nombre, ' ', Persona.Segundo_Nombre, ' ', Persona.Primer_Apellido, ' ', Persona.Segundo_Apellido) AS NombreCompleto, Cargo, Nombre_Usuario, Pass FROM Administrativo JOIN Persona ON Persona.Doc_Identidad = Administrativo.Doc_Identidad;";
             ResultSet resultSet = statement.executeQuery(selectSql);
 
             while (resultSet.next() && encontrado == -1) {
             	String cargo = resultSet.getString("Cargo");
                 String usuario = resultSet.getString("Nombre_Usuario");
                 String contra = resultSet.getString("Pass");
+                String nomCompleto = resultSet.getString("NombreCompleto");
                 
                 if(usuario.equals(nombreUsuario) && contra.equals(contrasena)) {
                 	Clinica.getInstance().setIdUsuarioLogueado(resultSet.getInt("ID_Administrativo"));
-    				usuarioLogueado = new Usuario("", "", "", "", "", "", "", 'x', null, cargo, usuario, "");
+    				usuarioLogueado = new Usuario("", "", "", "", "", "", "", 'x', null, cargo, nomCompleto, "");
     				permitir = 0;
     				encontrado = 1;
                 }
@@ -770,10 +771,18 @@ public class Clinica implements Serializable{
             	
                 while (resultSet.next() && encontrado == -1) {
                     String contra = resultSet.getString("Pass");
-               
-                    if(resultSet.getString("Nombre_Usuario").equals(nombreUsuario) && contra.equals(contrasena)) {
+                    String usuario = resultSet.getString("Nombre_Usuario");
+                    String nomCompleto = resultSet.getString("NombreCompleto");
+                	
+                	if(resultSet.getString("Nombre_Usuario") == null) {
+                		usuario = "Patata";
+                		contra = "Patata";
+                		nomCompleto = "Patata";
+                	}
+                    
+                    if(usuario.equals(nombreUsuario) && contra.equals(contrasena)) {
                     	Clinica.getInstance().setIdUsuarioLogueado(resultSet.getInt("ID_Medico"));
-        				usuarioLogueado = new Usuario("", "", "", "", "", "", "", 'x', null, "Médico", resultSet.getString("NombreCompleto"), "");
+        				usuarioLogueado = new Usuario("", "", "", "", "", "", "", 'x', null, "Médico", nomCompleto, "");
         				permitir = 1;
         				encontrado = 1;
                     }

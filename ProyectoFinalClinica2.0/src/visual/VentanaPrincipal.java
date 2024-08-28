@@ -56,27 +56,25 @@ public class VentanaPrincipal extends JFrame {
 
 	private JPanel contentPane;
 	private Dimension dim;
-	private JLabel label;
-	private JPanel panel_2;
-	private JLabel lblRegistro;
-	private PanelSimulacionAnim panelCita;
-	private JLabel lblCita;
-	private PanelSimulacionAnim panelReporte;
-	private JLabel lblReporte;
+	private JLabel lblRegistro = new JLabel("REGISTRO");
+	private PanelSimulacionAnim panelCita = new PanelSimulacionAnim();
+	private JLabel lblCita= new JLabel("CITAS");
+	private PanelSimulacionAnim panelReporte = new PanelSimulacionAnim();
+	private JLabel lblReporte= new JLabel("REPORTES");
 	private PanelSimulacionAnim panelGerencia = new PanelSimulacionAnim();
 	private JLabel lblGerencia = new JLabel("GERENCIA");
-	private PanelSimulacionAnim panelCerrarSesion;
-	private JLabel lblCerrarSesion;
-	private PanelSimulacionAnim panelRegistro;
-	private RoundedPanel roundedPanelPersona;
-	private RoundedPanel roundedPanelEnfermedad;
-	private RoundedPanel roundedPanelVacuna;
-	private RoundedPanel roundedPanelMedico;
-	private JLabel lblMedico;
-	private JLabel lblPersona;
-	private JLabel lblEnfermedad;
-	private JLabel lblVacuna;
-	private static PanelSimulacionAnim panelFondo;
+	private PanelSimulacionAnim panelCerrarSesion = new PanelSimulacionAnim();
+	private JLabel lblCerrarSesion = new JLabel("CERRAR SESI\u00D3N");
+	private PanelSimulacionAnim panelRegistro = new PanelSimulacionAnim();
+	private RoundedPanel roundedPanelPersona = new RoundedPanel();
+	private RoundedPanel roundedPanelEnfermedad = new RoundedPanel();
+	private RoundedPanel roundedPanelVacuna = new RoundedPanel();
+	private RoundedPanel roundedPanelMedico = new RoundedPanel();
+	private JLabel lblMedico = new JLabel("M\u00C9DICOS");
+	private JLabel lblPersona = new JLabel("PERSONAS");
+	private JLabel lblEnfermedad = new JLabel("ENFERMEDADES");
+	private JLabel lblVacuna = new JLabel("VACUNAS");
+	private static PanelSimulacionAnim panelFondo = new PanelSimulacionAnim();;
 	private PanelSimulacionAnim panelFondo2;
 	private PanelSimulacionAnim panelFondo3;
 	private PanelSimulacionAnim panelFondo4;
@@ -103,23 +101,26 @@ public class VentanaPrincipal extends JFrame {
 		if (Clinica.getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Médico")) {
 			lblGerencia.setEnabled(false);
 			panelGerencia.setEnabled(false);
+			lblRegistro.setEnabled(false);
+			panelRegistro.setEnabled(false);
+			lblReporte.setEnabled(false);
+			panelReporte.setEnabled(false);
+			panelFondo.setVisible(false);
+			ind = 1;
 		}
-		if (Clinica.getInstance().getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Secretario") ||
-		    Clinica.getInstance().getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Médico")) {
-			
-			//menuRecursosHumanos.setEnabled(false);
-		}
-		if (Clinica.getInstance().getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Secretario")) {
-				
-			//menuDatosMedicos.setEnabled(false);
-		}
-		if (!Clinica.getInstance().getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Administrador")) {
-			
-			//menuReportes.setEnabled(false);
-		}
-		if (!Clinica.getInstance().getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Administrador")) {
-			
-			//menuGerencia.setEnabled(false);
+		
+		if (Clinica.getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Secretario")) {
+			lblGerencia.setEnabled(false);
+			panelGerencia.setEnabled(false);
+			lblReporte.setEnabled(false);
+			panelReporte.setEnabled(false);
+			ind = 1;
+			roundedPanelEnfermedad.setEnabled(false);
+			roundedPanelVacuna.setEnabled(false);
+			roundedPanelMedico.setEnabled(false);
+			lblMedico.setEnabled(false);
+			lblEnfermedad.setEnabled(false);
+			lblVacuna.setEnabled(false);
 		}
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
@@ -164,7 +165,7 @@ public class VentanaPrincipal extends JFrame {
         
         panelTiempoSesion.add(lbl_Tiempo);
         
-        JLabel lblNewLabel_1 = new JLabel(Clinica.getInstance().getUsuarioLogueado().getNombreUsuario());
+		JLabel lblNewLabel_1 = new JLabel(Clinica.getUsuarioLogueado().getNombreUsuario());
         lblNewLabel_1.setFont(new Font("Gill Sans MT", Font.PLAIN, (int)(25*widthRatio)));
         lblNewLabel_1.setBounds((int)(33*widthRatio), (int)(7*heightRatio), (int)(730*widthRatio), (int)(33*heightRatio));
         panelTiempoSesion.add(lblNewLabel_1);
@@ -176,48 +177,51 @@ public class VentanaPrincipal extends JFrame {
         contentPane.revalidate();
         contentPane.repaint();
         
-        lblRegistro = new JLabel("REGISTRO");
         lblRegistro.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
-        		switch (ind){
-        			case 1:
-        				panelCita.Desaparecer(tiempoAnim);
-        				panelFondo2.Desaparecer(tiempoAnim);
-        				mostrarCita.Desaparecer(tiempoAnim);
-        				break;
-        				
-        			case 2:
-        				panelReporte.Desaparecer(tiempoAnim);
-        				panelFondo3.Desaparecer(tiempoAnim);
-        				break;
-        				
-        			case 3:
-        				panelGerencia.Desaparecer(tiempoAnim);
-        				panelFondo4.Desaparecer(tiempoAnim);
-        				break;
-        				
-        			case 5:
-        				mostrarPersona.Desaparecer(tiempoAnim);
-        				break;
-        				
-        			case 6:
-        				mostrarMedico.Desaparecer(tiempoAnim);
-        				break;
-        				
-        			case 7:
-        				mostrarEnfermedad.Desaparecer(tiempoAnim);
-        				break;
-        				
-        			case 8:
-        				mostrarVacuna.Desaparecer(tiempoAnim);
-        				break;
-        		}
         		
-        		ind = 0;
-				panelRegistro.setBackground(new Color(81, 137, 252));
-				panelRegistro.Aparecer(tiempoAnim);
-				panelFondo.Aparecer(tiempoAnim);
+        		if(lblRegistro.isEnabled()) {
+        			
+	        		switch (ind){
+	        			case 1:
+	        				panelCita.Desaparecer(tiempoAnim);
+	        				panelFondo2.Desaparecer(tiempoAnim);
+	        				mostrarCita.Desaparecer(tiempoAnim);
+	        				break;
+	        				
+	        			case 2:
+	        				panelReporte.Desaparecer(tiempoAnim);
+	        				panelFondo3.Desaparecer(tiempoAnim);
+	        				break;
+	        				
+	        			case 3:
+	        				panelGerencia.Desaparecer(tiempoAnim);
+	        				panelFondo4.Desaparecer(tiempoAnim);
+	        				break;
+	        				
+	        			case 5:
+	        				mostrarPersona.Desaparecer(tiempoAnim);
+	        				break;
+	        				
+	        			case 6:
+	        				mostrarMedico.Desaparecer(tiempoAnim);
+	        				break;
+	        				
+	        			case 7:
+	        				mostrarEnfermedad.Desaparecer(tiempoAnim);
+	        				break;
+	        				
+	        			case 8:
+	        				mostrarVacuna.Desaparecer(tiempoAnim);
+	        				break;
+	        		}
+	        		
+	        		ind = 0;
+					panelRegistro.setBackground(new Color(81, 137, 252));
+					panelRegistro.Aparecer(tiempoAnim);
+					panelFondo.Aparecer(tiempoAnim);
+        		}
         	}
         });
         lblRegistro.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/icons8-register-64.png")));
@@ -232,7 +236,6 @@ public class VentanaPrincipal extends JFrame {
         lblRegistro.setFont(new Font("Yu Gothic UI", Font.BOLD, 25));
         contentPane.add(lblRegistro);
         
-        panelRegistro = new PanelSimulacionAnim();
         panelRegistro.setBorder(new CompoundBorder());
         panelRegistro.setBounds(0, 0, (int)(459*widthRatio), (int)(196*heightRatio));
         contentPane.add(panelRegistro);
@@ -240,11 +243,11 @@ public class VentanaPrincipal extends JFrame {
         panelRegistro.setLayout(null);
 
         
-        lblCita = new JLabel("CITAS");
         lblCita.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
-        		switch (ind){
+        		if(lblCita.isEnabled()) {
+            		switch (ind){
         			case 0:
         				panelRegistro.Desaparecer(tiempoAnim);
         				panelFondo.Desaparecer(tiempoAnim);
@@ -280,6 +283,7 @@ public class VentanaPrincipal extends JFrame {
 				panelCita.Aparecer(tiempoAnim);
 				panelFondo2.Aparecer(tiempoAnim);
 				mostrarCita.Aparecer(tiempoAnim);
+        		}
         	}
         });
         lblCita.setBounds(0, (int)(198*heightRatio), (int)(459*widthRatio), (int)(196*heightRatio));
@@ -293,20 +297,21 @@ public class VentanaPrincipal extends JFrame {
         lblCita.setForeground(Color.WHITE);
         lblCita.setFont(new Font("Yu Gothic UI", Font.BOLD, 25));
         
-        panelCita = new PanelSimulacionAnim();
         panelCita.setBorder(new CompoundBorder());
         panelCita.setBounds(0, (int)(198*heightRatio), (int)(459*widthRatio), (int)(196*heightRatio));
         panelCita.setBackground(new Color(255, 255, 255, 0));
         contentPane.add(panelCita);
         contentPane.setLayout(null);
         
-        lblReporte = new JLabel("REPORTES");
         lblReporte.setBounds(0, (int)(397*heightRatio), (int)(459*widthRatio), (int)(196*heightRatio));
         contentPane.add(lblReporte);
         lblReporte.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
-        		switch (ind){
+        		
+        		if(lblReporte.isEnabled()) {
+        			
+            		switch (ind){
         			case 0:
         				panelRegistro.Desaparecer(tiempoAnim);
         				panelFondo.Desaparecer(tiempoAnim);
@@ -342,6 +347,7 @@ public class VentanaPrincipal extends JFrame {
 				panelReporte.setBackground(new Color(81, 137, 252));
 				panelReporte.Aparecer(tiempoAnim);
 				panelFondo3.Aparecer(tiempoAnim);
+        		}
         	}
         });
         lblReporte.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/icons8-report-70.png")));
@@ -353,7 +359,6 @@ public class VentanaPrincipal extends JFrame {
         lblReporte.setForeground(Color.WHITE);
         lblReporte.setFont(new Font("Yu Gothic UI", Font.BOLD, 25));
         
-        panelReporte = new PanelSimulacionAnim();
         panelReporte.setBorder(new CompoundBorder());
         panelReporte.setForeground(new Color(0, 0, 0));
         panelReporte.setBounds(0, (int)(397*heightRatio), (int)(459*widthRatio), (int)(196*heightRatio));
@@ -422,7 +427,6 @@ public class VentanaPrincipal extends JFrame {
         contentPane.add(panelGerencia);
         panelGerencia.setLayout(null);
         
-        lblCerrarSesion = new JLabel("CERRAR SESI\u00D3N");
         lblCerrarSesion.setBounds(0, (int)(797*heightRatio), (int)(459*widthRatio), (int)(196*heightRatio));
         contentPane.add(lblCerrarSesion);
         lblCerrarSesion.addMouseListener(new MouseAdapter() {
@@ -485,7 +489,6 @@ public class VentanaPrincipal extends JFrame {
         lblCerrarSesion.setForeground(Color.WHITE);
         lblCerrarSesion.setFont(new Font("Yu Gothic UI", Font.BOLD, 25));
         
-        panelCerrarSesion = new PanelSimulacionAnim();
         panelCerrarSesion.setBorder(new CompoundBorder());
 
         panelCerrarSesion.setBounds(0, (int)(797*heightRatio), (int)(459*widthRatio), (int)(196*heightRatio));
@@ -504,13 +507,11 @@ public class VentanaPrincipal extends JFrame {
         contentPane.add(gradientPanel);
         gradientPanel.setLayout(null);
         
-        panelFondo = new PanelSimulacionAnim();
         panelFondo.setBackground(new Color(255, 255, 255));
         panelFondo.setBounds((int)(458*widthRatio), 0, (int)(1444*widthRatio), (int)(993*heightRatio));
         contentPane.add(panelFondo);
         panelFondo.setLayout(null);
         
-        roundedPanelPersona = new RoundedPanel();
         roundedPanelPersona.setBorder(new CompoundBorder());
         roundedPanelPersona.setLayout(null);
         roundedPanelPersona.setRoundTopRight(35);
@@ -521,7 +522,6 @@ public class VentanaPrincipal extends JFrame {
         roundedPanelPersona.setBounds((int)(286*widthRatio), (int)(72*heightRatio), (int)(345*widthRatio), (int)(353*heightRatio));
         panelFondo.add(roundedPanelPersona);
         
-        lblPersona = new JLabel("PERSONAS");
         lblPersona.setForeground(new Color(255, 255, 255));
         lblPersona.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(25*widthRatio)));
         lblPersona.addMouseListener(new MouseAdapter() {
@@ -540,7 +540,6 @@ public class VentanaPrincipal extends JFrame {
         lblPersona.setBounds(0, 0, (int)(345*widthRatio), (int)(353*heightRatio));
         roundedPanelPersona.add(lblPersona);
         
-        roundedPanelMedico = new RoundedPanel();
         roundedPanelMedico.setBorder(new CompoundBorder());
         roundedPanelMedico.setLayout(null);
         roundedPanelMedico.setRoundTopRight(35);
@@ -551,15 +550,17 @@ public class VentanaPrincipal extends JFrame {
         roundedPanelMedico.setBounds((int)(800*widthRatio), (int)(72*heightRatio), (int)(345*widthRatio), (int)(353*heightRatio));
         panelFondo.add(roundedPanelMedico);
         
-        lblMedico = new JLabel("M\u00C9DICOS");
         lblMedico.setForeground(new Color(255, 255, 255));
         lblMedico.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(25*widthRatio)));
         lblMedico.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
-        		ind = 6;      		
-        		panelFondo.Desaparecer(tiempoAnim);
-				mostrarMedico.Aparecer(tiempoAnim);
+        		
+        		if(roundedPanelMedico.isEnabled() == true) {
+            		ind = 6;      		
+            		panelFondo.Desaparecer(tiempoAnim);
+    				mostrarMedico.Aparecer(tiempoAnim);
+        		}
         	}
         });
         lblMedico.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/icons8-medical-doctor-100.png")));
@@ -569,7 +570,6 @@ public class VentanaPrincipal extends JFrame {
         lblMedico.setBounds(0, 0, (int)(345*widthRatio), (int)(353*heightRatio));
         roundedPanelMedico.add(lblMedico);
         
-        roundedPanelEnfermedad = new RoundedPanel();
         roundedPanelEnfermedad.setBorder(new CompoundBorder());
         roundedPanelEnfermedad.setLayout(null);
         roundedPanelEnfermedad.setRoundTopRight(35);
@@ -580,15 +580,16 @@ public class VentanaPrincipal extends JFrame {
         roundedPanelEnfermedad.setBounds((int)(286*widthRatio), (int)(457*heightRatio), (int)(345*widthRatio), (int)(353*heightRatio));
         panelFondo.add(roundedPanelEnfermedad);
         
-        lblEnfermedad = new JLabel("ENFERMEDADES");
         lblEnfermedad.setForeground(new Color(255, 255, 255));
         lblEnfermedad.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(25*widthRatio)));
         lblEnfermedad.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
-        		ind = 7;      		
-        		panelFondo.Desaparecer(tiempoAnim);
-				mostrarEnfermedad.Aparecer(tiempoAnim);
+        		if(roundedPanelEnfermedad.isEnabled() == true) {
+            		ind = 7;      		
+            		panelFondo.Desaparecer(tiempoAnim);
+    				mostrarEnfermedad.Aparecer(tiempoAnim);
+        		}
         	}
         });
         lblEnfermedad.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/icons8-disease-64.png")));
@@ -598,7 +599,6 @@ public class VentanaPrincipal extends JFrame {
         lblEnfermedad.setBounds(0, 0, (int)(345*widthRatio), (int)(353*heightRatio));
         roundedPanelEnfermedad.add(lblEnfermedad);
         
-        roundedPanelVacuna = new RoundedPanel();
         roundedPanelVacuna.setBorder(new CompoundBorder());
         roundedPanelVacuna.setLayout(null);
         roundedPanelVacuna.setRoundTopRight(35);
@@ -609,15 +609,16 @@ public class VentanaPrincipal extends JFrame {
         roundedPanelVacuna.setBounds((int)(800*widthRatio), (int)(457*heightRatio), (int)(345*widthRatio), (int)(353*heightRatio));
         panelFondo.add(roundedPanelVacuna);
         
-        lblVacuna = new JLabel("VACUNAS");
         lblVacuna.setForeground(new Color(255, 255, 255));
         lblVacuna.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(25*widthRatio)));
         lblVacuna.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
-        		ind = 8;      		
-        		panelFondo.Desaparecer(tiempoAnim);
-				mostrarVacuna.Aparecer(tiempoAnim);
+        		if(roundedPanelVacuna.isEnabled() == true) {
+            		ind = 8;      		
+            		panelFondo.Desaparecer(tiempoAnim);
+    				mostrarVacuna.Aparecer(tiempoAnim);
+        		}
         	}
         });
         lblVacuna.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/icons8-vaccine-64 (1).png")));
@@ -646,13 +647,23 @@ public class VentanaPrincipal extends JFrame {
         panelFondo4.setBounds((int)(458*widthRatio), (int)(0*heightRatio), (int)(1444*widthRatio), (int)(993*heightRatio));
         contentPane.add(panelFondo4);
         
+        
         panelFondo2.setVisible(false);
         panelFondo3.setVisible(false);
         panelFondo4.setVisible(false);
-		panelRegistro.setBackground(new Color(81, 137, 252));
-		panelRegistro.Aparecer(tiempoAnim);
-		panelFondo.Aparecer(tiempoAnim);
         
+        if (Clinica.getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Administrador")) {
+    		panelRegistro.setBackground(new Color(81, 137, 252));
+    		panelRegistro.Aparecer(tiempoAnim);
+            panelFondo.Aparecer(tiempoAnim);
+        }
+        
+		if (Clinica.getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Médico") || Clinica.getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Secretario")) {
+			panelCita.setBackground(new Color(81, 137, 252));
+			panelCita.Aparecer(tiempoAnim);
+			panelFondo2.Aparecer(tiempoAnim);
+			mostrarCita.Aparecer(tiempoAnim);
+		}
 
         Thread hilo = new Thread(() -> {
         	LocalDateTime fechaHora = LocalDateTime.of(2023, 1, 1, 0, 0, 0);

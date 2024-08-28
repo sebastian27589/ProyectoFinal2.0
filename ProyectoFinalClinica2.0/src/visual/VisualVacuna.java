@@ -314,7 +314,7 @@ public class VisualVacuna extends PanelSimulacionAnim {
 			tableEnfermedad.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					txtCodeEnfermedad.setText(tableEnfermedad.getValueAt(tableEnfermedad.getSelectedRow(), tableEnfermedad.getSelectedColumn()).toString());
+					txtCodeEnfermedad.setText(tableEnfermedad.getValueAt(tableEnfermedad.getSelectedRow(), 0).toString());
 				}
 			});
 			tableEnfermedad.getTableHeader().setResizingAllowed(false);
