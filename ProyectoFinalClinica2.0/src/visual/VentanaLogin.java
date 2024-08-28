@@ -232,9 +232,10 @@ public class VentanaLogin extends JDialog {
                 	
                 	Connection conexion = ConnectionSQL.getConexion();
                 	
-    				if (Clinica.getInstance().permitirInicioSesion(txtUsuario.getText(), password, conexion)) {
-    					
-    					VentanaPrincipal ventanaPrincipal = new VentanaPrincipal(conexion);
+    				int control = Clinica.getInstance().permitirInicioSesion(txtUsuario.getText(), password, conexion);
+    				
+    				if (control != -1) {
+    					VentanaPrincipal ventanaPrincipal = new VentanaPrincipal(conexion, control);
     					dispose();
     					ventanaPrincipal.setVisible(true);
     				}
@@ -264,9 +265,10 @@ public class VentanaLogin extends JDialog {
                 	
                 	Connection conexion = ConnectionSQL.getConexion();
                 	
-    				if (Clinica.getInstance().permitirInicioSesion(txtUsuario.getText(), password, conexion)) {
-    					
-    					VentanaPrincipal ventanaPrincipal = new VentanaPrincipal(conexion);
+    				int control = Clinica.getInstance().permitirInicioSesion(txtUsuario.getText(), password, conexion);
+    				
+    				if (control != -1) {
+    					VentanaPrincipal ventanaPrincipal = new VentanaPrincipal(conexion, control);
     					dispose();
     					ventanaPrincipal.setVisible(true);
     				}
@@ -303,10 +305,10 @@ public class VentanaLogin extends JDialog {
 				}
 				
 				Connection conexion = ConnectionSQL.getConexion();
+				int control = Clinica.getInstance().permitirInicioSesion(txtUsuario.getText(), password, conexion);
 				
-				if (Clinica.getInstance().permitirInicioSesion(txtUsuario.getText(), password, conexion)) {
-					
-					VentanaPrincipal ventanaPrincipal = new VentanaPrincipal(conexion);
+				if (control != -1) {
+					VentanaPrincipal ventanaPrincipal = new VentanaPrincipal(conexion, control);
 					dispose();
 					ventanaPrincipal.setVisible(true);
 				}

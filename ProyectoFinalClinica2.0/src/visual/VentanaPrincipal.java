@@ -63,8 +63,8 @@ public class VentanaPrincipal extends JFrame {
 	private JLabel lblCita;
 	private PanelSimulacionAnim panelReporte;
 	private JLabel lblReporte;
-	private PanelSimulacionAnim panelGerencia;
-	private JLabel lblGerencia;
+	private PanelSimulacionAnim panelGerencia = new PanelSimulacionAnim();
+	private JLabel lblGerencia = new JLabel("GERENCIA");
 	private PanelSimulacionAnim panelCerrarSesion;
 	private JLabel lblCerrarSesion;
 	private PanelSimulacionAnim panelRegistro;
@@ -86,35 +86,8 @@ public class VentanaPrincipal extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public VentanaPrincipal(Connection conexion) {
-		setResizable(false);
-		
-		addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent e) {
-				
-//				FileOutputStream fclinica2;
-//				ObjectOutputStream fclinicaWrite;
-//				try {
-//					
-//					fclinica2 = new FileOutputStream("clinica.dat");
-//					fclinicaWrite = new ObjectOutputStream(fclinica2);
-//					fclinicaWrite.writeObject(Clinica.getInstance());
-//					
-//				} catch (FileNotFoundException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				} catch (IOException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				}
-				
-			}
-		});
-		
-		//KGradientPanel gradientPanel = new KGradientPanel();
-		//contentPane.add(gradientPanel, BorderLayout.CENTER);
-		
+	public VentanaPrincipal(Connection conexion, int control) {
+		setResizable(false);		
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(VentanaPrincipal.class.getResource("/Imagenes/iconLogoHoms.png")));
 		dim = getToolkit().getScreenSize();
@@ -127,13 +100,9 @@ public class VentanaPrincipal extends JFrame {
 		setSize((int)(1920*widthRatio),(int)(1040*heightRatio));
 		setLocationRelativeTo(null);
 		
-		if (Clinica.getInstance().getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Secretario") ||
-			Clinica.getInstance().getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Médico")) {
-				
-//			menuItemRegMedico.setEnabled(false);
-//			menuItemRegVacunas.setEnabled(false);
-//			menuItemRegEnfermedad.setEnabled(false);
-//			menuItemRegVivienda.setEnabled(false);
+		if (Clinica.getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Médico")) {
+			lblGerencia.setEnabled(false);
+			panelGerencia.setEnabled(false);
 		}
 		if (Clinica.getInstance().getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Secretario") ||
 		    Clinica.getInstance().getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Médico")) {
@@ -197,7 +166,7 @@ public class VentanaPrincipal extends JFrame {
         
         JLabel lblNewLabel_1 = new JLabel(Clinica.getInstance().getUsuarioLogueado().getNombreUsuario());
         lblNewLabel_1.setFont(new Font("Gill Sans MT", Font.PLAIN, (int)(25*widthRatio)));
-        lblNewLabel_1.setBounds((int)(33*widthRatio), (int)(7*heightRatio), (int)(130*widthRatio), (int)(33*heightRatio));
+        lblNewLabel_1.setBounds((int)(33*widthRatio), (int)(7*heightRatio), (int)(730*widthRatio), (int)(33*heightRatio));
         panelTiempoSesion.add(lblNewLabel_1);
         contentPane.add(mostrarPersona, BorderLayout.CENTER);
         contentPane.add(mostrarMedico, BorderLayout.CENTER);
@@ -392,13 +361,14 @@ public class VentanaPrincipal extends JFrame {
         contentPane.add(panelReporte);
         panelReporte.setLayout(null);
 
-        lblGerencia = new JLabel("GERENCIA");
         lblGerencia.setBounds(0, (int)(596*heightRatio), (int)(459*widthRatio), (int)(196*heightRatio));
         contentPane.add(lblGerencia);
         lblGerencia.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
-        		switch (ind){
+        		if(lblGerencia.isEnabled()) {
+        			
+        			switch (ind){
         			case 0:
         				panelRegistro.Desaparecer(tiempoAnim);
         				panelFondo.Desaparecer(tiempoAnim);
@@ -428,12 +398,13 @@ public class VentanaPrincipal extends JFrame {
         				panelRegistro.Desaparecer(tiempoAnim);
         				mostrarVacuna.Desaparecer(tiempoAnim);
         				break;
-        		}
+        			}
         		
-        		ind = 3;
-				panelGerencia.setBackground(new Color(81, 137, 252));
-				panelGerencia.Aparecer(tiempoAnim);
-				panelFondo4.Aparecer(tiempoAnim);
+	        		ind = 3;
+					panelGerencia.setBackground(new Color(81, 137, 252));
+					panelGerencia.Aparecer(tiempoAnim);
+					panelFondo4.Aparecer(tiempoAnim);
+        		}
         	}
         });
         lblGerencia.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/Imagenes/icons8-manager-70.png")));
@@ -445,7 +416,6 @@ public class VentanaPrincipal extends JFrame {
         lblGerencia.setForeground(Color.WHITE);
         lblGerencia.setFont(new Font("Yu Gothic UI", Font.BOLD, 25));
         
-        panelGerencia = new PanelSimulacionAnim();
         panelGerencia.setBorder(new CompoundBorder());
         panelGerencia.setBounds(0, (int)(596*heightRatio), (int)(459*widthRatio), (int)(196*heightRatio));
         panelGerencia.setBackground(new Color(255, 255, 255, 0));

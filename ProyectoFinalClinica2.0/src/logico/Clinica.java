@@ -742,24 +742,41 @@ public class Clinica implements Serializable{
 	
 	//Estas son las funciones nuevas. Las demas probablemente tengamos que borrarlas.
 	
-	public boolean permitirInicioSesion(String nombreUsuario, String contrasena, Connection conexion) {
+	public int permitirInicioSesion(String nombreUsuario, String contrasena, Connection conexion) {
 		
-		boolean permitir = false;
-		boolean encontrado = false;
+		int permitir = -1;
+		int encontrado = -1;
 		try {
 			Statement statement = conexion.createStatement();
             String selectSql = "SELECT ID_Administrativo, Cargo, Nombre_Usuario, Pass FROM Administrativo;";
             ResultSet resultSet = statement.executeQuery(selectSql);
 
-            while (resultSet.next() && encontrado == false) {
+            while (resultSet.next() && encontrado == -1) {
             	String cargo = resultSet.getString("Cargo");
                 String usuario = resultSet.getString("Nombre_Usuario");
                 String contra = resultSet.getString("Pass");
-                Clinica.getInstance().setIdUsuarioLogueado(resultSet.getInt("ID_Administrativo"));
+                
                 if(usuario.equals(nombreUsuario) && contra.equals(contrasena)) {
+                	Clinica.getInstance().setIdUsuarioLogueado(resultSet.getInt("ID_Administrativo"));
     				usuarioLogueado = new Usuario("", "", "", "", "", "", "", 'x', null, cargo, usuario, "");
-    				permitir = true;
-    				encontrado = true;
+    				permitir = 0;
+    				encontrado = 1;
+                }
+            }
+            
+            if(encontrado == -1) {
+            	selectSql = "SELECT ID_Medico, Persona.Doc_Identidad, CONCAT(Persona.Primer_Nombre, ' ', Persona.Segundo_Nombre, ' ', Persona.Primer_Apellido, ' ', Persona.Segundo_Apellido) AS NombreCompleto, Nombre_Usuario, Pass FROM Medico JOIN Persona ON Persona.Doc_Identidad = Medico.Doc_Identidad;";
+            	resultSet = statement.executeQuery(selectSql);
+            	
+                while (resultSet.next() && encontrado == -1) {
+                    String contra = resultSet.getString("Pass");
+               
+                    if(resultSet.getString("Nombre_Usuario").equals(nombreUsuario) && contra.equals(contrasena)) {
+                    	Clinica.getInstance().setIdUsuarioLogueado(resultSet.getInt("ID_Medico"));
+        				usuarioLogueado = new Usuario("", "", "", "", "", "", "", 'x', null, "Médico", resultSet.getString("NombreCompleto"), "");
+        				permitir = 1;
+        				encontrado = 1;
+                    }
                 }
             }
 
@@ -1161,6 +1178,128 @@ public class Clinica implements Serializable{
 			return false;
 		}
 		
+	}
+	
+public boolean insertarSintomas(Connection conexion, int ID_enfermedad, ArrayList<Integer> selectedSin, int tamArr) {
+		
+		Statement statement;
+		
+		try {
+			statement = conexion.createStatement();
+			for(int ind = 0; ind < tamArr; ind++) {
+	            String insertSql = "INSERT INTO Enfermedad_Sintoma (ID_Enfermedad, ID_Sintoma) VALUES ("+ID_enfermedad+", "+selectedSin.get(ind)+");";
+	            statement.executeUpdate(insertSql);
+			}
+            return true;
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			return false;
+		}
+	}
+
+
+	public boolean modificarSintomas(Connection conexion, int ID_Enfermedad, ArrayList<Integer> selectedSin, int tamArr) {
+		
+		boolean elim = eliminarSintomas(conexion, ID_Enfermedad);
+		
+		if(elim == true) {
+			
+			elim  = insertarSintomas(conexion, ID_Enfermedad, selectedSin, tamArr);
+			
+			if(elim == true) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			return false;
+		}
+	}
+	
+	public boolean eliminarSintomas(Connection conexion, int ID_Enfermedad) {
+		
+		Statement statement;
+		
+		try {
+			statement = conexion.createStatement();
+			String deleteSql = "DELETE FROM Enfermedad_Sintoma WHERE ID_Enfermedad = "+ID_Enfermedad+";";
+            statement.executeUpdate(deleteSql);
+            return true;
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			return false;
+		}
+		
+	}
+
+
+	public boolean insertarVacuna(Connection conexion, int idEnfermedad, String nombreVacuna, String nombreLab) {
+		
+		Statement statement;
+		
+		try {
+			statement = conexion.createStatement();
+            String insertSql = "INSERT INTO Vacuna VALUES ('"+idEnfermedad+"','"+nombreVacuna+"','"+nombreLab+"');";
+            statement.executeUpdate(insertSql);
+            return true;
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			return false;
+		}
+	}
+
+	public Vacuna buscarVacunaByCodeSQL(Connection conexion, int ID_vacuna) {
+		
+		Vacuna vacunaAbuscar = null;
+		
+		try {
+			Statement statement = conexion.createStatement();
+			String selectSQL = "SELECT ID_Vacuna, ID_Enfermedad, Nombre_Vacuna, Laboratorio FROM Vacuna";
+			ResultSet resultSet = statement.executeQuery(selectSQL);
+			
+			while(resultSet.next()) {
+				if(resultSet.getInt("ID_Vacuna") == ID_vacuna) {
+					vacunaAbuscar = new Vacuna(resultSet.getInt("ID_Vacuna"), resultSet.getInt("ID_Enfermedad"), resultSet.getString("Nombre_Vacuna"), resultSet.getString("Laboratorio"));
+					break;
+				}
+			}
+		} catch(SQLException e) {
+			JOptionPane.showMessageDialog(null, e.toString());
+		}
+		
+		return vacunaAbuscar;
+	}
+
+
+
+	public boolean modificarVacuna(Connection conexion, Integer idEnfermedad, String nombreVacuna, String nombreLab, int id_Vacuna) {
+		
+		try {
+			Statement statement = conexion.createStatement();
+			String updateSql = "UPDATE Vacuna SET ID_Enfermedad = '"+idEnfermedad+"', Nombre_Vacuna = '"+nombreVacuna+"', Laboratorio = '"+nombreLab+"' WHERE ID_Vacuna = '"+id_Vacuna+"';";
+            statement.executeUpdate(updateSql);
+            return true;
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			return false;
+		}
+	}
+
+
+
+	public boolean eliminarVacuna(Connection conexion, int idVacuna) {
+		
+		try {
+			Statement statement = conexion.createStatement();
+			String deleteSQL = "DELETE FROM Vacuna WHERE ID_Vacuna = " + idVacuna + ";";	
+			statement.executeUpdate(deleteSQL);
+			return true;
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			return false;
+		}
 	}
 	
 }
