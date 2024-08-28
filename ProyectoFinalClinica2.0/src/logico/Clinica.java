@@ -257,7 +257,6 @@ public class Clinica implements Serializable{
 		
 		misConsultasMedicas.add(consultaMedica);
 		generadorCodeConsMed++;
-		// Sysout de verificación [[Borrar más tarde]]
 		System.out.println(misHistorialesMedicos.size() +" consultas médicas");
 	}
 	
