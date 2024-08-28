@@ -1,10 +1,7 @@
 package visual;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
@@ -20,50 +17,46 @@ import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
-
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.awt.event.ActionEvent;
-import javax.swing.JRadioButton;
 import com.toedter.calendar.JDateChooser;
 
-import exception.ValidarCampo;
 import logico.Clinica;
 import logico.Paciente;
 import logico.PanelSimulacionAnim;
 import logico.Persona;
 import logico.RoundedGlowPanel;
 import logico.RoundedPanel;
-import logico.Vacuna;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.UIManager;
 import java.awt.SystemColor;
 import keeptoo.KGradientPanel;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.BevelBorder;
-import javax.swing.ImageIcon;
 import java.awt.Dimension;
+import javax.swing.JRadioButton;
 
 public class VisualCita extends PanelSimulacionAnim {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static DefaultTableModel model;
 	private Dimension dim;
 	private JTable tablePacientes;
 	private static Object[] row;
-	private Paciente selected = null;
+	private Persona selected = null;
 	private ArrayList<Paciente> pacientesEspecificosAMostrar = new ArrayList<Paciente>();
 	
 	private final JPanel contentPanel = new JPanel();
@@ -84,7 +77,7 @@ public class VisualCita extends PanelSimulacionAnim {
 	private JButton cancelButton;
 	private JPanel panelDatosPersona;
 	private RoundedPanel roundedPanelPNombre;
-	private JTextField txtSnombre;
+	private JTextField txtSNombre;
 	private JTextField txtPApellido;
 	private JLabel lblPApellido;
 	private RoundedPanel roundedPanelPApellido;
@@ -109,11 +102,9 @@ public class VisualCita extends PanelSimulacionAnim {
 	private RoundedGlowPanel roundedGlowPanelFNacimiento;
 	private RoundedGlowPanel roundedGlowPanelFechaCita;
 	private JPanel panelTablaCita;
-	private RoundedGlowPanel roundedGlowPanelEliminar;
 	private JLabel lblEliminar;
 	private JLabel lblModificar;
 	private JLabel lblRegistrar;
-	private RoundedGlowPanel roundedGlowConsultar;
 	private JLabel lblConsultar;
 	private RoundedGlowPanel roundedGlowPanelBuscarPaciente;
 	private JLabel lblBuscar;
@@ -125,6 +116,9 @@ public class VisualCita extends PanelSimulacionAnim {
 	private JComboBox cbxHora;
 	private JDateChooser dateChooserFechaCita;
 	private RoundedGlowPanel roundedGlowPanelAgendar;
+	private RoundedGlowPanel roundedGlowConsultar;
+	private RoundedGlowPanel roundedGlowPanelEliminar;
+	private RoundedGlowPanel roundedGlowPanelModificar;
 
 	/**
 	 * Create the dialog.
@@ -137,32 +131,8 @@ public class VisualCita extends PanelSimulacionAnim {
 		double widthRatio = (double) dim.width / screenWidthOriginal;
 		double heightRatio = (double) dim.height / screenHeightOriginal;
 		
-		//paciente = pacienteAModificar;
-		//pacientesEspecificosAMostrar = pacientesAMostrar;
-		
-		Object[] header = {"Código", "Cédula", "Nombre", "Sexo", "Teléfono", "Ver más"};
-		model = new DefaultTableModel() {
-			
-			public Class getColumnClass(int column) {
-				
-				if (column == 5) {
-					return Boolean.class;
-				}
-				else {
-					return String.class;
-				}
-			}
-			
-			public boolean isCellEditable(int row, int column) {       
-			       
-			       if (row >= 0 && column == 5) {
-			    	   return true;
-			       }
-			       else {
-			    	   return false;
-			       }
-			}
-		};
+		Object[] header = {"Doc_Identidad", "P_Nombre", "S_Nombre", "P_Apellido", "S_Apellido"};
+		model = new DefaultTableModel();
 		model.setColumnIdentifiers(header);
 		
 		setBounds(100, 100, 1444, 993);
@@ -176,10 +146,10 @@ public class VisualCita extends PanelSimulacionAnim {
 		panelTablaCita.setBackground(new Color(255, 255, 255));
 		panelTablaCita.setBounds((int)(814*widthRatio),(int)(13*heightRatio), (int)(555*widthRatio),(int)(515*heightRatio));
 		add(panelTablaCita);
-		panelTablaCita.setLayout(null);
+		panelTablaCita.setLayout(new BorderLayout(0, 0));
 		
 		JScrollPane scrollPane = new JScrollPane(tablePacientes);
-		panelTablaCita.add(scrollPane, BorderLayout.CENTER);
+		panelTablaCita.add(scrollPane);
 		
 		tablePacientes = new JTable(model);
 		tablePacientes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -188,50 +158,33 @@ public class VisualCita extends PanelSimulacionAnim {
 		DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
 		cellRenderer.setHorizontalAlignment(JLabel.CENTER);
 		
-		for (int index = 0; index < tablePacientes.getColumnCount(); index++) {
-			
-			if (index != 5) {
-				
-				tablePacientes.getColumnModel().getColumn(index).setCellRenderer(cellRenderer);
-			}
-		}
-		
-		tablePacientes.getColumnModel().getColumn(0).setPreferredWidth(5);
-		tablePacientes.getColumnModel().getColumn(1).setPreferredWidth(25);
-		tablePacientes.getColumnModel().getColumn(2).setPreferredWidth(100);
-		tablePacientes.getColumnModel().getColumn(3).setPreferredWidth(5);
+		tablePacientes.getColumnModel().getColumn(0).setPreferredWidth(50);
+		tablePacientes.getColumnModel().getColumn(1).setPreferredWidth(35);
+		tablePacientes.getColumnModel().getColumn(2).setPreferredWidth(35);
+		tablePacientes.getColumnModel().getColumn(3).setPreferredWidth(25);
 		tablePacientes.getColumnModel().getColumn(4).setPreferredWidth(25);
-		tablePacientes.getColumnModel().getColumn(5).setPreferredWidth(5);
+		
 		tablePacientes.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				
-				int rowIndex = tablePacientes.getSelectedRow(), colIndex = tablePacientes.getSelectedColumn();
-				
-				if (rowIndex >= 0) {
-					
-					selected = Clinica.getInstance().buscarPacienteByCode(tablePacientes.getValueAt(rowIndex, 0).toString());
-					lblConsultar.setEnabled(true);
-					
-					if (pacientesEspecificosAMostrar == null) {
-						
-						lblModificar.setEnabled(true);
-						lblEliminar.setEnabled(true);
-					}
-					
-					if (colIndex == 5) {
-						
-						/* RECORDAR QUE AQUI EN VEZ DE ABRIR LA PESTAÑA DE REGISTRAR PACIENTE, DEBEMOS PONER LOS DATOS DE LA PERSONA EN 
-						 * LOS CAMPOS QUE SALEN DENTRO DEL MISMO PANEL.
-						
-						RegPaciente visualizarPaciente = new RegPaciente(selected, false, true);
-						visualizarPaciente.setModal(true);
-						visualizarPaciente.setVisible(true);
-						tablePacientes.setValueAt(Boolean.FALSE, rowIndex, colIndex); */
-					}
 
-					
-				}
+				selected = Clinica.getInstance().buscarPersonaByCode(conexion, tablePacientes.getValueAt(tablePacientes.getSelectedRow(), 0).toString());
+				
+				txtCedula.setText(selected.getCedula());
+				txtPNombre.setText(selected.getPrimerNombre());
+				txtSNombre.setText(selected.getSegundoNombre()); 
+				txtPApellido.setText(selected.getPrimerApellido()); 
+				txtSApellido.setText(selected.getSegundoApellido()); 
+				txtTelefono.setText(selected.getTelefono()); 
+				
+				dateChooserNacim.setDate(selected.getFechaDeNacimiento());
+				
+				roundedGlowPanelEliminar.setEnabled(true);
+				roundedGlowPanelEliminar.setBackground(Color.WHITE);
+				roundedGlowPanelAgendar.setEnabled(true);
+				roundedGlowPanelAgendar.setBackground(Color.WHITE);
+				roundedGlowPanelModificar.setEnabled(true);
+				roundedGlowPanelModificar.setBackground(Color.WHITE);
 				
 			}
 		});
@@ -289,15 +242,15 @@ public class VisualCita extends PanelSimulacionAnim {
 			roundedPanelSNombre.setBounds((int)(91*widthRatio),(int)(148*heightRatio), (int)(249*widthRatio),(int)(46*heightRatio));
 			panelDatosPersona.add(roundedPanelSNombre);
 			
-			txtSnombre = new JTextField();
-			txtSnombre.setEnabled(false);
-			txtSnombre.setOpaque(false);
-			txtSnombre.setEditable(false);
-			txtSnombre.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
-			txtSnombre.setColumns(10);
-			txtSnombre.setBorder(null);
-			txtSnombre.setBounds((int)(135*widthRatio),(int)(0*heightRatio), (int)(102*widthRatio),(int)(46*heightRatio));
-			roundedPanelSNombre.add(txtSnombre);
+			txtSNombre = new JTextField();
+			txtSNombre.setEnabled(false);
+			txtSNombre.setOpaque(false);
+			txtSNombre.setEditable(false);
+			txtSNombre.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
+			txtSNombre.setColumns(10);
+			txtSNombre.setBorder(null);
+			txtSNombre.setBounds((int)(135*widthRatio),(int)(0*heightRatio), (int)(102*widthRatio),(int)(46*heightRatio));
+			roundedPanelSNombre.add(txtSNombre);
 			
 			JLabel lblSNombre = new JLabel("Segundo Nombre:");
 			lblSNombre.setOpaque(true);
@@ -768,7 +721,7 @@ public class VisualCita extends PanelSimulacionAnim {
 		add(gradientPanel);
 		gradientPanel.setLayout(null);
 		
-		RoundedGlowPanel roundedGlowPanelModificar = new RoundedGlowPanel();
+		roundedGlowPanelModificar = new RoundedGlowPanel();
 		roundedGlowPanelModificar.setEnabled(false);
 		roundedGlowPanelModificar.setLayout(null);
 		roundedGlowPanelModificar.setRoundTopRight(60);
@@ -791,23 +744,6 @@ public class VisualCita extends PanelSimulacionAnim {
 		lblModificar.setBackground(Color.WHITE);
 		lblModificar.setBounds(0, 0, (int)(118*widthRatio),(int)(49*heightRatio));
 		roundedGlowPanelModificar.add(lblModificar);
-		
-		/* RECORDAR CAMBIAR ESTO POR EL LABEL DE MODIFICAR, ADEMAS HAY QUE CAMBIAR LA ESTRUCTURA PARA QUE PONGA LOS DATOS DE LA
-		 * PERSONA EN LOS CAMPOS DEL MISMO PANEL.
-		 
-		
-		btnModificar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				RegPaciente mod_verPaciente = new RegPaciente(selected, false, false);
-				mod_verPaciente.setModal(true);
-				mod_verPaciente.setVisible(true);
-				loadPacientes();
-				JOptionPane.showMessageDialog(null, "Modificado con éxito", "Modificar Paciente", JOptionPane.INFORMATION_MESSAGE);
-			}
-		});
-		
-		*/
 		
 		roundedGlowPanelEliminar = new RoundedGlowPanel();
 		roundedGlowPanelEliminar.setEnabled(false);
@@ -833,28 +769,6 @@ public class VisualCita extends PanelSimulacionAnim {
 		lblEliminar.setBounds(0, 0, (int)(118*widthRatio),(int)(49*heightRatio));
 		roundedGlowPanelEliminar.add(lblEliminar);
 		
-		/* RECORDAR CAMBIAR ESTO POR EL LABEL DE ELIMINAR, CREO QUE NO HAY QUE HACER CAMBIOS EN LA ESTRUCTURA PERO
-		 * VERIFICAR.
-		  
-		btnEliminar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				int Option = JOptionPane.showConfirmDialog(null, "¿Está seguro de eliminar al Paciente con código: <" + selected.getCodePaciente() + ">?", "Eliminar Paciente", JOptionPane.OK_CANCEL_OPTION);
-				
-				if (Option == JOptionPane.OK_OPTION) {
-					
-					Clinica.getInstance().eliminarPaciente(selected);
-					loadPacientes();
-					btnEliminar.setEnabled(false);
-					btnModificar.setEnabled(false);
-					btnVerHistMed.setEnabled(false);
-				}
-				
-			}
-		});
-		
-		*/
-		
 		roundedGlowPanelAgendar = new RoundedGlowPanel();
 		roundedGlowPanelAgendar.setBounds((int)(817*widthRatio),(int)(599*heightRatio), (int)(118*widthRatio),(int)(49*heightRatio));
 		add(roundedGlowPanelAgendar);
@@ -869,109 +783,6 @@ public class VisualCita extends PanelSimulacionAnim {
 		roundedGlowPanelAgendar.setForeground(Color.WHITE);
 		roundedGlowPanelAgendar.setBorder(null);
 		roundedGlowPanelAgendar.setBackground(new Color(240,240,240));
-		
-//		lblRegistrar.addMouseListener(new MouseAdapter() {
-//			@Override
-//			public void mouseClicked(MouseEvent e) {
-//				try {
-//					if (paciente == null) {
-//						
-//						if (rdbtnMasculino.isSelected()) {
-//							
-//							sexoPaciente = 'M';
-//						}
-//						else {
-//							
-//							sexoPaciente = 'F';
-//						}
-//						
-//						nombre = txtNombre.getText();
-//						cedula = txtCedula.getText();
-//						telefono = txtTelefono.getText();
-//						fechaNacimiento = dateChooserNacim.getDate();
-//						peso = Float.parseFloat(txtPeso.getText());
-//						altura = Float.parseFloat(txtAltura.getText());
-//						
-//						if (nombre.isEmpty() || cedula.isEmpty() || telefono.isEmpty()) {
-//							throw new ValidarCampo("Debe llenar los campos obligatorios.");
-//						}
-//						
-//						if (fechaNacimiento == null) {
-//							throw new ValidarCampo("No ha seleccionado una fecha de nacimiento.");
-//						}
-//						
-//						if (cbxTipoSangre.getSelectedIndex() == 0) {
-//							throw new ValidarCampo("No ha seleccionado un tipo de sangre.");
-//						}
-//						
-//						if (peso <= 0 || altura <= 0) {
-//							throw new ValidarCampo("Las entradas del peso o la altura no pueden ser negativas.");
-//						} 
-//						
-//						if (!rdbtnMasculino.isSelected() && !rdbtnFemenino.isSelected()) {
-//							throw new ValidarCampo("Debe seleccionar un sexo.");
-//						}
-//						
-//						Paciente nuevoPaciente = new Paciente(txtCedula.getText(), txtNombre.getText(), dateChooserNacim.getDate(),
-//								 sexoPaciente, txtTelefono.getText(), txtareaDireccion.getText(), txtCodePaciente.getText(),
-//								 cbxTipoSangre.getSelectedItem().toString(), new Float(txtAltura.getText()), new Float(txtPeso.getText()),
-//								 txtareaAlergias.getText(), txtareaInfoRelevante.getText());
-//						
-//						codePacienteRegistrado = nuevoPaciente.getCodePaciente();
-//						ElegirVacunaPaciente elegirVacunas = new ElegirVacunaPaciente(null);
-//						elegirVacunas.setModal(true);
-//						elegirVacunas.setVisible(true);
-//						nuevoPaciente.getMisVacunas().addAll(elegirVacunas.extraerVacunasElegidas());
-//						Clinica.getInstance().insertarPaciente(nuevoPaciente);
-//						JOptionPane.showMessageDialog(null, "Registrado con éxito", "Registrar Paciente", JOptionPane.INFORMATION_MESSAGE);
-//						
-//						if (regUnSoloPaciente) {
-//							
-//							dispose();
-//						}
-//						else {
-//							clean();
-//						}
-//						
-//					}
-//					else {
-//				
-//						if (rdbtnMasculino.isSelected()) {
-//							
-//							sexoPaciente = 'M';
-//						}
-//						else {
-//							
-//							sexoPaciente = 'F';
-//						}
-//						
-//						paciente.setTipoDeSangre(cbxTipoSangre.getSelectedItem().toString());
-//						paciente.setAltura(new Float(txtAltura.getText()));
-//						paciente.setPeso(new Float(txtPeso.getText()));
-//						paciente.setTelefono(txtTelefono.getText());
-//						paciente.setDireccion(txtareaDireccion.getText());
-//						paciente.setAlergias(txtareaAlergias.getText());
-//						
-//						ElegirVacunaPaciente elegirVacunas = new ElegirVacunaPaciente(paciente);
-//						elegirVacunas.setModal(true);
-//						elegirVacunas.setVisible(true);
-//						paciente.getMisVacunas().clear();
-//						paciente.getMisVacunas().addAll(elegirVacunas.extraerVacunasElegidas());							
-//						Clinica.getInstance().actualizarPaciente(paciente);
-//						dispose();
-//					}
-//				} catch (ValidarCampo e2) {
-//					JOptionPane.showMessageDialog(null, e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-//					e2.printStackTrace();
-//					txtNombre.grabFocus();
-//				}
-//				catch (NumberFormatException e3) {
-//					JOptionPane.showMessageDialog(null, "Ingrese datos válidos para la altura y el peso.", "Error", JOptionPane.ERROR_MESSAGE);
-//					txtPeso.grabFocus();
-//				}
-//				
-//			}
-//		});
 		
 		lblAgendar = new JLabel("Agendar");
 		lblAgendar.setHorizontalAlignment(SwingConstants.CENTER);
@@ -1005,22 +816,6 @@ public class VisualCita extends PanelSimulacionAnim {
 		lblConsultar.setBackground(Color.WHITE);
 		lblConsultar.setBounds(0, 0, (int)(118*widthRatio),(int)(49*heightRatio));
 		roundedGlowConsultar.add(lblConsultar);
-		
-		/*RECORDAR CAMBIAR ESTO POR EL LABEL DE HISTORIAL, ADEMAS HAY QUE CREAR UN NUEVO PANEL QUE MUESTRE
-		 *EL HISTORIAL DE LA PERSONA SELECCIONADA.
-		 
-		
-		btnVerHistMed.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				VerHistorialMedico verHistorialPaciente = new VerHistorialMedico(selected.getCodePaciente());
-				verHistorialPaciente.setModal(true);
-				verHistorialPaciente.setVisible(true);
-				
-			}
-		});
-		
-		*/
 		
 		roundedGlowPanelBuscarPaciente = new RoundedGlowPanel();
 		roundedGlowPanelBuscarPaciente.setLayout(null);
@@ -1073,6 +868,7 @@ public class VisualCita extends PanelSimulacionAnim {
 	    cbxHora.addActionListener(cbxListener);
 	    cbxElegirMedico.addActionListener(cbxListener);
 	    dateChooserFechaCita.addPropertyChangeListener("yyyy-MM-dd", e -> validarCampos());
+	    loadPersonas(conexion);
 	}
 	
 	private void validarCampos() {
@@ -1091,5 +887,29 @@ public class VisualCita extends PanelSimulacionAnim {
 		   
 		}
 		
+	}
+	
+	public static void loadPersonas(Connection conexion) {
+		
+		model.setRowCount(0);
+		row = new Object[model.getColumnCount()];
+		
+		try {
+			Statement statement = conexion.createStatement();
+            String selectSql = "SELECT Persona.Doc_Identidad, Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido FROM Persona LEFT JOIN Medico ON Persona.Doc_Identidad = Medico.Doc_Identidad LEFT JOIN Administrativo ON Persona.Doc_Identidad = Administrativo.Doc_Identidad WHERE Medico.Doc_Identidad IS NULL AND Administrativo.Doc_Identidad IS NULL;";
+            ResultSet resultSet = statement.executeQuery(selectSql);
+
+            while (resultSet.next()) {
+            	row[0] = resultSet.getString("Doc_Identidad");
+            	row[1] = resultSet.getString("Primer_Nombre");
+            	row[2] = resultSet.getString("Segundo_Nombre");
+            	row[3] = resultSet.getString("Primer_Apellido");
+            	row[4] = resultSet.getString("Segundo_Apellido");
+            	model.addRow(row);
+            }
+
+		} catch(SQLException e) {
+			JOptionPane.showMessageDialog(null, e.toString());
+		}
 	}
 }
