@@ -54,7 +54,7 @@ public class VisualCita extends PanelSimulacionAnim {
 	private static final long serialVersionUID = 1L;
 	private static DefaultTableModel model;
 	private Dimension dim;
-	private JTable tablePacientes;
+	private JTable tablePersona;
 	private static Object[] row;
 	private Persona selected = null;
 	private ArrayList<Paciente> pacientesEspecificosAMostrar = new ArrayList<Paciente>();
@@ -71,7 +71,6 @@ public class VisualCita extends PanelSimulacionAnim {
 	// Posiblemente haya que cambiar esto a VisualPaciente
 	private Paciente paciente = null;
 	private char sexoPaciente;
-	private JComboBox cbxElegirMedico;
 	public static String codePacienteRegistrado = null;
 	private JButton btnSiguiente;
 	private JButton cancelButton;
@@ -101,7 +100,7 @@ public class VisualCita extends PanelSimulacionAnim {
 	private RoundedGlowPanel roundedGlowPanelTelefono;
 	private RoundedGlowPanel roundedGlowPanelFNacimiento;
 	private RoundedGlowPanel roundedGlowPanelFechaCita;
-	private JPanel panelTablaCita;
+	private JPanel panelTablaPersona;
 	private JLabel lblEliminar;
 	private JLabel lblModificar;
 	private JLabel lblRegistrar;
@@ -113,12 +112,15 @@ public class VisualCita extends PanelSimulacionAnim {
 	private RoundedGlowPanel roundedGlowPanelCodeCita;
 	private RoundedGlowPanel roundedGlowHora;
 	private JTextField txtCodeCita;
-	private JComboBox cbxHora;
 	private JDateChooser dateChooserFechaCita;
 	private RoundedGlowPanel roundedGlowPanelAgendar;
 	private RoundedGlowPanel roundedGlowConsultar;
 	private RoundedGlowPanel roundedGlowPanelEliminar;
 	private RoundedGlowPanel roundedGlowPanelModificar;
+	private JPanel panelTablaMedico;
+	private JTable tableMedico;
+	private JTextField txtHora;
+	private JLabel lblTituloPersona;
 
 	/**
 	 * Create the dialog.
@@ -135,40 +137,56 @@ public class VisualCita extends PanelSimulacionAnim {
 		model = new DefaultTableModel();
 		model.setColumnIdentifiers(header);
 		
-		setBounds(100, 100, 1444, 993);
+		panelTablaPersona.setBounds((int)(814*widthRatio),(int)(13*heightRatio), (int)(555*widthRatio),(int)(250*heightRatio));
 		setSize(new Dimension((int)(1381*widthRatio),(int)(900*heightRatio)));
 		setBackground(new Color(248, 248, 255));
 		setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		setLayout(null);
 		
-		panelTablaCita = new JPanel();
-		panelTablaCita.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panelTablaCita.setBackground(new Color(255, 255, 255));
-		panelTablaCita.setBounds((int)(814*widthRatio),(int)(13*heightRatio), (int)(555*widthRatio),(int)(515*heightRatio));
-		add(panelTablaCita);
-		panelTablaCita.setLayout(new BorderLayout(0, 0));
+		panelTablaMedico = new JPanel();
+		panelTablaMedico.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panelTablaMedico.setBackground(Color.WHITE);
+		panelTablaMedico.setBounds((int)(814*heightRatio),(int)(360*heightRatio), (int)(555*widthRatio),(int)(250*heightRatio));
+		add(panelTablaMedico);
+		panelTablaMedico.setLayout(new BorderLayout(0, 0));
 		
-		JScrollPane scrollPane = new JScrollPane(tablePacientes);
-		panelTablaCita.add(scrollPane);
+		JScrollPane scrollPaneMedico = new JScrollPane();
+		panelTablaMedico.add(scrollPaneMedico, BorderLayout.CENTER);
 		
-		tablePacientes = new JTable(model);
-		tablePacientes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tablePacientes.getTableHeader().setResizingAllowed(false);
-		tablePacientes.getTableHeader().setReorderingAllowed(false);
+		tableMedico = new JTable();
+		tableMedico.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableMedico.setFillsViewportHeight(true);
+		tableMedico.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
+		scrollPaneMedico.setViewportView(tableMedico);
+		
+		panelTablaPersona = new JPanel();
+		panelTablaPersona.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panelTablaPersona.setBackground(new Color(255, 255, 255));
+		panelTablaPersona.setBounds((int)(814*widthRatio),(int)(13*heightRatio), (int)(555*widthRatio),(int)(259*heightRatio));
+		add(panelTablaPersona);
+		panelTablaPersona.setLayout(new BorderLayout(0, 0));
+		
+		JScrollPane scrollPanePersona = new JScrollPane(tablePersona);
+		panelTablaPersona.add(scrollPanePersona);
+		
+		tablePersona = new JTable(model);
+		tablePersona.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tablePersona.getTableHeader().setResizingAllowed(false);
+		tablePersona.getTableHeader().setReorderingAllowed(false);
 		DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
 		cellRenderer.setHorizontalAlignment(JLabel.CENTER);
 		
-		tablePacientes.getColumnModel().getColumn(0).setPreferredWidth(50);
-		tablePacientes.getColumnModel().getColumn(1).setPreferredWidth(35);
-		tablePacientes.getColumnModel().getColumn(2).setPreferredWidth(35);
-		tablePacientes.getColumnModel().getColumn(3).setPreferredWidth(25);
-		tablePacientes.getColumnModel().getColumn(4).setPreferredWidth(25);
+		tablePersona.getColumnModel().getColumn(0).setPreferredWidth(50);
+		tablePersona.getColumnModel().getColumn(1).setPreferredWidth(35);
+		tablePersona.getColumnModel().getColumn(2).setPreferredWidth(35);
+		tablePersona.getColumnModel().getColumn(3).setPreferredWidth(25);
+		tablePersona.getColumnModel().getColumn(4).setPreferredWidth(25);
 		
-		tablePacientes.addMouseListener(new MouseAdapter() {
+		tablePersona.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 
-				selected = Clinica.getInstance().buscarPersonaByCode(conexion, tablePacientes.getValueAt(tablePacientes.getSelectedRow(), 0).toString());
+				selected = Clinica.getInstance().buscarPersonaByCode(conexion, tablePersona.getValueAt(tablePersona.getSelectedRow(), 0).toString());
 				
 				txtCedula.setText(selected.getCedula());
 				txtPNombre.setText(selected.getPrimerNombre());
@@ -188,9 +206,9 @@ public class VisualCita extends PanelSimulacionAnim {
 				
 			}
 		});
-		tablePacientes.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
-		tablePacientes.setFillsViewportHeight(true);
-		scrollPane.setViewportView(tablePacientes);
+		tablePersona.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
+		tablePersona.setFillsViewportHeight(true);
+		scrollPanePersona.setViewportView(tablePersona);
 		{
 			RoundedPanel panelDatosPersona = new RoundedPanel();
 			panelDatosPersona.setRoundTopRight(35);
@@ -448,33 +466,6 @@ public class VisualCita extends PanelSimulacionAnim {
 			lblFDeNac.setBounds((int)(0*widthRatio),(int)(11*heightRatio), (int)(112*widthRatio),(int)(22*heightRatio));
 			roundedPanelFNac.add(lblFDeNac);
 			
-			RoundedPanel roundedPanelFechaCita = new RoundedPanel();
-			roundedPanelFechaCita.setLayout(null);
-			roundedPanelFechaCita.setRoundTopRight(18);
-			roundedPanelFechaCita.setRoundTopLeft(18);
-			roundedPanelFechaCita.setRoundBottomRight(18);
-			roundedPanelFechaCita.setRoundBottomLeft(18);
-			roundedPanelFechaCita.setBackground(Color.WHITE);
-			roundedPanelFechaCita.setBounds((int)(103*widthRatio),(int)(437*heightRatio), (int)(105*widthRatio),(int)(46*heightRatio));
-			panelDatosPersona.add(roundedPanelFechaCita);
-			
-			JLabel lblFechaCita = new JLabel("Fecha");
-			lblFechaCita.setOpaque(true);
-			lblFechaCita.setHorizontalAlignment(SwingConstants.CENTER);
-			lblFechaCita.setForeground(new Color(65, 105, 225));
-			lblFechaCita.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
-			lblFechaCita.setBackground(Color.WHITE);
-			lblFechaCita.setBounds((int)(3*widthRatio),(int)(13*heightRatio), (int)(73*widthRatio),(int)(22*heightRatio));
-			roundedPanelFechaCita.add(lblFechaCita);
-			
-			cbxElegirMedico = new JComboBox();
-			cbxElegirMedico.setBounds((int)(366*widthRatio),(int)(437*heightRatio), (int)(277*widthRatio),(int)(46*heightRatio));
-			panelDatosPersona.add(cbxElegirMedico);
-			cbxElegirMedico.setBorder(null);
-			cbxElegirMedico.setModel(new DefaultComboBoxModel(new String[] {"Elegir M\u00E9dico", "M\u00E9dico 1"}));
-			cbxElegirMedico.setSelectedIndex(0);
-			cbxElegirMedico.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
-			
 			dateChooserNacim = new JDateChooser();
 			dateChooserNacim.setOpaque(false);
 			dateChooserNacim.setEnabled(false);
@@ -496,7 +487,7 @@ public class VisualCita extends PanelSimulacionAnim {
 			roundedPanelTablaPersonas.setBounds((int)(0*widthRatio),(int)(512*heightRatio), (int)(790*widthRatio),(int)(209*heightRatio));
 			panelDatosPersona.add(roundedPanelTablaPersonas);
 			
-			JLabel lblImagen = new JLabel("AQUI SALDR\u00C1 LA LISTA DE GENTE QUE EST\u00C1 REGISTRADA");
+			JLabel lblImagen = new JLabel("ESTA ES LA TABLA DE CITAS");
 			lblImagen.setOpaque(true);
 			lblImagen.setHorizontalAlignment(SwingConstants.CENTER);
 			lblImagen.setForeground(new Color(65, 105, 225));
@@ -614,8 +605,17 @@ public class VisualCita extends PanelSimulacionAnim {
 			roundedGlowPanelFechaCita.setForeground(Color.WHITE);
 			roundedGlowPanelFechaCita.setBorder(null);
 			roundedGlowPanelFechaCita.setBackground(Color.WHITE);
-			roundedGlowPanelFechaCita.setBounds((int)(89*widthRatio),(int)(433*heightRatio), (int)(135*widthRatio),(int)(53*heightRatio));
+			roundedGlowPanelFechaCita.setBounds((int)(218*widthRatio),(int)(434*heightRatio), (int)(135*widthRatio),(int)(53*heightRatio));
 			panelDatosPersona.add(roundedGlowPanelFechaCita);
+			
+			JLabel lblFechaCita = new JLabel("Fecha");
+			lblFechaCita.setBounds((int)(29*widthRatio),(int)(13*heightRatio), (int)(73*widthRatio),(int)(22*heightRatio));
+			roundedGlowPanelFechaCita.add(lblFechaCita);
+			lblFechaCita.setOpaque(true);
+			lblFechaCita.setHorizontalAlignment(SwingConstants.CENTER);
+			lblFechaCita.setForeground(new Color(65, 105, 225));
+			lblFechaCita.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
+			lblFechaCita.setBackground(Color.WHITE);
 			
 			roundedGlowPanelCodeCita = new RoundedGlowPanel();
 			roundedGlowPanelCodeCita.setLayout(null);
@@ -661,7 +661,7 @@ public class VisualCita extends PanelSimulacionAnim {
 			roundedPanelCodeCita.add(txtCodeCita);
 			
 			roundedGlowHora = new RoundedGlowPanel();
-			roundedGlowHora.setBounds((int)(366*widthRatio),(int)(368*heightRatio), (int)(135*widthRatio),(int)(53*heightRatio));
+			roundedGlowHora.setBounds((int)(366*widthRatio),(int)(368*heightRatio), (int)(274*widthRatio),(int)(53*heightRatio));
 			panelDatosPersona.add(roundedGlowHora);
 			roundedGlowHora.setLayout(null);
 			roundedGlowHora.setRoundTopRight(60);
@@ -674,40 +674,37 @@ public class VisualCita extends PanelSimulacionAnim {
 			roundedGlowHora.setBorder(null);
 			roundedGlowHora.setBackground(Color.WHITE);
 			
-			RoundedPanel roundedPanelHora = new RoundedPanel();
-			roundedPanelHora.setLayout(null);
-			roundedPanelHora.setRoundTopRight(18);
-			roundedPanelHora.setRoundTopLeft(18);
-			roundedPanelHora.setRoundBottomRight(18);
-			roundedPanelHora.setRoundBottomLeft(18);
-			roundedPanelHora.setBackground(Color.WHITE);
-			roundedPanelHora.setBounds((int)(12*widthRatio),(int)(3*heightRatio), (int)(111*widthRatio),(int)(46*heightRatio));
-			roundedGlowHora.add(roundedPanelHora);
-			
-			JLabel lblHora = new JLabel("Hora");
+			JLabel lblHora = new JLabel("Hora:");
+			lblHora.setBounds((int)(12*widthRatio),(int)(13*heightRatio), (int)(66*widthRatio),(int)(22*heightRatio));
+			roundedGlowHora.add(lblHora);
 			lblHora.setOpaque(true);
 			lblHora.setHorizontalAlignment(SwingConstants.CENTER);
 			lblHora.setForeground(new Color(65, 105, 225));
 			lblHora.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
 			lblHora.setBackground(Color.WHITE);
-			lblHora.setBounds((int)(0*widthRatio),(int)(11*heightRatio), (int)(112*widthRatio),(int)(22*heightRatio));
-			roundedPanelHora.add(lblHora);
+			
+			txtHora = new JTextField();
+			txtHora.setOpaque(false);
+			txtHora.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
+			txtHora.setColumns(10);
+			txtHora.setBorder(null);
+			txtHora.setBounds((int)(79*widthRatio),(int)(4*heightRatio), (int)(160*widthRatio),(int)(46*heightRatio));
+			roundedGlowHora.add(txtHora);
 			
 			dateChooserFechaCita = new JDateChooser();
 			dateChooserFechaCita.getCalendarButton().setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
 			dateChooserFechaCita.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
 			dateChooserFechaCita.setBorder(new EmptyBorder(0, 0, 0, 0));
 			dateChooserFechaCita.setBackground(Color.WHITE);
-			dateChooserFechaCita.setBounds((int)(235*widthRatio),(int)(437*heightRatio), (int)(118*widthRatio),(int)(46*heightRatio));
+			dateChooserFechaCita.setBounds((int)(366*widthRatio),(int)(438*heightRatio), (int)(118*widthRatio),(int)(46*heightRatio));
 			panelDatosPersona.add(dateChooserFechaCita);
 			
-			cbxHora = new JComboBox();
-			cbxHora.setModel(new DefaultComboBoxModel(new String[] {"Elegir", "00:00"}));
-			//cbxHora.setSelectedIndex(0);
-			cbxHora.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
-			cbxHora.setBorder(null);
-			cbxHora.setBounds((int)(522*widthRatio),(int)(368*heightRatio), (int)(118*widthRatio),(int)(46*heightRatio));
-			panelDatosPersona.add(cbxHora);
+			JDateChooser dateChooserFechaCreacionCita = new JDateChooser();
+			dateChooserFechaCreacionCita.setEnabled(false);
+			dateChooserFechaCreacionCita.getCalendarButton().setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
+			dateChooserFechaCreacionCita.setFont(new Font("Yu Gothic UI", Font.PLAIN, 12));
+			dateChooserFechaCreacionCita.setBounds((int)(669*widthRatio),(int)(13*heightRatio), (int)(94*widthRatio),(int)(22*heightRatio));
+			panelDatosPersona.add(dateChooserFechaCreacionCita);
 			
 
 		}
@@ -733,7 +730,7 @@ public class VisualCita extends PanelSimulacionAnim {
 		roundedGlowPanelModificar.setForeground(Color.WHITE);
 		roundedGlowPanelModificar.setBorder(null);
 		roundedGlowPanelModificar.setBackground(new Color(240,240,240));
-		roundedGlowPanelModificar.setBounds((int)(1107*widthRatio),(int)(599*heightRatio), (int)(118*widthRatio),(int)(49*heightRatio));
+		roundedGlowPanelModificar.setBounds(1104,685, (int)(118*widthRatio),(int)(49*heightRatio));
 		add(roundedGlowPanelModificar);
 		
 		lblModificar = new JLabel("Modificar");
@@ -757,7 +754,7 @@ public class VisualCita extends PanelSimulacionAnim {
 		roundedGlowPanelEliminar.setForeground(Color.WHITE);
 		roundedGlowPanelEliminar.setBorder(null);
 		roundedGlowPanelEliminar.setBackground(new Color(240,240,240));
-		roundedGlowPanelEliminar.setBounds((int)(1249*widthRatio),(int)(599*heightRatio), (int)(118*widthRatio),(int)(49*heightRatio));
+		roundedGlowPanelEliminar.setBounds(1246,685, (int)(118*widthRatio),(int)(49*heightRatio));
 		add(roundedGlowPanelEliminar);
 		
 		lblEliminar = new JLabel("Eliminar");
@@ -770,7 +767,7 @@ public class VisualCita extends PanelSimulacionAnim {
 		roundedGlowPanelEliminar.add(lblEliminar);
 		
 		roundedGlowPanelAgendar = new RoundedGlowPanel();
-		roundedGlowPanelAgendar.setBounds((int)(817*widthRatio),(int)(599*heightRatio), (int)(118*widthRatio),(int)(49*heightRatio));
+		roundedGlowPanelAgendar.setBounds(814,685, (int)(118*widthRatio),(int)(49*heightRatio));
 		add(roundedGlowPanelAgendar);
 		roundedGlowPanelAgendar.setEnabled(false);
 		roundedGlowPanelAgendar.setLayout(null);
@@ -805,7 +802,7 @@ public class VisualCita extends PanelSimulacionAnim {
 		roundedGlowConsultar.setForeground(Color.WHITE);
 		roundedGlowConsultar.setBorder(null);
 		roundedGlowConsultar.setBackground(new Color(240,240,240));
-		roundedGlowConsultar.setBounds((int)(963*widthRatio),(int)(599*heightRatio), (int)(118*widthRatio),(int)(49*heightRatio));
+		roundedGlowConsultar.setBounds(960,685, (int)(118*widthRatio),(int)(49*heightRatio));
 		add(roundedGlowConsultar);
 		
 		lblConsultar = new JLabel("Consultar");
@@ -828,7 +825,7 @@ public class VisualCita extends PanelSimulacionAnim {
 		roundedGlowPanelBuscarPaciente.setForeground(Color.WHITE);
 		roundedGlowPanelBuscarPaciente.setBorder(null);
 		roundedGlowPanelBuscarPaciente.setBackground(Color.WHITE);
-		roundedGlowPanelBuscarPaciente.setBounds((int)(817*widthRatio),(int)(541*heightRatio), (int)(550*widthRatio),(int)(49*heightRatio));
+		roundedGlowPanelBuscarPaciente.setBounds((int)(814*widthRatio),(int)(627*heightRatio), (int)(550*widthRatio),(int)(49*heightRatio));
 		add(roundedGlowPanelBuscarPaciente);
 		
 		lblBuscar = new JLabel("Buscar:");
@@ -849,44 +846,32 @@ public class VisualCita extends PanelSimulacionAnim {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				
-				DefaultTableModel searchModel1 = (DefaultTableModel) tablePacientes.getModel();
+				DefaultTableModel searchModel1 = (DefaultTableModel) tablePersona.getModel();
 				TableRowSorter<DefaultTableModel> searchModel2 = new TableRowSorter<DefaultTableModel>(searchModel1);
-				tablePacientes.setRowSorter(searchModel2);
+				tablePersona.setRowSorter(searchModel2);
 				searchModel2.setRowFilter(RowFilter.regexFilter("(?i)" + txtBuscarPaciente.getText()));
 			}
 		});
 		roundedGlowPanelBuscarPaciente.add(txtBuscarPaciente);
 		txtBuscarPaciente.setColumns(10);
 		
+		JLabel lblTituloMedico = new JLabel("M\u00E9dicos");
+		lblTituloMedico.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*heightRatio)));
+		lblTituloMedico.setBounds((int)(1066*widthRatio),(int)(331*heightRatio), (int)(72*widthRatio),(int)(16*heightRatio));
+		add(lblTituloMedico);
+		
+		lblTituloPersona = new JLabel("Personas");
+		lblTituloPersona.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*heightRatio)));
+		lblTituloPersona.setBounds((int)(1065*widthRatio),(int)(283*heightRatio), (int)(72*widthRatio),(int)(16*heightRatio));
+		add(lblTituloPersona);
+		
 	    ActionListener cbxListener = new ActionListener() {
 	        @Override
 	        public void actionPerformed(ActionEvent e) {
-	            validarCampos();
 	        }
 	    };
 	    
-	    cbxHora.addActionListener(cbxListener);
-	    cbxElegirMedico.addActionListener(cbxListener);
-	    dateChooserFechaCita.addPropertyChangeListener("yyyy-MM-dd", e -> validarCampos());
 	    loadPersonas(conexion);
-	}
-	
-	private void validarCampos() {
-		
-		if((dateChooserFechaCita.getDate() != null) && (cbxHora.getSelectedIndex() != 0) && (cbxElegirMedico.getSelectedIndex() != 0)) {
-												
-		   roundedGlowPanelAgendar.setEnabled(true);
-		   roundedGlowPanelAgendar.setBackground(Color.WHITE);
-		   lblAgendar.setEnabled(true);
-		   
-		} else {
-			
-			roundedGlowPanelAgendar.setEnabled(false);
-			roundedGlowPanelAgendar.setBackground(new Color(240, 240, 240));
-			lblAgendar.setEnabled(false);
-		   
-		}
-		
 	}
 	
 	public static void loadPersonas(Connection conexion) {
