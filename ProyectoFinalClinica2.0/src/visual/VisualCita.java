@@ -730,7 +730,7 @@ public class VisualCita extends PanelSimulacionAnim {
 		roundedGlowPanelModificar.setForeground(Color.WHITE);
 		roundedGlowPanelModificar.setBorder(null);
 		roundedGlowPanelModificar.setBackground(new Color(240,240,240));
-		roundedGlowPanelModificar.setBounds(1104,685, (int)(118*widthRatio),(int)(49*heightRatio));
+		roundedGlowPanelModificar.setBounds((int)(1104*widthRatio),(int)(685*heightRatio), (int)(118*widthRatio),(int)(49*heightRatio));
 		add(roundedGlowPanelModificar);
 		
 		lblModificar = new JLabel("Modificar");
@@ -754,7 +754,7 @@ public class VisualCita extends PanelSimulacionAnim {
 		roundedGlowPanelEliminar.setForeground(Color.WHITE);
 		roundedGlowPanelEliminar.setBorder(null);
 		roundedGlowPanelEliminar.setBackground(new Color(240,240,240));
-		roundedGlowPanelEliminar.setBounds(1246,685, (int)(118*widthRatio),(int)(49*heightRatio));
+		roundedGlowPanelEliminar.setBounds((int)(1246*widthRatio),(int)(685*heightRatio), (int)(118*widthRatio),(int)(49*heightRatio));
 		add(roundedGlowPanelEliminar);
 		
 		lblEliminar = new JLabel("Eliminar");
@@ -767,7 +767,7 @@ public class VisualCita extends PanelSimulacionAnim {
 		roundedGlowPanelEliminar.add(lblEliminar);
 		
 		roundedGlowPanelAgendar = new RoundedGlowPanel();
-		roundedGlowPanelAgendar.setBounds(814,685, (int)(118*widthRatio),(int)(49*heightRatio));
+		roundedGlowPanelAgendar.setBounds((int)(814*widthRatio),(int)(685*heightRatio), (int)(118*widthRatio),(int)(49*heightRatio));
 		add(roundedGlowPanelAgendar);
 		roundedGlowPanelAgendar.setEnabled(false);
 		roundedGlowPanelAgendar.setLayout(null);
@@ -802,7 +802,7 @@ public class VisualCita extends PanelSimulacionAnim {
 		roundedGlowConsultar.setForeground(Color.WHITE);
 		roundedGlowConsultar.setBorder(null);
 		roundedGlowConsultar.setBackground(new Color(240,240,240));
-		roundedGlowConsultar.setBounds(960,685, (int)(118*widthRatio),(int)(49*heightRatio));
+		roundedGlowConsultar.setBounds((int)(960*widthRatio),(int)(685*heightRatio), (int)(118*widthRatio),(int)(49*heightRatio));
 		add(roundedGlowConsultar);
 		
 		lblConsultar = new JLabel("Consultar");
