@@ -1,11 +1,9 @@
 package visual;
 
 import java.awt.BorderLayout;
-import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -19,7 +17,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -29,25 +26,19 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.Date;
-import java.awt.event.ActionEvent;
 import com.toedter.calendar.JDateChooser;
 
 import logico.Cita;
 import logico.Clinica;
 import logico.Medico;
-import logico.Paciente;
 import logico.PanelSimulacionAnim;
 import logico.Persona;
 import logico.RoundedGlowPanel;
 import logico.RoundedPanel;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
 import java.awt.SystemColor;
 import keeptoo.KGradientPanel;
 import java.awt.Dimension;
-import javax.swing.JRadioButton;
 
 public class VisualCita extends PanelSimulacionAnim {
 
@@ -65,24 +56,13 @@ public class VisualCita extends PanelSimulacionAnim {
 	private Persona selected = null;
 	private Medico selectedMedico;
 	private Cita selectedCita;
-	private ArrayList<Paciente> pacientesEspecificosAMostrar = new ArrayList<Paciente>();
 	
-	private final JPanel contentPanel = new JPanel();
-	private String nombre, cedula, telefono;
-	private float peso, altura;
-	private Date fechaNacimiento;
 	private JTextField txtCodePaciente;
 	private JTextField txtPNombre;
 	private JTextField txtCedula;
 	private JTextField txtTelefono;
 	private JDateChooser dateChooserNacim;
-	// Posiblemente haya que cambiar esto a VisualPaciente
-	private Paciente paciente = null;
-	private char sexoPaciente;
 	public static String codePacienteRegistrado = null;
-	private JButton btnSiguiente;
-	private JButton cancelButton;
-	private JPanel panelDatosPersona;
 	private RoundedPanel roundedPanelPNombre;
 	private JTextField txtSNombre;
 	private JTextField txtPApellido;
@@ -108,10 +88,8 @@ public class VisualCita extends PanelSimulacionAnim {
 	private RoundedGlowPanel roundedGlowPanelTelefono;
 	private RoundedGlowPanel roundedGlowPanelFNacimiento;
 	private RoundedGlowPanel roundedGlowPanelFechaCita;
-	private JPanel panelTablaPersona;
 	private JLabel lblEliminar;
 	private JLabel lblModificar;
-	private JLabel lblRegistrar;
 	private JLabel lblConsultar;
 	private RoundedGlowPanel roundedGlowPanelBuscarPaciente;
 	private JLabel lblBuscar;
@@ -126,11 +104,12 @@ public class VisualCita extends PanelSimulacionAnim {
 	private RoundedGlowPanel roundedGlowPanelEliminar;
 	private RoundedGlowPanel roundedGlowPanelModificar;
 	private JPanel panelTablaMedico;
+	private JPanel panelTablaPersona;
+	private RoundedPanel panelDatosPersona;
 	private JTable tableMedico;
 	private JTextField txtHora;
 	private JLabel lblTituloPersona;
 	private Color colorDeshabilitado = new Color(240, 240, 240);
-	private JScrollPane scrollPane_Cita;
 	private JTable tableCita;
 
 	/**
@@ -158,6 +137,12 @@ public class VisualCita extends PanelSimulacionAnim {
 		setBackground(new Color(248, 248, 255));
 		setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		setLayout(null);
+		
+		VisualConsulta mostrarConsulta = new VisualConsulta(conexion, selectedCita);
+		mostrarConsulta.setSize((int)(1381*widthRatio), (int)(900*heightRatio));
+		mostrarConsulta.setLocation(0, 0);
+		add(mostrarConsulta, BorderLayout.CENTER);
+		mostrarConsulta.setVisible(false);
 		
 		panelTablaMedico = new JPanel();
 		panelTablaMedico.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -244,7 +229,7 @@ public class VisualCita extends PanelSimulacionAnim {
 		tablePersona.setFillsViewportHeight(true);
 		scrollPanePersona.setViewportView(tablePersona);
 		{
-			RoundedPanel panelDatosPersona = new RoundedPanel();
+			panelDatosPersona = new RoundedPanel();
 			panelDatosPersona.setRoundTopRight(35);
 			panelDatosPersona.setRoundTopLeft(35);
 			panelDatosPersona.setRoundBottomRight(35);
@@ -505,7 +490,7 @@ public class VisualCita extends PanelSimulacionAnim {
 			dateChooserNacim.setEnabled(false);
 			dateChooserNacim.setBounds((int)(522*widthRatio),(int)(278*heightRatio), (int)(118*widthRatio),(int)(46*heightRatio));
 			panelDatosPersona.add(dateChooserNacim);
-			BorderLayout borderLayout = (BorderLayout) dateChooserNacim.getLayout();
+			dateChooserNacim.getLayout();
 			dateChooserNacim.setBackground(new Color(255, 255, 255));
 			dateChooserNacim.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
 			dateChooserNacim.setBorder(new EmptyBorder(0, 0, 0, 0));
@@ -1006,6 +991,17 @@ public class VisualCita extends PanelSimulacionAnim {
 		add(roundedGlowConsultar);
 		
 		lblConsultar = new JLabel("Consultar");
+		lblConsultar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				mostrarConsulta.setPersonaConsulta(selected);
+				VisualConsulta.loadPersonaTxt(selected);
+				mostrarConsulta.Aparecer(20);
+				panelTablaMedico.setVisible(false);
+				panelTablaPersona.setVisible(false);
+				panelDatosPersona.setVisible(false);
+			}
+		});
 		lblConsultar.setEnabled(false);
 		lblConsultar.setHorizontalAlignment(SwingConstants.CENTER);
 		lblConsultar.setForeground(new Color(100, 149, 237));

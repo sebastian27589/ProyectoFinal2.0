@@ -489,29 +489,6 @@ public class Clinica implements Serializable{
 		return citaABuscar;
 	}
 	
-	public Paciente buscarPacienteByCedula(String cedula) {
-		
-		Paciente pacienteABuscar = null;
-		boolean encontrado = false;
-		int index = 0;
-		
-		while (!encontrado && index < misPersonas.size()) {
-			
-			if (misPersonas.get(index) instanceof Paciente) {
-				
-				if (misPersonas.get(index).getCedula().equalsIgnoreCase(cedula)) {
-					pacienteABuscar = (Paciente) misPersonas.get(index);
-					encontrado = true;
-				}
-				
-			}
-			
-			index++;
-		}
-		
-		return pacienteABuscar;
-	}
-	
 	public Medico buscarMedicoByCedula(String cedula) {
 		
 		Medico medicoABuscar = null;
@@ -847,6 +824,131 @@ public class Clinica implements Serializable{
 		}
 	}
 	
+	public boolean insertaConsulta(Connection conexion, String cedulaPersona, Integer altura, Integer peso, String alergia,
+			int idMedico, ArrayList<Integer> selectedSintomas, ArrayList<Integer> selectedAnalisis,
+			ArrayList<Integer> selectedEnfermedades, ArrayList<Integer> selectedVacunas, String tipoSangre, String diagnostico) 
+	{
+		Statement statement; 
+		int ID_Paciente = Clinica.getInstance().buscarPacienteByCedula(conexion, cedulaPersona);
+		int ID_Consulta = 0;
+		
+		if(ID_Paciente == -1) {
+			try {
+				statement = conexion.createStatement();
+	            String insertSql = "INSERT INTO Paciente (Doc_Identidad, ID_Tipo_Sangre, Altura, Peso, Alergia) VALUES ('"+cedulaPersona+"', '2', "+altura+", "+peso+", '"+alergia+"');";
+	            statement.executeUpdate(insertSql);
+	            ID_Paciente = Clinica.getInstance().buscarPacienteByCedula(conexion, cedulaPersona);
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		}
+		
+		try {
+			statement = conexion.createStatement();
+            String insertSql = "INSERT INTO Consulta (ID_Medico, ID_Paciente, Diagnostico) VALUES("+idMedico+", "+ID_Paciente+", '"+diagnostico+"');";
+            statement.executeUpdate(insertSql);
+            ID_Consulta = Clinica.getInstance().buscarConsultaByID(conexion, idMedico, ID_Paciente, diagnostico);
+            
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+
+		try {
+			statement = conexion.createStatement();
+			int tamArr = selectedSintomas.size();
+			for(int ind = 0; ind < tamArr; ind++) {
+	            String insertSql = "INSERT INTO Consulta_Sintoma (ID_Consulta, ID_Sintoma) VALUES("+ID_Consulta+", "+selectedSintomas.get(ind)+");";
+	            statement.executeUpdate(insertSql);
+			}
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		
+		try {
+			statement = conexion.createStatement();
+			int tamArr = selectedAnalisis.size();
+			for(int ind = 0; ind < tamArr; ind++) {
+	            String insertSql = "INSERT INTO Consulta_Analisis (ID_Consulta, ID_Analisis) VALUES("+ID_Consulta+", "+selectedAnalisis.get(ind)+");";
+	            statement.executeUpdate(insertSql);
+			}
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		
+		try {
+			statement = conexion.createStatement();
+			int tamArr = selectedEnfermedades.size();
+			for(int ind = 0; ind < tamArr; ind++) {
+	            String insertSql = "INSERT INTO Consulta_Enfermedad (ID_Consulta, ID_Enfermedad) VALUES("+ID_Consulta+", "+selectedEnfermedades.get(ind)+");";
+	            statement.executeUpdate(insertSql);
+			}
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		
+		try {
+			statement = conexion.createStatement();
+			int tamArr = selectedVacunas.size();
+			for(int ind = 0; ind < tamArr; ind++) {
+	            String insertSql = "INSERT INTO Consulta_Vacuna (ID_Consulta, ID_Vacuna) VALUES("+ID_Consulta+", "+selectedVacunas.get(ind)+");";
+	            statement.executeUpdate(insertSql);
+			}
+            return true;
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			return false;
+		}
+		
+	}
+	
+	private int buscarPacienteByCedula(Connection conexion, String cedulaPersona) {
+		boolean encontrado = false;
+		int ID_Paciente = -1;
+		
+		try {
+			Statement statement = conexion.createStatement();
+            String selectSql = "SELECT Persona.Doc_Identidad, Paciente.ID_Paciente, Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Telefono, Direccion, Sexo, Fecha_Nacimiento FROM Persona INNER JOIN Paciente ON Persona.Doc_Identidad = Paciente.Doc_Identidad;";
+            ResultSet resultSet = statement.executeQuery(selectSql);
+
+            while (resultSet.next() && encontrado == false) {
+            	
+                if(resultSet.getString("Doc_Identidad").equals(cedulaPersona)) {
+                	ID_Paciente = resultSet.getInt("ID_Paciente");
+    				encontrado = true;
+                }
+            }
+            return ID_Paciente;
+
+		} catch(SQLException e) {
+			JOptionPane.showMessageDialog(null, e.toString());
+			return ID_Paciente;
+		}
+	}
+	
+	private int buscarConsultaByID(Connection conexion, int ID_Medico, int ID_Paciente, String diagnostico) {
+		boolean encontrado = false;
+		int ID_Consulta = -1;
+		
+		try {
+			Statement statement = conexion.createStatement();
+            String selectSql = "SELECT ID_Consulta, ID_Medico, ID_Paciente, Diagnostico FROM Consulta;";
+            ResultSet resultSet = statement.executeQuery(selectSql);
+
+            while (resultSet.next() && encontrado == false) {
+            	
+                if(resultSet.getInt("ID_Medico") == ID_Medico && resultSet.getInt("ID_Paciente") == ID_Paciente && resultSet.getString("Diagnostico").equals(diagnostico)) {
+                	ID_Consulta = resultSet.getInt("ID_Consulta");
+    				encontrado = true;
+                }
+            }
+            return ID_Consulta;
+
+		} catch(SQLException e) {
+			JOptionPane.showMessageDialog(null, e.toString());
+			return ID_Consulta;
+		}
+	}
+
 	public Persona buscarPersonaByCode(Connection conexion, String codigo) {
 		
 		Persona personaABuscar = null;
@@ -1011,7 +1113,8 @@ public class Clinica implements Serializable{
 		}
 	}
 	
-	public boolean modificarCita(Connection conexion, int id_Cita, String cedula, int idUsuarioLogueado2, int id_Medico, Date fechaCita, String horaCita) {
+	public boolean modificarCita(Connection conexion, int id_Cita, String cedula, int idUsuarioLogueado2, 
+			int id_Medico, Date fechaCita, String horaCita) {
 		
 		Statement statement;
 		SimpleDateFormat formateador = new SimpleDateFormat("yyyy-MM-dd");  
@@ -1027,7 +1130,9 @@ public class Clinica implements Serializable{
 		
 		try {
 			statement = conexion.createStatement();
-			String updateSql = "UPDATE Cita SET Doc_Identidad = '"+cedula+"', ID_Administrativo = "+idUsuarioLogueado2+", ID_Medico = "+id_Medico+", Fecha_Cita = '"+strDate+"', Hora_Cita = '"+horaCita+"', Pendiente = "+pendiente+" WHERE ID_Cita = "+id_Cita+";";
+			String updateSql = "UPDATE Cita SET Doc_Identidad = '"+cedula+"', ID_Administrativo = "
+			+idUsuarioLogueado2+", ID_Medico = "+id_Medico+", Fecha_Cita = '"+strDate+"', Hora_Cita = '"
+					+horaCita+"', Pendiente = "+pendiente+" WHERE ID_Cita = "+id_Cita+";";
             statement.executeUpdate(updateSql);
             return true;
 		} catch (SQLException e1) {
@@ -1135,14 +1240,16 @@ public class Clinica implements Serializable{
 	}
 
 
-	public boolean insertarEspecialidades(Connection conexion, int ID_Medico, ArrayList<Integer> selectedEsp, int tamArr) {
+	public boolean insertarEspecialidades(Connection conexion, int ID_Medico, ArrayList<Integer> selectedEsp, 
+											int tamArr) {
 		
 		Statement statement;
 		
 		try {
 			statement = conexion.createStatement();
 			for(int ind = 0; ind < tamArr; ind++) {
-	            String insertSql = "INSERT INTO Med_Especialidad (ID_Medico, ID_Especialidad) VALUES ("+ID_Medico+", "+selectedEsp.get(ind)+");";
+	            String insertSql = "INSERT INTO Med_Especialidad (ID_Medico, ID_Especialidad) VALUES ("+ID_Medico+","
+	            		+ " "+selectedEsp.get(ind)+");";
 	            statement.executeUpdate(insertSql);
 			}
             return true;
@@ -1270,7 +1377,8 @@ public boolean insertarSintomas(Connection conexion, int ID_enfermedad, ArrayLis
 			
 			while(resultSet.next()) {
 				if(resultSet.getInt("ID_Vacuna") == ID_vacuna) {
-					vacunaAbuscar = new Vacuna(resultSet.getInt("ID_Vacuna"), resultSet.getInt("ID_Enfermedad"), resultSet.getString("Nombre_Vacuna"), resultSet.getString("Laboratorio"));
+					vacunaAbuscar = new Vacuna(resultSet.getInt("ID_Vacuna"), resultSet.getInt("ID_Enfermedad"), 
+							resultSet.getString("Nombre_Vacuna"), resultSet.getString("Laboratorio"));
 					break;
 				}
 			}
