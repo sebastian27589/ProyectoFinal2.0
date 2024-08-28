@@ -36,6 +36,7 @@ public class Clinica implements Serializable{
 	public static int generadorCodeHistMed = 1;
 	public static int generadorCodeVacuna = 1;
 	public static int generadorNumCita = 1;
+	public static int generadorCodeEnfermedad = 1;
 	public static Clinica clinica = null; 
 	private static Usuario usuarioLogueado; 
 	
@@ -197,6 +198,14 @@ public class Clinica implements Serializable{
 	public static int getGeneradorNumCita() {
 		return generadorNumCita;
 	}
+	
+	public static int getGeneradorCodeEnfermedad() {
+		return generadorCodeEnfermedad;
+	}
+	
+	public static void setGeneradorCodeEnfermedad(int generadorCodeEnfermedad) {
+		Clinica.generadorCodeEnfermedad = generadorCodeEnfermedad;
+	}
 
 	public static void setGeneradorNumCita(int generadorNumCita) {
 		Clinica.generadorNumCita = generadorNumCita;
@@ -275,23 +284,11 @@ public class Clinica implements Serializable{
 		System.out.println(misPersonas.size()+" citas");
 	}
 	
-	public void actualizarEnfermedad(Enfermedad enfermedad) {
-		int index = buscarIndexEnfermedadByNombre(enfermedad.getNombre());
-		misEnfermedades.set(index, enfermedad);
-	}
-	
 	public void actualizarPaciente(Paciente paciente) {
 		
 		int index = buscarIndexPacienteByCode(paciente.getCodePaciente());
 		
 		misPersonas.set(index, paciente);
-	}
-	
-	public void actualizarMedico(Medico medico) {
-		
-		int index = buscarIndexMedicoByCode(medico.getCodeMedico());
-		
-		misPersonas.set(index, medico);
 	}
 	
 	public void actualizarUsuario(Usuario usuario) {
@@ -323,21 +320,6 @@ public class Clinica implements Serializable{
 		misUsuarios.remove(usuarioAEliminar);
 	}
 	
-	public int buscarIndexEnfermedadByNombre(String nombreEnfermedad) {
-		int index = -1;
-		boolean encontrado = false;
-		int i = 0;
-		while (!encontrado && i < misEnfermedades.size()) {
-			if(misEnfermedades.get(i).getNombre().equalsIgnoreCase(nombreEnfermedad)){
-				encontrado = true;
-				index = i;
-			}
-			i++;
-			
-		}
-		return index;
-	}
-	
 	public int buscarIndexPacienteByCode(String codigo) {
 		
 		boolean encontrado = false;
@@ -357,27 +339,6 @@ public class Clinica implements Serializable{
 		}
 		
 		return indPaciente;
-	}
-	
-	public int buscarIndexMedicoByCode(String codigo) {
-		
-		boolean encontrado = false;
-		int cont = 0, indMedico = -1;
-		
-		while (!encontrado && cont < misPersonas.size()) {
-			
-			if (misPersonas.get(cont) instanceof Medico) {
-				
-				if (((Medico) misPersonas.get(cont)).getCodeMedico().equalsIgnoreCase(codigo)) {
-					encontrado = true;
-					indMedico = cont;
-				}
-			}
-		
-			cont++;
-		}
-		
-		return indMedico;
 	}
 	
 	public int buscarIndexUsuario(String nombreUsuario) {
@@ -585,24 +546,6 @@ public class Clinica implements Serializable{
 		}
 		
 		return viviendaABuscar;
-	}
-
-	public Enfermedad buscarEnfermedadByNombre(String nombreEnfermedad) {
-		
-		Enfermedad enfermedadABuscar = null;
-		boolean encontrado = false;
-		int index = 0;
-		
-		while (!encontrado && index < misEnfermedades.size()) {
-			if (misEnfermedades.get(index).getNombre().equalsIgnoreCase(nombreEnfermedad)) {
-				enfermedadABuscar = misEnfermedades.get(index);
-				encontrado = true;
-			}
-			
-			index++;
-		}
-		
-		return enfermedadABuscar;
 	}
 	
 	public boolean validarUsuario(String userNombre) {
@@ -953,24 +896,74 @@ public class Clinica implements Serializable{
 		}
 	}
 	
-	public int obtenerIdTipoEnfermedad(Connection conexion, String tipoEnfermedad) {
+	public boolean insertarEnfermedad(Connection conexion, String tipoEnfermedad, String nombreEnfermedad, boolean vigilancia, Integer mortalidad) 
+	{
+		int idTipoEnfermedad = obtenerIdTipoEnfermedad(conexion, tipoEnfermedad);
+		
+		if(idTipoEnfermedad == -1) {
+			return false;
+		}
+		Statement statement;
+		
+		try {
+			statement = conexion.createStatement();
+            String insertSql = "INSERT INTO Enfermedad VALUES ('"+idTipoEnfermedad+"','"+nombreEnfermedad+"','"+vigilancia+"','"+mortalidad+"');";
+            statement.executeUpdate(insertSql);
+            return true;
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			return false;
+		}
+		
+	}
+	
+	public boolean modificarEnfermedad(Connection conexion, String tipoEnfermedad, String nombreEnfermedad, boolean vigilancia, Integer mortalidad, int id_Enfermedad) 
+	{
+		int idTipoEnfermedad = obtenerIdTipoEnfermedad(conexion, tipoEnfermedad);
+		
+		try {
+			Statement statement = conexion.createStatement();
+			String updateSql = "UPDATE Enfermedad SET ID_Tipo_Enfermedad = '"+idTipoEnfermedad+"', Nombre_Enfermedad = '"+nombreEnfermedad+"', Vigilancia = '"+vigilancia+"', Peligrosidad = '"+mortalidad+"' WHERE ID_Enfermedad = '"+id_Enfermedad+"';";
+            statement.executeUpdate(updateSql);
+            return true;
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean eliminarEnfermedad(Connection conexion, int id_Enfermedad) {
+		
+		try {
+			Statement statement = conexion.createStatement();
+			String deleteSQL = "DELETE FROM Enfermedad WHERE ID_Enfermedad = '" + id_Enfermedad + "';";	
+			statement.executeUpdate(deleteSQL);
+			return true;
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			return false;
+		}
+	}
 
+
+	public int obtenerIdTipoEnfermedad(Connection conexion, String tipoEnfermedad) {
+		
 		int idTipoEnfermedad = -1;
 		String nombreTipoEnfermedad;
-
+		
 		try {
+			
 			Statement statement = conexion.createStatement();
 			String selectSQL = "SELECT ID_Tipo_Enfermedad, Nombre_Tipo_Enfermedad FROM Tipo_Enfermedad";
 			ResultSet resultSet = statement.executeQuery(selectSQL);
-	
-			while (resultSet.next()) {
-	            nombreTipoEnfermedad = resultSet.getString("Nombre_Tipo_Enfermedad");
-	            
-	            if(nombreTipoEnfermedad.equals(tipoEnfermedad)) {
-		            idTipoEnfermedad = resultSet.getInt("ID_Tipo_Enfermedad");
-		            break;
-	            }
-			}
+			
+            while (resultSet.next()) {
+            	nombreTipoEnfermedad = resultSet.getString("Nombre_Tipo_Enfermedad");
+            	if(nombreTipoEnfermedad.equals(tipoEnfermedad)) {
+            		idTipoEnfermedad = resultSet.getInt("ID_Tipo_Enfermedad");
+            		break;
+            	}
+            }
 		} catch(SQLException e) {
 			JOptionPane.showMessageDialog(null, "Error al obtener el tipo de enfermedad: "+e.getMessage());
 			e.printStackTrace();
@@ -978,29 +971,29 @@ public class Clinica implements Serializable{
 
 		return idTipoEnfermedad;
 	}
-	
-	public boolean insertarEnfermedad(Connection conexion, String tipoEnfermedad, String nombreEnfermedad, boolean vigilancia, Integer mortalidad) 
-	{
-		int idTipoEnfermedad = obtenerIdTipoEnfermedad(conexion, tipoEnfermedad);
 
-		if(idTipoEnfermedad == -1) {
-			return false;
+	public Enfermedad buscarEnfermedadByCode(Connection conexion, int id_Enfermedad) {
+		
+		Enfermedad enfermedadABuscar = null;
+		
+		try {
+			Statement statement = conexion.createStatement();
+			String selectSQL = "SELECT ID_Enfermedad, ID_Tipo_Enfermedad, Nombre_Enfermedad, Vigilancia, Peligrosidad FROM Enfermedad";
+			ResultSet resultSet = statement.executeQuery(selectSQL);
+			
+			while(resultSet.next()) {
+				if(resultSet.getInt("ID_Enfermedad") == id_Enfermedad) {
+					enfermedadABuscar = new Enfermedad(resultSet.getInt("ID_Enfermedad"), resultSet.getInt("ID_Tipo_Enfermedad"), resultSet.getString("Nombre_Enfermedad"), resultSet.getBoolean("Vigilancia"), resultSet.getInt("Peligrosidad"));
+					break;
+				}
+			}
+		} catch(SQLException e) {
+			JOptionPane.showMessageDialog(null, e.toString());
 		}
 		
-		Statement statement;
-
-		try {
-			statement = conexion.createStatement();
-            String insertSql = "INSERT INTO Enfermedad VALUES ('"+idTipoEnfermedad+"','"+nombreEnfermedad+"','"+vigilancia+"','"+mortalidad+"');";
-            statement.executeUpdate(insertSql);
-            
-            return true;
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-			return false;
-		}
-
+		return enfermedadABuscar;
 	}
+
 
 	public boolean insertarEspecialidades(Connection conexion, int ID_Medico, ArrayList<Integer> selectedEsp, int tamArr) {
 		

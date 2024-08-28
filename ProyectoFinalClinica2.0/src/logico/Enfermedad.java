@@ -5,47 +5,37 @@ import java.io.Serializable;
 public class Enfermedad implements Serializable {
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = -7074745685948383811L;
-	
-	private String nombre;
-    private String tipo;
-    private String sintomas;
-    private int indPeligro;
-    private boolean vigilada;
+     
+*/
+  private static final long serialVersionUID = -7074745685948383811L;
+  private int ID_Enfermedad;
+  private int ID_Tipo_Enfermedad;
+  private String Nombre_Enfermedad;
+  private boolean vigilada;
+  private int indPeligro;
+  public Enfermedad(int iD_Enfermedad, int iD_Tipo_Enfermedad, String nombre_Enfermedad, boolean vigilada,
+                    int indPeligro) {
+      super();
+      this.ID_Enfermedad = iD_Enfermedad;
+      this.ID_Tipo_Enfermedad = iD_Tipo_Enfermedad;
+      this.Nombre_Enfermedad = nombre_Enfermedad;
+      this.vigilada = vigilada;
+      this.indPeligro = indPeligro;}
 
-    public Enfermedad(String nombre, String tipo, String sintomas, int indPeligro, boolean vigilada) {
-        super();
-        this.nombre = nombre;
-        this.tipo = tipo;
-        this.sintomas = sintomas;
-        this.indPeligro = indPeligro;
-        this.vigilada = vigilada;
+    public int getID_Tipo_Enfermedad() {
+        return ID_Tipo_Enfermedad;
     }
 
-    public String getNombre() {
-        return nombre;
+    public void setID_Tipo_Enfermedad(int iD_Tipo_Enfermedad) {
+        ID_Tipo_Enfermedad = iD_Tipo_Enfermedad;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public String getNombre_Enfermedad() {
+        return Nombre_Enfermedad;
     }
 
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
-
-    public String getSintomas() {
-        return sintomas;
-    }
-
-    public void setSintomas(String sintomas) {
-        this.sintomas = sintomas;
+    public void setNombre_Enfermedad(String nombre_Enfermedad) {
+        Nombre_Enfermedad = nombre_Enfermedad;
     }
 
     public boolean isVigilada() {
@@ -63,5 +53,14 @@ public class Enfermedad implements Serializable {
     public void setIndPeligro(int indPeligro) {
         this.indPeligro = indPeligro;
     }
+
+    public static long getSerialversionuid() {
+        return serialVersionUID;
+    }
+
+    public int getID_Enfermedad() {
+        return ID_Enfermedad;
+    }
+
 
 }

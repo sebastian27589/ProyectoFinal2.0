@@ -42,8 +42,10 @@ import java.awt.event.ActionEvent;
 import javax.swing.JRadioButton;
 import com.toedter.calendar.JDateChooser;
 
+import SQLConnection.ConnectionSQL;
 import exception.ValidarCampo;
 import logico.Clinica;
+import logico.Enfermedad;
 import logico.Paciente;
 import logico.PanelSimulacionAnim;
 import logico.Persona;
@@ -68,19 +70,15 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 	private Dimension dim;
 	private JTable tableEnfermedad;
 	private static Object[] row;
-	private Paciente selected = null;
+	private Enfermedad selected = null;
 	private ArrayList<Paciente> pacientesEspecificosAMostrar = new ArrayList<Paciente>();
-	
 	private String nombre, cedula, telefono;
 	private float peso, altura;
 	private Date fechaNacimiento;
 	private JTextField txtCodeEnfermedad;
 	private JTextField txtNombreEnfermedad;
-	// Posiblemente haya que cambiar esto a VisualPaciente
-	private Paciente paciente = null;
 	private char sexoPaciente;
 	private JComboBox cbxTipoEnfermedad;
-	public static String codePacienteRegistrado = null;
 	private JPanel panelTablaEnfermedad;
 	private JLabel lblEliminar;
 	private JLabel lblModificar;
@@ -91,19 +89,9 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 	private JLabel lblRegistroDeEnfermedad;
 	private RoundedGlowPanel roundedGlowPanelRegistrar;
 	private JCheckBox chbxVigilancia;
+	private RoundedGlowPanel roundedGlowPanelModificar;
+	private RoundedGlowPanel roundedGlowPanelEliminar;
 	
-	/**
-	 * Launch the application.
-	 */
-//	public static void main(String[] args) {
-//		try {
-//			VisualEnfermedad dialog = new VisualEnfermedad();
-//			dialog.setVisible(true);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
-
 	/**
 	 * Create the dialog.
 	 */
@@ -115,32 +103,8 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 		double widthRatio = (double) dim.width / screenWidthOriginal;
 		double heightRatio = (double) dim.height / screenHeightOriginal;
 		
-		//paciente = pacienteAModificar;
-		//pacientesEspecificosAMostrar = pacientesAMostrar;
-		
-		Object[] header = {"Código", "Cédula", "Nombre", "Sexo", "Teléfono", "Ver más"};
-		model = new DefaultTableModel() {
-			
-			public Class getColumnClass(int column) {
-				
-				if (column == 5) {
-					return Boolean.class;
-				}
-				else {
-					return String.class;
-				}
-			}
-			
-			public boolean isCellEditable(int row, int column) {       
-			       
-			       if (row >= 0 && column == 5) {
-			    	   return true;
-			       }
-			       else {
-			    	   return false;
-			       }
-			}
-		};
+		Object[] header = {"ID_Enfermedad", "ID_T_Enfermedad", "Nombre_Enfermedad", "Niv_Mortalidad"};
+		model = new DefaultTableModel() ;
 		model.setColumnIdentifiers(header);
 		
 		setBounds(100, 100, 1444, 993);
@@ -182,7 +146,7 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 		panelTablaEnfermedad.setBackground(new Color(255, 255, 255));
 		panelTablaEnfermedad.setBounds((int)(814*widthRatio),(int)(13*heightRatio), (int)(550*widthRatio),(int)(515*heightRatio));
 		add(panelTablaEnfermedad);
-		panelTablaEnfermedad.setLayout(null);
+		panelTablaEnfermedad.setLayout(new BorderLayout());
 		
 		JScrollPane scrollPane = new JScrollPane(tableEnfermedad);
 		panelTablaEnfermedad.add(scrollPane, BorderLayout.CENTER);
@@ -194,51 +158,47 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 		DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
 		cellRenderer.setHorizontalAlignment(JLabel.CENTER);
 		
-		for (int index = 0; index < tableEnfermedad.getColumnCount(); index++) {
-			
-			if (index != 5) {
-				
-				tableEnfermedad.getColumnModel().getColumn(index).setCellRenderer(cellRenderer);
-			}
-		}
-		
-		tableEnfermedad.getColumnModel().getColumn(0).setPreferredWidth(5);
-		tableEnfermedad.getColumnModel().getColumn(1).setPreferredWidth(25);
-		tableEnfermedad.getColumnModel().getColumn(2).setPreferredWidth(100);
-		tableEnfermedad.getColumnModel().getColumn(3).setPreferredWidth(5);
-		tableEnfermedad.getColumnModel().getColumn(4).setPreferredWidth(25);
-		tableEnfermedad.getColumnModel().getColumn(5).setPreferredWidth(5);
+		tableEnfermedad.getColumnModel().getColumn(0).setPreferredWidth(10);
+		tableEnfermedad.getColumnModel().getColumn(1).setPreferredWidth(10);
+		tableEnfermedad.getColumnModel().getColumn(2).setPreferredWidth(10);
+		tableEnfermedad.getColumnModel().getColumn(3).setPreferredWidth(10);
 		tableEnfermedad.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				
-				int rowIndex = tableEnfermedad.getSelectedRow(), colIndex = tableEnfermedad.getSelectedColumn();
-				
-				if (rowIndex >= 0) {
+				int ind = tableEnfermedad.rowAtPoint(e.getPoint());
+		        if (ind == -1) 
+		        { 
+		            limpiarDatos(); 
+		            tableEnfermedad.clearSelection();
+		            
+		        } else {
+					selected = Clinica.getInstance().buscarEnfermedadByCode(conexion, (int) tableEnfermedad.getValueAt(tableEnfermedad.getSelectedRow(), 0));
 					
-					selected = Clinica.getInstance().buscarPacienteByCode(tableEnfermedad.getValueAt(rowIndex, 0).toString());
-					//lblHistorial.setEnabled(true);
+					chbxVigilancia.setSelected(false);
 					
-					if (pacientesEspecificosAMostrar == null) {
-						
-						lblModificar.setEnabled(true);
-						lblEliminar.setEnabled(true);
+					txtCodeEnfermedad.setText("E-"+selected.getID_Enfermedad());
+					txtNombreEnfermedad.setText(selected.getNombre_Enfermedad());
+					spnMortalidad.setValue(selected.getIndPeligro());
+					
+					if(selected.isVigilada() == true) {
+						chbxVigilancia.setSelected(true);
+					} else {
+						chbxVigilancia.setSelected(false);
 					}
 					
-					if (colIndex == 5) {
-						
-						/* RECORDAR QUE AQUI EN VEZ DE ABRIR LA PESTAÑA DE REGISTRAR PACIENTE, DEBEMOS PONER LOS DATOS DE LA PERSONA EN 
-						 * LOS CAMPOS QUE SALEN DENTRO DEL MISMO PANEL.
-						
-						RegPaciente visualizarPaciente = new RegPaciente(selected, false, true);
-						visualizarPaciente.setModal(true);
-						visualizarPaciente.setVisible(true);
-						tablePacientes.setValueAt(Boolean.FALSE, rowIndex, colIndex); */
-					}
-
+					cbxTipoEnfermedad.setSelectedIndex(selected.getID_Tipo_Enfermedad());
 					
-				}
-				
+					roundedGlowPanelEliminar.setEnabled(true);
+					roundedGlowPanelEliminar.setBackground(Color.WHITE);
+					roundedGlowPanelModificar.setEnabled(true);
+					roundedGlowPanelModificar.setBackground(Color.WHITE);
+					roundedGlowPanelRegistrar.setEnabled(false);
+					roundedGlowPanelRegistrar.setBackground(new Color(240,240,240));
+					lblModificar.setEnabled(true);
+					lblEliminar.setEnabled(true);
+					lblRegistrar_1.setEnabled(false);
+		        }
 			}
 		});
 		tableEnfermedad.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
@@ -273,7 +233,7 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 			txtNombreEnfermedad.setColumns(10);
 			{
 				JLabel lblPNombreEnfermedad = new JLabel("Nombre:");
-				lblPNombreEnfermedad.setBounds((int)(4*widthRatio),(int)(11*heightRatio),  (int)(74*widthRatio),(int)(22*heightRatio));
+				lblPNombreEnfermedad.setBounds(4,11, 74,22);
 				roundedPanelPNombreEnfermedad.add(lblPNombreEnfermedad);
 				lblPNombreEnfermedad.setOpaque(true);
 				lblPNombreEnfermedad.setHorizontalAlignment(SwingConstants.CENTER);
@@ -303,13 +263,13 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 			
 			txtCodeEnfermedad = new JTextField();
 			txtCodeEnfermedad.setBackground(new Color(255, 255, 255));
-			txtCodeEnfermedad.setBounds((int)(92*widthRatio),(int)(14*heightRatio), (int)(62*widthRatio),(int)(22*heightRatio));
+			txtCodeEnfermedad.setBounds((int)(92*widthRatio),(int)(14*heightRatio), (int)(48*widthRatio),(int)(22*heightRatio));
 			roundedPanelCodeEnfermedad.add(txtCodeEnfermedad);
 			txtCodeEnfermedad.setBorder(null);
 			txtCodeEnfermedad.setEditable(false);
 			txtCodeEnfermedad.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
 			txtCodeEnfermedad.setColumns(10);
-			txtCodeEnfermedad.setText("E-"+Clinica.getInstance().getGeneradorCodePaciente());
+			//txtCodeEnfermedad.setText("E-"+Clinica.getInstance().getGeneradorCodeEnfermedad()+1);
 			
 			RoundedGlowPanel roundedGlowPanelCodeEnfermedad = new RoundedGlowPanel();
 			roundedGlowPanelCodeEnfermedad.setBounds((int)(77*widthRatio),(int)(79*heightRatio), (int)(170*widthRatio),(int)(61*heightRatio));
@@ -445,9 +405,9 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 			panelDatosEnfermedad.add(roundedGlowPanelTEnfermedad);
 			
 			chbxVigilancia = new JCheckBox("Vigilancia");
-            chbxVigilancia.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
-            chbxVigilancia.setBounds((int)(91*widthRatio),(int)(401*heightRatio), (int)(129*widthRatio),(int)(25*heightRatio));
-            panelDatosEnfermedad.add(chbxVigilancia);
+			chbxVigilancia.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
+			chbxVigilancia.setBounds((int)(91*widthRatio),(int)(401*heightRatio), (int)(129*widthRatio),(int)(25*heightRatio));
+			panelDatosEnfermedad.add(chbxVigilancia);
 			
 
 		}
@@ -461,7 +421,40 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 		add(gradientPanel);
 		gradientPanel.setLayout(null);
 		
-		RoundedGlowPanel roundedGlowPanelModificar = new RoundedGlowPanel();
+		roundedGlowPanelModificar = new RoundedGlowPanel();
+		roundedGlowPanelModificar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				if(roundedGlowPanelModificar.isEnabled() == true) 
+				{
+					int Option = JOptionPane.showConfirmDialog(null, "¿Está seguro de modificar los datos de la enfermedad con ID <" + selected.getID_Enfermedad() + "> y cuyo nombre es: <" + selected.getNombre_Enfermedad() + ">?", "Modificar Enfermedad", JOptionPane.OK_CANCEL_OPTION);
+					
+					if (Option == JOptionPane.OK_OPTION) 
+					{
+						
+						boolean vigilancia;
+						if(chbxVigilancia.isSelected())
+							vigilancia = true;
+						else
+							vigilancia = false;
+						
+						boolean mod = Clinica.getInstance().modificarEnfermedad(conexion, cbxTipoEnfermedad.getSelectedItem().toString(), 
+								txtNombreEnfermedad.getText(), vigilancia, new Integer(spnMortalidad.getValue().toString()), (int) tableEnfermedad.getValueAt(tableEnfermedad.getSelectedRow(), 0));
+						
+						if(mod == true) 
+						{
+							JOptionPane.showMessageDialog(null, "Modificado con éxito", "Modificar Enfermedad", JOptionPane.INFORMATION_MESSAGE);
+							loadEnfermedades(conexion);
+							limpiarDatos();
+						} else {
+							JOptionPane.showMessageDialog(null,"¡No Se Pudo Modificar la Enfermedad!", "Error", JOptionPane.ERROR_MESSAGE);
+						}
+					}
+				}
+			}
+		});
+		roundedGlowPanelModificar.setEnabled(false);
 		roundedGlowPanelModificar.setLayout(null);
 		roundedGlowPanelModificar.setRoundTopRight(60);
 		roundedGlowPanelModificar.setRoundTopLeft(60);
@@ -471,7 +464,7 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 		roundedGlowPanelModificar.setGlowAlpha(170);
 		roundedGlowPanelModificar.setForeground(Color.WHITE);
 		roundedGlowPanelModificar.setBorder(null);
-		roundedGlowPanelModificar.setBackground(Color.WHITE);
+		roundedGlowPanelModificar.setBackground(new Color(240,240,240));
 		roundedGlowPanelModificar.setBounds((int)(1105*widthRatio),(int)(599*heightRatio), (int)(132*widthRatio),(int)(49*heightRatio));
 		add(roundedGlowPanelModificar);
 		
@@ -484,7 +477,33 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 		lblModificar.setBounds(0, 0, (int)(132*widthRatio),(int)(49*heightRatio));
 		roundedGlowPanelModificar.add(lblModificar);
 		
-		RoundedGlowPanel roundedGlowPanelEliminar = new RoundedGlowPanel();
+		roundedGlowPanelEliminar = new RoundedGlowPanel();
+		roundedGlowPanelEliminar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+			{
+				
+				if(roundedGlowPanelEliminar.isEnabled() == true) 
+				{
+					int Option = JOptionPane.showConfirmDialog(null, "¿Está seguro de eliminar la enfermedad con ID <" + selected.getID_Enfermedad() + "> y cuyo nombre es: <" + selected.getNombre_Enfermedad() + ">?", "Eliminar Enfermedad", JOptionPane.OK_CANCEL_OPTION);
+					
+					if (Option == JOptionPane.OK_OPTION) 
+					{
+						boolean elim = Clinica.getInstance().eliminarEnfermedad(conexion, (int) tableEnfermedad.getValueAt(tableEnfermedad.getSelectedRow(), 0));
+						
+						if(elim == true) 
+						{
+							JOptionPane.showMessageDialog(null, "Eliminado con éxito", "Eliminar Enfermedad", JOptionPane.INFORMATION_MESSAGE);
+							loadEnfermedades(conexion);
+							limpiarDatos();
+						} else {
+							JOptionPane.showMessageDialog(null,"¡No Se Pudo Eliminar la Enfermedad!", "Error", JOptionPane.ERROR_MESSAGE);
+						}
+					}
+				}
+			}
+		});
+		roundedGlowPanelEliminar.setEnabled(false);
 		roundedGlowPanelEliminar.setLayout(null);
 		roundedGlowPanelEliminar.setRoundTopRight(60);
 		roundedGlowPanelEliminar.setRoundTopLeft(60);
@@ -494,7 +513,7 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 		roundedGlowPanelEliminar.setGlowAlpha(170);
 		roundedGlowPanelEliminar.setForeground(Color.WHITE);
 		roundedGlowPanelEliminar.setBorder(null);
-		roundedGlowPanelEliminar.setBackground(Color.WHITE);
+		roundedGlowPanelEliminar.setBackground(new Color(240,240,240));
 		roundedGlowPanelEliminar.setBounds((int)(1249*widthRatio),(int)(599*heightRatio), (int)(118*widthRatio),(int)(49*heightRatio));
 		add(roundedGlowPanelEliminar);
 		
@@ -504,7 +523,7 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 		lblEliminar.setForeground(new Color(220, 20, 60));
 		lblEliminar.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
 		lblEliminar.setBackground(Color.WHITE);
-		lblEliminar.setBounds(0, 0, (int)(132*widthRatio),(int)(49*heightRatio));
+		lblEliminar.setBounds(0, 0, (int)(118*widthRatio),(int)(49*heightRatio));
 		roundedGlowPanelEliminar.add(lblEliminar);
 		
 		roundedGlowPanelRegistrar = new RoundedGlowPanel();
@@ -512,20 +531,24 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				
-				boolean vigilancia;
-				if(chbxVigilancia.isSelected())
-					vigilancia = true;
-				else
-					vigilancia = false;
-				
-				boolean res = Clinica.getInstance().insertarEnfermedad(conexion, cbxTipoEnfermedad.getSelectedItem().toString(), 
-								txtNombreEnfermedad.getText(), vigilancia, new Integer(spnMortalidad.getValue().toString()));
-				if(res) {
-					JOptionPane.showMessageDialog(null, "Registrado con éxito", "Registrar Enfermedad", JOptionPane.INFORMATION_MESSAGE);
-					limpiarDatos();
-				}
-				else {
-					JOptionPane.showMessageDialog(null,"¡No Se Pudo Insertar la Enfermedad!", "Error", JOptionPane.ERROR_MESSAGE);
+				if(roundedGlowPanelRegistrar.isEnabled() == true) 
+				{
+					boolean vigilancia;
+					if(chbxVigilancia.isSelected())
+						vigilancia = true;
+					else
+						vigilancia = false;
+					
+					boolean res = Clinica.getInstance().insertarEnfermedad(conexion, cbxTipoEnfermedad.getSelectedItem().toString(), 
+									txtNombreEnfermedad.getText(), vigilancia, new Integer(spnMortalidad.getValue().toString()));
+					if(res) {
+						JOptionPane.showMessageDialog(null, "Registrado con éxito", "Registrar Enfermedad", JOptionPane.INFORMATION_MESSAGE);
+						loadEnfermedades(conexion);
+						limpiarDatos();
+					}
+					else {
+						JOptionPane.showMessageDialog(null,"¡No Se Pudo Insertar la Enfermedad!", "Error", JOptionPane.ERROR_MESSAGE);
+					}
 				}
 			}
 		});
@@ -551,22 +574,6 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 		lblRegistrar_1.setBackground(Color.WHITE);
 		lblRegistrar_1.setBounds(0, 0, (int)(132*widthRatio),(int)(49*heightRatio));
 		roundedGlowPanelRegistrar.add(lblRegistrar_1);
-		
-		/*RECORDAR CAMBIAR ESTO POR EL LABEL DE HISTORIAL, ADEMAS HAY QUE CREAR UN NUEVO PANEL QUE MUESTRE
-		 *EL HISTORIAL DE LA PERSONA SELECCIONADA.
-		 
-		
-		btnVerHistMed.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				VerHistorialMedico verHistorialPaciente = new VerHistorialMedico(selected.getCodePaciente());
-				verHistorialPaciente.setModal(true);
-				verHistorialPaciente.setVisible(true);
-				
-			}
-		});
-		
-		*/
 		
 		RoundedGlowPanel roundedGlowPanelBuscarEnfermedad = new RoundedGlowPanel();
 		roundedGlowPanelBuscarEnfermedad.setLayout(null);
@@ -619,6 +626,7 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 	    ActionListener cbxListener = new ActionListener() {
 	        @Override
 	        public void actionPerformed(ActionEvent e) {
+	        	validarCampos();
 	        }
 	    };
 	    
@@ -626,7 +634,35 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 	    cbxTipoEnfermedad.addActionListener(cbxListener);
 	    
 	    llenarComboBoxBD(conexion, cbxTipoEnfermedad);
+	    loadEnfermedades(conexion);
+	    limpiarDatos();
 	}
+
+	public static void loadEnfermedades(Connection conexion) {
+		
+		model.setRowCount(0);
+		row = new Object[model.getColumnCount()];
+		
+		try {
+			Statement statement = conexion.createStatement();
+            String selectSql = "SELECT ID_Enfermedad, ID_Tipo_Enfermedad, Nombre_Enfermedad, Peligrosidad FROM Enfermedad;";
+            ResultSet resultSet = statement.executeQuery(selectSql);
+
+            while (resultSet.next()) {
+            	row[0] = resultSet.getInt("ID_Enfermedad");
+            	row[1] = resultSet.getInt("ID_Tipo_Enfermedad");
+            	row[2] = resultSet.getString("Nombre_Enfermedad");
+            	row[3] = resultSet.getInt("Peligrosidad");
+            	model.addRow(row);
+            	
+				Clinica.setGeneradorCodeEnfermedad(resultSet.getInt("ID_Enfermedad"));
+            }
+
+		} catch(SQLException e) {
+			JOptionPane.showMessageDialog(null, e.toString());
+		}
+	}
+	
 
 	private void llenarComboBoxBD(Connection conexion, JComboBox cbxTipoEnfermedad) {
 		Statement statement;
@@ -645,29 +681,43 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 	}
 
 	protected void limpiarDatos() {
+	
 		chbxVigilancia.setSelected(false);
 		cbxTipoEnfermedad.setSelectedIndex(0);
 		spnMortalidad.setValue(0);
 		txtNombreEnfermedad.setText("");
 		roundedGlowPanelRegistrar.setEnabled(false);
 		roundedGlowPanelRegistrar.setBackground(new Color(240, 240, 240));
+        roundedGlowPanelEliminar.setEnabled(false);
+		roundedGlowPanelEliminar.setBackground(new Color(240,240,240));
+		roundedGlowPanelModificar.setEnabled(false);
+		roundedGlowPanelModificar.setBackground(new Color(240,240,240));
+		lblModificar.setEnabled(false);
+		lblEliminar.setEnabled(false);
 		lblRegistrar_1.setEnabled(false);
+		txtCodeEnfermedad.setText("E-" + (Clinica.getGeneradorCodeEnfermedad() + 1));
+		selected = null;
 	}
 
 	private void validarCampos() {
 		
-		if(!txtNombreEnfermedad.getText().isEmpty() && (cbxTipoEnfermedad.getSelectedIndex() != 0)) {
-												
-		   roundedGlowPanelRegistrar.setEnabled(true);
-		   roundedGlowPanelRegistrar.setBackground(Color.WHITE);
-		   lblRegistrar_1.setEnabled(true);
-		   
-		} else {
+		if(selected == null) 
+		{
 			
-		   roundedGlowPanelRegistrar.setEnabled(false);
-		   roundedGlowPanelRegistrar.setBackground(new Color(240, 240, 240));
-		   lblRegistrar_1.setEnabled(false);
-		   
+			if(!txtNombreEnfermedad.getText().isEmpty() && (cbxTipoEnfermedad.getSelectedIndex() != 0)) 
+			{
+				
+			   roundedGlowPanelRegistrar.setEnabled(true);
+			   roundedGlowPanelRegistrar.setBackground(Color.WHITE);
+			   lblRegistrar_1.setEnabled(true);
+				   
+			} else {
+					
+			   roundedGlowPanelRegistrar.setEnabled(false);
+			   roundedGlowPanelRegistrar.setBackground(new Color(240, 240, 240));
+			   lblRegistrar_1.setEnabled(false);
+				   
+			}
 		}
 		
 	}
