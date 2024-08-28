@@ -137,7 +137,6 @@ public class VisualCita extends PanelSimulacionAnim {
 		model = new DefaultTableModel();
 		model.setColumnIdentifiers(header);
 		
-		panelTablaPersona.setBounds((int)(814*widthRatio),(int)(13*heightRatio), (int)(555*widthRatio),(int)(250*heightRatio));
 		setSize(new Dimension((int)(1381*widthRatio),(int)(900*heightRatio)));
 		setBackground(new Color(248, 248, 255));
 		setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
