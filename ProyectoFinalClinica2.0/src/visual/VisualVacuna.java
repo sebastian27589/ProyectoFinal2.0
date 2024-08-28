@@ -16,6 +16,8 @@ import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
@@ -33,8 +35,13 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.awt.event.ActionEvent;
 import javax.swing.JRadioButton;
 import com.toedter.calendar.JDateChooser;
@@ -60,22 +67,21 @@ import javax.swing.JCheckBox;
 import javax.swing.border.EtchedBorder;
 
 public class VisualVacuna extends PanelSimulacionAnim {
-
+	
 	private static DefaultTableModel model;
+	private static DefaultTableModel modelEnfermedad;
 	private Dimension dim;
-	private JTable tableEnfermedad;
+	private JTable tableVacuna;
 	private static Object[] row;
-	private Paciente selected = null;
+	private Vacuna selected = null;
 	private ArrayList<Paciente> pacientesEspecificosAMostrar = new ArrayList<Paciente>();
 	
 	private final JPanel contentPanel = new JPanel();
 	private String nombre, cedula, telefono;
 	private float peso, altura;
 	private Date fechaNacimiento;
-	private JTextField txtCodeVacuna;
+	private static JTextField txtCodeVacuna;
 	private JTextField txtNombreVacuna;
-	// Posiblemente haya que cambiar esto a VisualPaciente
-	private Paciente paciente = null;
 	private char sexoPaciente;
 	public static String codePacienteRegistrado = null;
 	private JPanel panelTablaVacuna;
@@ -86,9 +92,12 @@ public class VisualVacuna extends PanelSimulacionAnim {
 	private JLabel lblRegistrarVacuna;
 	private JLabel lblRegistroDeVacuna;
 	private JCheckBox chbxVigilancia;
-	private JComboBox cbxEnfermedad;
 	private JTextField txtLaboratorio;
 	private RoundedGlowPanel roundedGlowPanelRegistrarVacuna;
+	private RoundedGlowPanel roundedGlowPanelEliminarVacuna;
+	private RoundedGlowPanel roundedGlowPanelModificarVacuna;
+	private static JTable tableEnfermedad;
+	private JTextField txtCodeEnfermedad;
 
 	/**
 	 * Create the dialog.
@@ -101,33 +110,15 @@ public class VisualVacuna extends PanelSimulacionAnim {
 		double widthRatio = (double) dim.width / screenWidthOriginal;
 		double heightRatio = (double) dim.height / screenHeightOriginal;
 		
-		//paciente = pacienteAModificar;
-		//pacientesEspecificosAMostrar = pacientesAMostrar;
 		
-		Object[] header = {"Código", "Cédula", "Nombre", "Sexo", "Teléfono", "Ver más"};
-		model = new DefaultTableModel() {
-			
-			public Class getColumnClass(int column) {
-				
-				if (column == 5) {
-					return Boolean.class;
-				}
-				else {
-					return String.class;
-				}
-			}
-			
-			public boolean isCellEditable(int row, int column) {       
-			       
-			       if (row >= 0 && column == 5) {
-			    	   return true;
-			       }
-			       else {
-			    	   return false;
-			       }
-			}
-		};
+		Object[] header = {"ID_Vacuna", "Nombre_Vacuna", "Nombre_Laboratorio"};
+		Object[] headerEnf = {"ID_Enfermedad", "Nombre_Enfermedad"};
+		
+		model = new DefaultTableModel();
 		model.setColumnIdentifiers(header);
+		modelEnfermedad = new DefaultTableModel();
+		
+		modelEnfermedad.setColumnIdentifiers(headerEnf);
 		
 		setBounds(100, 100, 1444, 993);
 		setSize(new Dimension((int)(1381*widthRatio),(int)(900*heightRatio)));
@@ -169,68 +160,57 @@ public class VisualVacuna extends PanelSimulacionAnim {
 		panelTablaVacuna.setBackground(new Color(255, 255, 255));
 		panelTablaVacuna.setBounds((int)(814*widthRatio),(int)(13*heightRatio), (int)(550*widthRatio),(int)(515*heightRatio));
 		add(panelTablaVacuna);
-		panelTablaVacuna.setLayout(null);
+		panelTablaVacuna.setLayout(new BorderLayout(0, 0));
 		
-		JScrollPane scrollPane = new JScrollPane(tableEnfermedad);
-		panelTablaVacuna.add(scrollPane, BorderLayout.CENTER);
+		JScrollPane scrollPaneVacuna = new JScrollPane(tableVacuna);
+		panelTablaVacuna.add(scrollPaneVacuna);
 		
-		tableEnfermedad = new JTable(model);
-		tableEnfermedad.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tableEnfermedad.getTableHeader().setResizingAllowed(false);
-		tableEnfermedad.getTableHeader().setReorderingAllowed(false);
+		tableVacuna = new JTable(model);
+		tableVacuna.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableVacuna.getTableHeader().setResizingAllowed(false);
+		tableVacuna.getTableHeader().setReorderingAllowed(false);
 		DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
 		cellRenderer.setHorizontalAlignment(JLabel.CENTER);
 		
-		for (int index = 0; index < tableEnfermedad.getColumnCount(); index++) {
-			
-			if (index != 5) {
-				
-				tableEnfermedad.getColumnModel().getColumn(index).setCellRenderer(cellRenderer);
-			}
-		}
-		
-		tableEnfermedad.getColumnModel().getColumn(0).setPreferredWidth(5);
-		tableEnfermedad.getColumnModel().getColumn(1).setPreferredWidth(25);
-		tableEnfermedad.getColumnModel().getColumn(2).setPreferredWidth(100);
-		tableEnfermedad.getColumnModel().getColumn(3).setPreferredWidth(5);
-		tableEnfermedad.getColumnModel().getColumn(4).setPreferredWidth(25);
-		tableEnfermedad.getColumnModel().getColumn(5).setPreferredWidth(5);
-		tableEnfermedad.addMouseListener(new MouseAdapter() {
+		tableVacuna.getColumnModel().getColumn(0).setPreferredWidth(5);
+		tableVacuna.getColumnModel().getColumn(1).setPreferredWidth(20);
+		tableVacuna.getColumnModel().getColumn(2).setPreferredWidth(40);
+		tableVacuna.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				
-				int rowIndex = tableEnfermedad.getSelectedRow(), colIndex = tableEnfermedad.getSelectedColumn();
+				loadEnfermedades(conexion);
+				tableEnfermedad.clearSelection();
 				
-				if (rowIndex >= 0) {
+				int ind = tableVacuna.rowAtPoint(e.getPoint());
+		        if (ind == -1) 
+		        { 
+		            limpiarDatos(); 
+		            tableVacuna.clearSelection();
+		            
+		        } else {
+					selected = Clinica.getInstance().buscarVacunaByCodeSQL(conexion, (int) tableVacuna.getValueAt(tableVacuna.getSelectedRow(), 0));
 					
-					selected = Clinica.getInstance().buscarPacienteByCode(tableEnfermedad.getValueAt(rowIndex, 0).toString());
-					//lblHistorial.setEnabled(true);
-					
-					if (pacientesEspecificosAMostrar == null) {
-						
-						lblModificarVacuna.setEnabled(true);
-						lblEliminarVacuna.setEnabled(true);
-					}
-					
-					if (colIndex == 5) {
-						
-						/* RECORDAR QUE AQUI EN VEZ DE ABRIR LA PESTAÑA DE REGISTRAR PACIENTE, DEBEMOS PONER LOS DATOS DE LA PERSONA EN 
-						 * LOS CAMPOS QUE SALEN DENTRO DEL MISMO PANEL.
-						
-						RegPaciente visualizarPaciente = new RegPaciente(selected, false, true);
-						visualizarPaciente.setModal(true);
-						visualizarPaciente.setVisible(true);
-						tablePacientes.setValueAt(Boolean.FALSE, rowIndex, colIndex); */
-					}
+					txtCodeVacuna.setText("V-"+ selected.getID_vacuna());
+					txtNombreVacuna.setText(selected.getNombre_vacuna());
+					txtLaboratorio.setText(selected.getNombre_laboratorio());
+					txtCodeEnfermedad.setText(new Integer(selected.getID_enfermedad()).toString());
 
-					
-				}
-				
+					roundedGlowPanelEliminarVacuna.setEnabled(true);
+					roundedGlowPanelEliminarVacuna.setBackground(Color.WHITE);
+					roundedGlowPanelModificarVacuna.setEnabled(true);
+					roundedGlowPanelModificarVacuna.setBackground(Color.WHITE);
+					roundedGlowPanelRegistrarVacuna.setEnabled(false);
+					roundedGlowPanelRegistrarVacuna.setBackground(new Color(240,240,240));
+					lblModificarVacuna.setEnabled(true);
+					lblEliminarVacuna.setEnabled(true);
+					lblRegistrarVacuna.setEnabled(false);
+		        }
 			}
 		});
-		tableEnfermedad.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
-		tableEnfermedad.setFillsViewportHeight(true);
-		scrollPane.setViewportView(tableEnfermedad);
+		tableVacuna.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
+		tableVacuna.setFillsViewportHeight(true);
+		scrollPaneVacuna.setViewportView(tableVacuna);
 		{
 			RoundedPanel panelDatosVacuna = new RoundedPanel();
 			panelDatosVacuna.setRoundTopRight(35);
@@ -269,25 +249,6 @@ public class VisualVacuna extends PanelSimulacionAnim {
 				lblNombreVacuna.setBackground(Color.WHITE);
 			}
 			
-			RoundedPanel roundedPanelEnfermedad = new RoundedPanel();
-			roundedPanelEnfermedad.setLayout(null);
-			roundedPanelEnfermedad.setRoundTopRight(18);
-			roundedPanelEnfermedad.setRoundTopLeft(18);
-			roundedPanelEnfermedad.setRoundBottomRight(18);
-			roundedPanelEnfermedad.setRoundBottomLeft(18);
-			roundedPanelEnfermedad.setBackground(Color.WHITE);
-			roundedPanelEnfermedad.setBounds((int)(93*widthRatio), (int)(330*heightRatio),  (int)(105*widthRatio),(int)(46*heightRatio));
-			panelDatosVacuna.add(roundedPanelEnfermedad);
-			
-			JLabel lblEnfermedad = new JLabel("Enfermedad");
-			lblEnfermedad.setOpaque(true);
-			lblEnfermedad.setHorizontalAlignment(SwingConstants.CENTER);
-			lblEnfermedad.setForeground(new Color(65, 105, 225));
-			lblEnfermedad.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
-			lblEnfermedad.setBackground(Color.WHITE);
-			lblEnfermedad.setBounds((int)(4*widthRatio), (int)(11*heightRatio), (int)(89*widthRatio), (int)(22*heightRatio));
-			roundedPanelEnfermedad.add(lblEnfermedad);
-			
 			RoundedPanel roundedPanelCodeVacuna = new RoundedPanel();
 			roundedPanelCodeVacuna.setLayout(null);
 			roundedPanelCodeVacuna.setRoundTopRight(18);
@@ -315,7 +276,7 @@ public class VisualVacuna extends PanelSimulacionAnim {
 			txtCodeVacuna.setEditable(false);
 			txtCodeVacuna.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
 			txtCodeVacuna.setColumns(10);
-			txtCodeVacuna.setText("V-"+Clinica.getInstance().getGeneradorCodeVacuna());
+			//txtCodeVacuna.setText("V-"+Clinica.getInstance().getGeneradorCodeVacuna());
 			
 			RoundedGlowPanel roundedGlowPanelCodeVacuna = new RoundedGlowPanel();
 			roundedGlowPanelCodeVacuna.setBounds((int)(77*widthRatio),(int)(79*heightRatio), (int)(170*widthRatio),(int)(61*heightRatio));
@@ -341,19 +302,32 @@ public class VisualVacuna extends PanelSimulacionAnim {
 			panelDatosVacuna.add(lblRegistroDeVacuna);
 			
 			RoundedPanel roundedPanelTablaEnfermedad = new RoundedPanel();
-			roundedPanelTablaEnfermedad.setLayout(null);
 			roundedPanelTablaEnfermedad.setBackground(Color.WHITE);
 			roundedPanelTablaEnfermedad.setBounds((int)(0*widthRatio),(int)(512*heightRatio), (int)(790*widthRatio),(int)(209*heightRatio));
 			panelDatosVacuna.add(roundedPanelTablaEnfermedad);
+			roundedPanelTablaEnfermedad.setLayout(new BorderLayout(0, 0));
 			
-			JLabel lblImagen = new JLabel("AQUI VA LA TABLA DE ENFERMEDADES");
-			lblImagen.setOpaque(true);
-			lblImagen.setHorizontalAlignment(SwingConstants.CENTER);
-			lblImagen.setForeground(new Color(65, 105, 225));
-			lblImagen.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
-			lblImagen.setBackground(Color.WHITE);
-			lblImagen.setBounds((int)(203*widthRatio),(int)(101*heightRatio), (int)(348*widthRatio),(int)(22*heightRatio));
-			roundedPanelTablaEnfermedad.add(lblImagen);
+			JScrollPane scrollPaneEnfermedad = new JScrollPane();
+			roundedPanelTablaEnfermedad.add(scrollPaneEnfermedad, BorderLayout.CENTER);
+			
+			tableEnfermedad = new JTable(modelEnfermedad);
+			tableEnfermedad.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					txtCodeEnfermedad.setText(tableEnfermedad.getValueAt(tableEnfermedad.getSelectedRow(), tableEnfermedad.getSelectedColumn()).toString());
+				}
+			});
+			tableEnfermedad.getTableHeader().setResizingAllowed(false);
+			tableEnfermedad.getTableHeader().setReorderingAllowed(false);
+			cellRenderer.setHorizontalAlignment(JLabel.CENTER);	
+		
+			
+			tableEnfermedad.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			tableEnfermedad.getColumnModel().getColumn(0).setPreferredWidth(5);
+			tableEnfermedad.getColumnModel().getColumn(1).setPreferredWidth(20);
+			tableEnfermedad.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*heightRatio)));
+			tableEnfermedad.setFillsViewportHeight(true);
+			scrollPaneEnfermedad.setViewportView(tableEnfermedad);
 			
 			RoundedGlowPanel roundedGlowPanelNombreVacuna = new RoundedGlowPanel();
 			roundedGlowPanelNombreVacuna.setLayout(null);
@@ -369,34 +343,12 @@ public class VisualVacuna extends PanelSimulacionAnim {
 			roundedGlowPanelNombreVacuna.setBounds((int)(77*widthRatio),(int)(161*heightRatio),  (int)(562*widthRatio),(int)(59*heightRatio));
 			panelDatosVacuna.add(roundedGlowPanelNombreVacuna);
 			
-			RoundedGlowPanel roundedGlowPanelEnfermedad = new RoundedGlowPanel();
-			roundedGlowPanelEnfermedad.setLayout(null);
-			roundedGlowPanelEnfermedad.setRoundTopRight(60);
-			roundedGlowPanelEnfermedad.setRoundTopLeft(60);
-			roundedGlowPanelEnfermedad.setRoundBottomRight(60);
-			roundedGlowPanelEnfermedad.setRoundBottomLeft(60);
-			roundedGlowPanelEnfermedad.setGlowColor(Color.CYAN);
-			roundedGlowPanelEnfermedad.setGlowAlpha(170);
-			roundedGlowPanelEnfermedad.setForeground(Color.WHITE);
-			roundedGlowPanelEnfermedad.setBorder(null);
-			roundedGlowPanelEnfermedad.setBackground(Color.WHITE);
-			roundedGlowPanelEnfermedad.setBounds((int)(77*widthRatio), (int)(323*heightRatio), (int)(140*widthRatio),(int)(59*heightRatio));
-			panelDatosVacuna.add(roundedGlowPanelEnfermedad);
-			
 			chbxVigilancia = new JCheckBox("Bajo Vigilancia");
 			chbxVigilancia.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
 			chbxVigilancia.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 			chbxVigilancia.setBackground(Color.WHITE);
 			chbxVigilancia.setBounds((int)(275*widthRatio),(int)(2662*heightRatio), (int)(163*widthRatio),(int)(22*heightRatio));
 			panelDatosVacuna.add(chbxVigilancia);
-			
-			cbxEnfermedad = new JComboBox();
-			cbxEnfermedad.setModel(new DefaultComboBoxModel(new String[] {"Elegir", "Vacuna1"}));
-			//cbxEnfermedad.setSelectedIndex(0);
-			cbxEnfermedad.setFont(new Font("Yu Gothic UI", Font.PLAIN, (int)(15*widthRatio)));
-			cbxEnfermedad.setBorder(null);
-			cbxEnfermedad.setBounds((int)(229*widthRatio), (int)(330*heightRatio), (int)(216*widthRatio), (int)(46*heightRatio));
-			panelDatosVacuna.add(cbxEnfermedad);
 			
 			RoundedGlowPanel roundedGlowPanelLaboratorio = new RoundedGlowPanel();
 			roundedGlowPanelLaboratorio.setLayout(null);
@@ -438,6 +390,37 @@ public class VisualVacuna extends PanelSimulacionAnim {
 			lblLaboratorio.setBounds((int)(4*widthRatio), (int)(11*heightRatio), (int)(84*widthRatio), (int)(22*heightRatio));
 			roundedPanelLaboratorio.add(lblLaboratorio);
 			
+			RoundedGlowPanel roundedGlowPanelIdEnfermedad = new RoundedGlowPanel();
+			roundedGlowPanelIdEnfermedad.setLayout(null);
+			roundedGlowPanelIdEnfermedad.setRoundTopRight(60);
+			roundedGlowPanelIdEnfermedad.setRoundTopLeft(60);
+			roundedGlowPanelIdEnfermedad.setRoundBottomRight(60);
+			roundedGlowPanelIdEnfermedad.setRoundBottomLeft(60);
+			roundedGlowPanelIdEnfermedad.setGlowColor(Color.CYAN);
+			roundedGlowPanelIdEnfermedad.setGlowAlpha(170);
+			roundedGlowPanelIdEnfermedad.setForeground(Color.WHITE);
+			roundedGlowPanelIdEnfermedad.setBorder(null);
+			roundedGlowPanelIdEnfermedad.setBackground(Color.WHITE);
+			roundedGlowPanelIdEnfermedad.setBounds((int)(77*widthRatio), (int)(325*heightRatio), (int)(170*widthRatio), (int)(61*heightRatio));
+			panelDatosVacuna.add(roundedGlowPanelIdEnfermedad);
+			
+			JLabel lblCodeEnfermedad = new JLabel("C\u00F3digo Enf:");
+			lblCodeEnfermedad.setOpaque(true);
+			lblCodeEnfermedad.setHorizontalAlignment(SwingConstants.CENTER);
+			lblCodeEnfermedad.setForeground(new Color(65, 105, 225));
+			lblCodeEnfermedad.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
+			lblCodeEnfermedad.setBackground(Color.WHITE);
+			lblCodeEnfermedad.setBounds((int)(20*widthRatio), (int)(18*heightRatio), (int)(89*widthRatio), (int)(22*heightRatio));
+			roundedGlowPanelIdEnfermedad.add(lblCodeEnfermedad);
+			
+			txtCodeEnfermedad = new JTextField();
+			txtCodeEnfermedad.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
+			txtCodeEnfermedad.setColumns(10);
+			txtCodeEnfermedad.setBorder(null);
+			txtCodeEnfermedad.setBackground(Color.WHITE);
+			txtCodeEnfermedad.setBounds((int)(116*widthRatio), (int)(20*heightRatio), (int)(42*widthRatio), (int)(22*heightRatio));
+			roundedGlowPanelIdEnfermedad.add(txtCodeEnfermedad);
+			
 
 		}
 		
@@ -450,7 +433,54 @@ public class VisualVacuna extends PanelSimulacionAnim {
 		add(gradientPanel);
 		gradientPanel.setLayout(null);
 		
-		RoundedGlowPanel roundedGlowPanelModificarVacuna = new RoundedGlowPanel();
+		roundedGlowPanelModificarVacuna = new RoundedGlowPanel();
+		roundedGlowPanelModificarVacuna.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				if(roundedGlowPanelModificarVacuna.isEnabled() == true) 
+				{
+					int Option = JOptionPane.showConfirmDialog(null, "¿Está seguro de modificar los datos de la enfermedad con ID <" + selected.getID_vacuna() + "> y cuyo nombre es: <" + selected.getNombre_vacuna() + ">?", "Modificar Vacuna", JOptionPane.OK_CANCEL_OPTION);
+					
+					if (Option == JOptionPane.OK_OPTION) {
+					
+						try {
+								int idEnfermedad = Integer.parseInt(txtCodeEnfermedad.getText());
+				                Set<Integer> idsEnfermedades = obtenerIDsEnfermedades();
+				                
+				                if(idsEnfermedades.contains(idEnfermedad)) 
+				                {
+									boolean mod = Clinica.getInstance().modificarVacuna(conexion, new Integer(txtCodeEnfermedad.getText()), 
+											  txtNombreVacuna.getText(), txtLaboratorio.getText(), (int) tableVacuna.getValueAt(tableVacuna.getSelectedRow(), 0));
+								
+									if(mod == true) 
+									{
+										JOptionPane.showMessageDialog(null, "Modificado con éxito", "Modificar Vacuna", JOptionPane.INFORMATION_MESSAGE);
+										loadVacunas(conexion);
+										loadEnfermedades(conexion);
+										limpiarDatos();
+										
+										roundedGlowPanelEliminarVacuna.setEnabled(false);
+										roundedGlowPanelEliminarVacuna.setBackground(new Color(240,240,240));
+										lblEliminarVacuna.setEnabled(false);
+										roundedGlowPanelModificarVacuna.setEnabled(false);
+										roundedGlowPanelModificarVacuna.setBackground(new Color(240,240,240));
+										lblModificarVacuna.setEnabled(false);
+										
+									} else {
+										JOptionPane.showMessageDialog(null,"¡No Se Pudo Modificar la Vacuna!", "Error", JOptionPane.ERROR_MESSAGE);
+									  }
+				                } else {
+				                	JOptionPane.showMessageDialog(null, "ID de enfermedad no válido. Verifique que el ID exista en la tabla.", "Error", JOptionPane.ERROR_MESSAGE);
+				                }
+							} catch (NumberFormatException ex) {
+			                JOptionPane.showMessageDialog(null, "ID de enfermedad debe ser un número entero.", "Error", JOptionPane.ERROR_MESSAGE);
+			            }
+					}
+				}
+			}
+		});
+		roundedGlowPanelModificarVacuna.setEnabled(false);
 		roundedGlowPanelModificarVacuna.setLayout(null);
 		roundedGlowPanelModificarVacuna.setRoundTopRight(60);
 		roundedGlowPanelModificarVacuna.setRoundTopLeft(60);
@@ -460,7 +490,7 @@ public class VisualVacuna extends PanelSimulacionAnim {
 		roundedGlowPanelModificarVacuna.setGlowAlpha(170);
 		roundedGlowPanelModificarVacuna.setForeground(Color.WHITE);
 		roundedGlowPanelModificarVacuna.setBorder(null);
-		roundedGlowPanelModificarVacuna.setBackground(Color.WHITE);
+		roundedGlowPanelModificarVacuna.setBackground(new Color(240,240,240));
 		roundedGlowPanelModificarVacuna.setBounds((int)(1105*widthRatio),(int)(599*heightRatio), (int)(132*widthRatio),(int)(49*heightRatio));
 		add(roundedGlowPanelModificarVacuna);
 		
@@ -472,25 +502,37 @@ public class VisualVacuna extends PanelSimulacionAnim {
 		lblModificarVacuna.setBackground(Color.WHITE);
 		lblModificarVacuna.setBounds(0, 0, (int)(132*widthRatio),(int)(49*heightRatio));
 		roundedGlowPanelModificarVacuna.add(lblModificarVacuna);
-		
-		/* RECORDAR CAMBIAR ESTO POR EL LABEL DE MODIFICAR, ADEMAS HAY QUE CAMBIAR LA ESTRUCTURA PARA QUE PONGA LOS DATOS DE LA
-		 * PERSONA EN LOS CAMPOS DEL MISMO PANEL.
-		 
-		
-		btnModificar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+
+		roundedGlowPanelEliminarVacuna = new RoundedGlowPanel();
+		roundedGlowPanelEliminarVacuna.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
 				
-				RegPaciente mod_verPaciente = new RegPaciente(selected, false, false);
-				mod_verPaciente.setModal(true);
-				mod_verPaciente.setVisible(true);
-				loadPacientes();
-				JOptionPane.showMessageDialog(null, "Modificado con éxito", "Modificar Paciente", JOptionPane.INFORMATION_MESSAGE);
+				if(roundedGlowPanelEliminarVacuna.isEnabled() == true) 
+				{
+					int Option = JOptionPane.showConfirmDialog(null, "¿Está seguro de eliminar la Vacuna con ID <" + selected.getID_vacuna() + "> y cuyo nombre es: <" + selected.getNombre_vacuna() + ">?", "Eliminar Vacuna", JOptionPane.OK_CANCEL_OPTION);
+					
+					if (Option == JOptionPane.OK_OPTION) 
+					{
+						
+						boolean elim = Clinica.getInstance().eliminarVacuna(conexion, (int) tableVacuna.getValueAt(tableVacuna.getSelectedRow(), 0));
+						
+						if(elim == true) 
+						{
+							JOptionPane.showMessageDialog(null, "Eliminado con éxito", "Eliminar Vacuna", JOptionPane.INFORMATION_MESSAGE);
+
+							loadEnfermedades(conexion);
+							loadVacunas(conexion);
+							limpiarDatos();
+							
+						} else {
+							JOptionPane.showMessageDialog(null,"¡No Se Pudo Eliminar la Vacuna!", "Error", JOptionPane.ERROR_MESSAGE);
+						}
+					}
+				}
 			}
 		});
-		
-		*/
-		
-		RoundedGlowPanel roundedGlowPanelEliminarVacuna = new RoundedGlowPanel();
+		roundedGlowPanelEliminarVacuna.setEnabled(false);
 		roundedGlowPanelEliminarVacuna.setLayout(null);
 		roundedGlowPanelEliminarVacuna.setRoundTopRight(60);
 		roundedGlowPanelEliminarVacuna.setRoundTopLeft(60);
@@ -500,7 +542,7 @@ public class VisualVacuna extends PanelSimulacionAnim {
 		roundedGlowPanelEliminarVacuna.setGlowAlpha(170);
 		roundedGlowPanelEliminarVacuna.setForeground(Color.WHITE);
 		roundedGlowPanelEliminarVacuna.setBorder(null);
-		roundedGlowPanelEliminarVacuna.setBackground(Color.WHITE);
+		roundedGlowPanelEliminarVacuna.setBackground(new Color(240,240,240));
 		roundedGlowPanelEliminarVacuna.setBounds((int)(1249*widthRatio),(int)(599*heightRatio), (int)(118*widthRatio),(int)(49*heightRatio));
 		add(roundedGlowPanelEliminarVacuna);
 		
@@ -510,32 +552,42 @@ public class VisualVacuna extends PanelSimulacionAnim {
 		lblEliminarVacuna.setForeground(new Color(220, 20, 60));
 		lblEliminarVacuna.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
 		lblEliminarVacuna.setBackground(Color.WHITE);
-		lblEliminarVacuna.setBounds(0, 0, (int)(132*widthRatio),(int)(49*heightRatio));
+		lblEliminarVacuna.setBounds(0, 0, (int)(118*widthRatio),(int)(49*heightRatio));
 		roundedGlowPanelEliminarVacuna.add(lblEliminarVacuna);
 		
-		/* RECORDAR CAMBIAR ESTO POR EL LABEL DE ELIMINAR, CREO QUE NO HAY QUE HACER CAMBIOS EN LA ESTRUCTURA PERO
-		 * VERIFICAR.
-		  
-		btnEliminar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				int Option = JOptionPane.showConfirmDialog(null, "¿Está seguro de eliminar al Paciente con código: <" + selected.getCodePaciente() + ">?", "Eliminar Paciente", JOptionPane.OK_CANCEL_OPTION);
-				
-				if (Option == JOptionPane.OK_OPTION) {
-					
-					Clinica.getInstance().eliminarPaciente(selected);
-					loadPacientes();
-					btnEliminar.setEnabled(false);
-					btnModificar.setEnabled(false);
-					btnVerHistMed.setEnabled(false);
+		roundedGlowPanelRegistrarVacuna = new RoundedGlowPanel();
+		roundedGlowPanelRegistrarVacuna.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+			{
+				if(roundedGlowPanelRegistrarVacuna.isEnabled() == true) 
+				{
+					try {
+						
+						int idEnfermedad = Integer.parseInt(txtCodeEnfermedad.getText());
+		                Set<Integer> idsEnfermedades = obtenerIDsEnfermedades();
+		                
+		                if(idsEnfermedades.contains(idEnfermedad)) 
+		                {
+							boolean res = Clinica.getInstance().insertarVacuna(conexion, new Integer(txtCodeEnfermedad.getText()), txtNombreVacuna.getText(), txtLaboratorio.getText());
+							
+							if(res) {
+								JOptionPane.showMessageDialog(null, "Registrado con éxito", "Registrar Enfermedad", JOptionPane.INFORMATION_MESSAGE);
+								loadVacunas(conexion);
+								limpiarDatos();
+							}
+							else {
+								JOptionPane.showMessageDialog(null,"¡No Se Pudo Insertar la Enfermedad!", "Error", JOptionPane.ERROR_MESSAGE);
+							}
+		                } else {
+		                	JOptionPane.showMessageDialog(null, "ID de enfermedad no válido. Verifique que el ID exista en la tabla.", "Error", JOptionPane.ERROR_MESSAGE);
+		                }
+					} catch (NumberFormatException ex) {
+		                JOptionPane.showMessageDialog(null, "ID de enfermedad debe ser un número entero.", "Error", JOptionPane.ERROR_MESSAGE);
+		            }
 				}
-				
 			}
 		});
-		
-		*/
-		
-		roundedGlowPanelRegistrarVacuna = new RoundedGlowPanel();
 		roundedGlowPanelRegistrarVacuna.setBounds((int)(961*widthRatio),(int)(599*heightRatio), (int)(132*widthRatio),(int)(49*heightRatio));
 		add(roundedGlowPanelRegistrarVacuna);
 		roundedGlowPanelRegistrarVacuna.setEnabled(false);
@@ -550,109 +602,6 @@ public class VisualVacuna extends PanelSimulacionAnim {
 		roundedGlowPanelRegistrarVacuna.setBorder(null);
 		roundedGlowPanelRegistrarVacuna.setBackground(new Color(240,240,240));
 		
-//		lblRegistrar.addMouseListener(new MouseAdapter() {
-//			@Override
-//			public void mouseClicked(MouseEvent e) {
-//				try {
-//					if (paciente == null) {
-//						
-//						if (rdbtnMasculino.isSelected()) {
-//							
-//							sexoPaciente = 'M';
-//						}
-//						else {
-//							
-//							sexoPaciente = 'F';
-//						}
-//						
-//						nombre = txtNombre.getText();
-//						cedula = txtCedula.getText();
-//						telefono = txtTelefono.getText();
-//						fechaNacimiento = dateChooserNacim.getDate();
-//						peso = Float.parseFloat(txtPeso.getText());
-//						altura = Float.parseFloat(txtAltura.getText());
-//						
-//						if (nombre.isEmpty() || cedula.isEmpty() || telefono.isEmpty()) {
-//							throw new ValidarCampo("Debe llenar los campos obligatorios.");
-//						}
-//						
-//						if (fechaNacimiento == null) {
-//							throw new ValidarCampo("No ha seleccionado una fecha de nacimiento.");
-//						}
-//						
-//						if (cbxTipoSangre.getSelectedIndex() == 0) {
-//							throw new ValidarCampo("No ha seleccionado un tipo de sangre.");
-//						}
-//						
-//						if (peso <= 0 || altura <= 0) {
-//							throw new ValidarCampo("Las entradas del peso o la altura no pueden ser negativas.");
-//						} 
-//						
-//						if (!rdbtnMasculino.isSelected() && !rdbtnFemenino.isSelected()) {
-//							throw new ValidarCampo("Debe seleccionar un sexo.");
-//						}
-//						
-//						Paciente nuevoPaciente = new Paciente(txtCedula.getText(), txtNombre.getText(), dateChooserNacim.getDate(),
-//								 sexoPaciente, txtTelefono.getText(), txtareaDireccion.getText(), txtCodePaciente.getText(),
-//								 cbxTipoSangre.getSelectedItem().toString(), new Float(txtAltura.getText()), new Float(txtPeso.getText()),
-//								 txtareaAlergias.getText(), txtareaInfoRelevante.getText());
-//						
-//						codePacienteRegistrado = nuevoPaciente.getCodePaciente();
-//						ElegirVacunaPaciente elegirVacunas = new ElegirVacunaPaciente(null);
-//						elegirVacunas.setModal(true);
-//						elegirVacunas.setVisible(true);
-//						nuevoPaciente.getMisVacunas().addAll(elegirVacunas.extraerVacunasElegidas());
-//						Clinica.getInstance().insertarPaciente(nuevoPaciente);
-//						JOptionPane.showMessageDialog(null, "Registrado con éxito", "Registrar Paciente", JOptionPane.INFORMATION_MESSAGE);
-//						
-//						if (regUnSoloPaciente) {
-//							
-//							dispose();
-//						}
-//						else {
-//							clean();
-//						}
-//						
-//					}
-//					else {
-//				
-//						if (rdbtnMasculino.isSelected()) {
-//							
-//							sexoPaciente = 'M';
-//						}
-//						else {
-//							
-//							sexoPaciente = 'F';
-//						}
-//						
-//						paciente.setTipoDeSangre(cbxTipoSangre.getSelectedItem().toString());
-//						paciente.setAltura(new Float(txtAltura.getText()));
-//						paciente.setPeso(new Float(txtPeso.getText()));
-//						paciente.setTelefono(txtTelefono.getText());
-//						paciente.setDireccion(txtareaDireccion.getText());
-//						paciente.setAlergias(txtareaAlergias.getText());
-//						
-//						ElegirVacunaPaciente elegirVacunas = new ElegirVacunaPaciente(paciente);
-//						elegirVacunas.setModal(true);
-//						elegirVacunas.setVisible(true);
-//						paciente.getMisVacunas().clear();
-//						paciente.getMisVacunas().addAll(elegirVacunas.extraerVacunasElegidas());							
-//						Clinica.getInstance().actualizarPaciente(paciente);
-//						dispose();
-//					}
-//				} catch (ValidarCampo e2) {
-//					JOptionPane.showMessageDialog(null, e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-//					e2.printStackTrace();
-//					txtNombre.grabFocus();
-//				}
-//				catch (NumberFormatException e3) {
-//					JOptionPane.showMessageDialog(null, "Ingrese datos válidos para la altura y el peso.", "Error", JOptionPane.ERROR_MESSAGE);
-//					txtPeso.grabFocus();
-//				}
-//				
-//			}
-//		});
-		
 		lblRegistrarVacuna = new JLabel("Registrar");
 		lblRegistrarVacuna.setEnabled(false);
 		lblRegistrarVacuna.setHorizontalAlignment(SwingConstants.CENTER);
@@ -661,22 +610,6 @@ public class VisualVacuna extends PanelSimulacionAnim {
 		lblRegistrarVacuna.setBackground(Color.WHITE);
 		lblRegistrarVacuna.setBounds(0, 0, (int)(132*widthRatio),(int)(49*heightRatio));
 		roundedGlowPanelRegistrarVacuna.add(lblRegistrarVacuna);
-		
-		/*RECORDAR CAMBIAR ESTO POR EL LABEL DE HISTORIAL, ADEMAS HAY QUE CREAR UN NUEVO PANEL QUE MUESTRE
-		 *EL HISTORIAL DE LA PERSONA SELECCIONADA.
-		 
-		
-		btnVerHistMed.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				VerHistorialMedico verHistorialPaciente = new VerHistorialMedico(selected.getCodePaciente());
-				verHistorialPaciente.setModal(true);
-				verHistorialPaciente.setVisible(true);
-				
-			}
-		});
-		
-		*/
 		
 		RoundedGlowPanel roundedGlowPanelBuscarVacuna = new RoundedGlowPanel();
 		roundedGlowPanelBuscarVacuna.setLayout(null);
@@ -710,9 +643,9 @@ public class VisualVacuna extends PanelSimulacionAnim {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				
-				DefaultTableModel searchModel1 = (DefaultTableModel) tableEnfermedad.getModel();
+				DefaultTableModel searchModel1 = (DefaultTableModel) tableVacuna.getModel();
 				TableRowSorter<DefaultTableModel> searchModel2 = new TableRowSorter<DefaultTableModel>(searchModel1);
-				tableEnfermedad.setRowSorter(searchModel2);
+				tableVacuna.setRowSorter(searchModel2);
 				searchModel2.setRowFilter(RowFilter.regexFilter("(?i)" + txtBuscarVacuna.getText()));
 			}
 		});
@@ -726,33 +659,108 @@ public class VisualVacuna extends PanelSimulacionAnim {
 	        }
 	    };
 	    
-	    ActionListener cbxListener = new ActionListener() {
-	        @Override
-	        public void actionPerformed(ActionEvent e) {
-	            validarCampos();
-	        }
-	    };
-	    
 	    txtNombreVacuna.addKeyListener(campoListener);
 	    txtLaboratorio.addKeyListener(campoListener);
-	    cbxEnfermedad.addActionListener(cbxListener);
+	    
+	    loadVacunas(conexion);
+	    loadEnfermedades(conexion);
+	    limpiarDatos();
+	}
+
+	protected Set<Integer> obtenerIDsEnfermedades() 
+	{
+	    Set<Integer> idsEnfermedades = new HashSet<>();
+	    for (int i = 0; i < tableEnfermedad.getRowCount(); i++) {
+	        Integer id = (Integer) tableEnfermedad.getValueAt(i, 0);
+	        idsEnfermedades.add(id);
+	    }
+	    return idsEnfermedades;
+	}
+
+	public static void loadVacunas(Connection conexion) {
+		
+		model.setRowCount(0);
+		row = new Object[model.getColumnCount()];
+		
+		try {
+			Statement statement = conexion.createStatement();
+            String selectSql = "SELECT ID_Vacuna, Nombre_Vacuna, Laboratorio FROM Vacuna;";
+            ResultSet resultSet = statement.executeQuery(selectSql);
+
+            while (resultSet.next()) {
+            	row[0] = resultSet.getInt("ID_Vacuna");
+            	row[1] = resultSet.getString("Nombre_Vacuna");
+            	row[2] = resultSet.getString("Laboratorio");
+            	model.addRow(row);
+            	
+				Clinica.setGeneradorCodeVacuna(resultSet.getInt("ID_Vacuna"));
+				txtCodeVacuna.setText("V-"+(Clinica.getGeneradorCodeVacuna()+1));
+            }
+
+		} catch(SQLException e) {
+			JOptionPane.showMessageDialog(null, e.toString());
+		}
 	}
 	
-	private void validarCampos() {
+	public static void loadEnfermedades(Connection conexion) {
 		
-		if(!txtNombreVacuna.getText().isEmpty() && !txtLaboratorio.getText().isEmpty() && (cbxEnfermedad.getSelectedIndex() != 0)) {
-												
-		   roundedGlowPanelRegistrarVacuna.setEnabled(true);
-		   roundedGlowPanelRegistrarVacuna.setBackground(Color.WHITE);
-		   lblRegistrarVacuna.setEnabled(true);
-		   
-		} else {
-			
-		   roundedGlowPanelRegistrarVacuna.setEnabled(false);
-		   roundedGlowPanelRegistrarVacuna.setBackground(new Color(240, 240, 240));
-		   lblRegistrarVacuna.setEnabled(false);
-		   
+		modelEnfermedad.setRowCount(0);
+		row = new Object[modelEnfermedad.getColumnCount()];
+		
+		try {
+			Statement statement = conexion.createStatement();
+            String selectSql = "SELECT ID_Enfermedad, Nombre_Enfermedad FROM Enfermedad;";
+            ResultSet resultSet = statement.executeQuery(selectSql);
+
+            while (resultSet.next()) {
+            	row[0] = resultSet.getInt("ID_Enfermedad");
+            	row[1] = resultSet.getString("Nombre_Enfermedad");
+            	modelEnfermedad.addRow(row);
+
+            	//Clinica.setGeneradorCodeEnfermedad(resultSet.getInt("ID_Enfermedad"));
+            }
+
+		} catch(SQLException e) {
+			JOptionPane.showMessageDialog(null, e.toString());
 		}
-		
+	}
+	
+	protected void limpiarDatos() {
+
+		txtNombreVacuna.setText("");
+		txtLaboratorio.setText("");
+		txtCodeEnfermedad.setText("");
+		roundedGlowPanelRegistrarVacuna.setEnabled(false);
+		roundedGlowPanelRegistrarVacuna.setBackground(new Color(240, 240, 240));
+        roundedGlowPanelEliminarVacuna.setEnabled(false);
+		roundedGlowPanelEliminarVacuna.setBackground(new Color(240,240,240));
+		roundedGlowPanelModificarVacuna.setEnabled(false);
+		roundedGlowPanelModificarVacuna.setBackground(new Color(240,240,240));
+		lblModificarVacuna.setEnabled(false);
+		lblEliminarVacuna.setEnabled(false);
+		lblRegistrarVacuna.setEnabled(false);
+		txtCodeVacuna.setText("V-" + (Clinica.getGeneradorCodeVacuna() + 1));
+		selected = null;
+	}
+	
+	private void validarCampos() 
+	{
+		if (selected == null) 
+		{
+			if(!txtNombreVacuna.getText().isEmpty() && !txtLaboratorio.getText().isEmpty()) 
+			{
+													
+			   roundedGlowPanelRegistrarVacuna.setEnabled(true);
+			   roundedGlowPanelRegistrarVacuna.setBackground(Color.WHITE);
+			   lblRegistrarVacuna.setEnabled(true);
+			   
+			} else {
+				
+			   roundedGlowPanelRegistrarVacuna.setEnabled(false);
+			   roundedGlowPanelRegistrarVacuna.setBackground(new Color(240, 240, 240));
+			   lblRegistrarVacuna.setEnabled(false);
+			   
+			}
+		}
 	}
 }
