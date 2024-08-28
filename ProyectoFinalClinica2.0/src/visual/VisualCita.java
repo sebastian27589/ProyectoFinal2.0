@@ -32,6 +32,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.awt.event.ActionEvent;
@@ -124,23 +125,11 @@ public class VisualCita extends PanelSimulacionAnim {
 	private JComboBox cbxHora;
 	private JDateChooser dateChooserFechaCita;
 	private RoundedGlowPanel roundedGlowPanelAgendar;
-	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			VisualCita dialog = new VisualCita();
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	/**
 	 * Create the dialog.
 	 */
-	public VisualCita() 
+	public VisualCita(Connection conexion) 
 	{
 		dim = getToolkit().getScreenSize();
 		int screenWidthOriginal = 1920;

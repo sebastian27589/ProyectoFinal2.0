@@ -32,6 +32,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.awt.event.ActionEvent;
@@ -88,23 +89,11 @@ public class VisualVacuna extends PanelSimulacionAnim {
 	private JComboBox cbxEnfermedad;
 	private JTextField txtLaboratorio;
 	private RoundedGlowPanel roundedGlowPanelRegistrarVacuna;
-	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			VisualVacuna dialog = new VisualVacuna();
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	/**
 	 * Create the dialog.
 	 */
-	public VisualVacuna() 
+	public VisualVacuna(Connection conexion) 
 	{
 		dim = getToolkit().getScreenSize();
 		int screenWidthOriginal = 1920;

@@ -173,12 +173,12 @@ public class VentanaPrincipal extends JFrame {
 		mostrarEnfermedad.setLocation((int)(492*widthRatio), (int)(10*heightRatio));
 		mostrarEnfermedad.setVisible(false);
 		
-		VisualVacuna mostrarVacuna = new VisualVacuna();
+		VisualVacuna mostrarVacuna = new VisualVacuna(conexion);
 		mostrarVacuna.setSize((int)(1381*widthRatio), (int)(900*heightRatio));
 		mostrarVacuna.setLocation((int)(492*widthRatio), (int)(10*heightRatio));
 		mostrarVacuna.setVisible(false);
 		
-		VisualCita mostrarCita = new VisualCita();
+		VisualCita mostrarCita = new VisualCita(conexion);
 		mostrarCita.setSize((int)(1381*widthRatio), (int)(900*heightRatio));
 		mostrarCita.setLocation((int)(492*widthRatio), (int)(10*heightRatio));
 		mostrarCita.setVisible(false);
