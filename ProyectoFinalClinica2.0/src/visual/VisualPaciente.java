@@ -1,10 +1,6 @@
 package visual;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
@@ -36,28 +32,19 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Date;
 import java.awt.event.ActionEvent;
 import javax.swing.JRadioButton;
 import com.toedter.calendar.JDateChooser;
 
-import exception.ValidarCampo;
 import logico.Clinica;
-import logico.Paciente;
 import logico.PanelSimulacionAnim;
 import logico.Persona;
 import logico.RoundedGlowPanel;
 import logico.RoundedPanel;
-import logico.Usuario;
-import logico.Vacuna;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.UIManager;
 import java.awt.SystemColor;
 import keeptoo.KGradientPanel;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.BevelBorder;
 import javax.swing.ImageIcon;
 import java.awt.Dimension;
 
@@ -72,12 +59,6 @@ public class VisualPaciente extends PanelSimulacionAnim {
 	private JTable tablePacientes;
 	private static Object[] row;
 	private Persona selected = null;
-	private ArrayList<Paciente> pacientesEspecificosAMostrar = new ArrayList<Paciente>();
-	
-	private final JPanel contentPanel = new JPanel();
-	private String nombre, cedula, telefono;
-	private float peso, altura;
-	private Date fechaNacimiento;
 	private JTextField txtCodePaciente;
 	private JTextField txtPNombre;
 	private JTextField txtCedula;
@@ -86,14 +67,9 @@ public class VisualPaciente extends PanelSimulacionAnim {
 	private JRadioButton rdbtnMasculino;
 	private JRadioButton rdbtnFemenino;
 	private JTextArea txtareaDireccion;
-	private Paciente paciente = null;
-	private char sexoPaciente;
 	private JComboBox cbxTipoSangre;
 	private JTextArea txtareaAlergias;
 	public static String codePacienteRegistrado = null;
-	private JButton btnSiguiente;
-	private JButton cancelButton;
-	private JPanel panelDatosPersona;
 	private JTextField txtSNombre;
 	private JTextField txtPApellido;
 	private JLabel lblPApellido;
@@ -115,13 +91,11 @@ public class VisualPaciente extends PanelSimulacionAnim {
 	private JLabel lblTelefono;
 	private JLabel lblAltura;
 	private JLabel lblFDeNac;
-	private JPanel panel_1;
 	private JLabel lblDireccion;
 	private JLabel lblAlergia;
 	private JPanel panelTablaPersona;
 	private JLabel lblEliminar;
 	private JLabel lblModificar;
-	private JLabel lblRegistrar;
 	private JLabel lblHistorial;
 	private JLabel lblBuscar;
 	private JTextField txtBuscarPaciente;
@@ -594,7 +568,7 @@ public class VisualPaciente extends PanelSimulacionAnim {
 		dateChooserNacim = new JDateChooser();
 		dateChooserNacim.setBounds((int)(521*widthRatio),(int)(211*heightRatio), (int)(118*widthRatio),(int)(46*heightRatio));
 		panelDatosPersona.add(dateChooserNacim);
-		BorderLayout borderLayout = (BorderLayout) dateChooserNacim.getLayout();
+		dateChooserNacim.getLayout();
 		dateChooserNacim.setBackground(new Color(255, 255, 255));
 		dateChooserNacim.setFont(new Font("Yu Gothic UI", Font.PLAIN, 15));
 		dateChooserNacim.setBorder(new EmptyBorder(0, 0, 0, 0));

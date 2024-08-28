@@ -45,7 +45,6 @@ import com.toedter.calendar.JDateChooser;
 import exception.ValidarCampo;
 import logico.Cita;
 import logico.Clinica;
-import logico.Paciente;
 import logico.PanelSimulacionAnim;
 import logico.Persona;
 import logico.RoundedGlowPanel;
@@ -66,6 +65,10 @@ import javax.swing.event.ChangeEvent;
 
 public class VisualConsulta extends PanelSimulacionAnim {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static DefaultTableModel modelEnfermedad;
 	private static DefaultTableModel modelAnalisis;
 	private static DefaultTableModel modelVacuna;
@@ -80,14 +83,8 @@ public class VisualConsulta extends PanelSimulacionAnim {
 	private JTable tableAnalisis;
 	private JTable tableVacuna;
 	private static Object[] row;
-	private Persona personaConsulta = null;
-	private ArrayList<Paciente> pacientesEspecificosAMostrar = new ArrayList<Paciente>();
-	
-	private final JPanel contentPanel = new JPanel();
-	private String nombre, cedula, telefono;
+	private Persona personaConsulta = null;	
 	private static JDateChooser dateChooserConsulta;
-	private float peso, altura;
-	private Date fechaNacimiento;
 	private static JTextField txtCodePaciente;
 	private static JTextField txtPNombre;
 	private static JTextField txtCedula;
@@ -96,14 +93,9 @@ public class VisualConsulta extends PanelSimulacionAnim {
 	private static JRadioButton rdbtnMasculino;
 	private static JRadioButton rdbtnFemenino;
 	private static JTextArea txtareaDireccion;
-	private Paciente paciente = null;
-	private char sexoPaciente;
 	private JComboBox cbxTipoSangre;
 	private JTextArea txtareaAlergia;
 	public static String codePacienteRegistrado = null;
-	private JButton btnSiguiente;
-	private JButton cancelButton;
-	private JPanel panelDatosPersona;
 	private static JTextField txtSNombre;
 	private static JTextField txtPApellido;
 	private JLabel lblPApellido;
@@ -114,7 +106,6 @@ public class VisualConsulta extends PanelSimulacionAnim {
 	private JLabel lblTelefono;
 	private JLabel lblAltura;
 	private JLabel lblFDeNac;
-	private JPanel panel_1;
 	private RoundedGlowPanel roundedGlowPanelCodePaciente;
 	private RoundedGlowPanel roundedGlowPanelPApellido;
 	private RoundedGlowPanel roundedGlowPanelSApellido;

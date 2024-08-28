@@ -1,12 +1,8 @@
 package visual;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -20,12 +16,8 @@ import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
-
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -36,35 +28,27 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.Date;
 import java.awt.event.ActionEvent;
-import javax.swing.JRadioButton;
-import com.toedter.calendar.JDateChooser;
-
-import exception.ValidarCampo;
 import logico.Clinica;
 import logico.Medico;
-import logico.Paciente;
 import logico.PanelSimulacionAnim;
 import logico.Persona;
 import logico.RoundedGlowPanel;
 import logico.RoundedPanel;
 import logico.Usuario;
-import logico.Vacuna;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.UIManager;
-import java.awt.SystemColor;
 import keeptoo.KGradientPanel;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.BevelBorder;
-import javax.swing.ImageIcon;
 import java.awt.Dimension;
 import java.awt.Component;
 
 public class VisualUsuario extends PanelSimulacionAnim {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static DefaultTableModel modelPersona;
 	private static DefaultTableModel modelMedico;
 	private static DefaultTableModel modelUsuario;
@@ -74,18 +58,9 @@ public class VisualUsuario extends PanelSimulacionAnim {
 	private Persona selectedPersona;
 	private Medico selectedMedico;
 	private Usuario selectedUsuario;
-	private ArrayList<Paciente> pacientesEspecificosAMostrar = new ArrayList<Paciente>();
 	
-	private final JPanel contentPanel = new JPanel();
-	private String nombre, cedula, telefono;
-	private float peso, altura;
-	private Date fechaNacimiento;
 	private JTextField txtCodeUsuario;
-	private char sexoPaciente;
 	public static String codePacienteRegistrado = null;
-	private JButton btnSiguiente;
-	private JButton cancelButton;
-	private JPanel panelDatosPersona;
 	private JTextField txtUsuario;
 	private JTextField txtPassword;
 	private JLabel lblPassword;
@@ -97,7 +72,6 @@ public class VisualUsuario extends PanelSimulacionAnim {
 	private RoundedGlowPanel roundedGlowPanelEliminar;
 	private JLabel lblEliminar;
 	private JLabel lblModificar;
-	private JLabel lblRegistrar;
 	private RoundedGlowPanel roundedGlowPanelRegistrar;
 	private JLabel lblRegistrar1;
 	private RoundedGlowPanel roundedGlowPanelBuscarPaciente;

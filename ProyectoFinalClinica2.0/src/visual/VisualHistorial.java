@@ -39,7 +39,6 @@ import com.toedter.calendar.JDateChooser;
 
 import exception.ValidarCampo;
 import logico.Clinica;
-import logico.Paciente;
 import logico.PanelSimulacionAnim;
 import logico.Persona;
 import logico.RoundedGlowPanel;
@@ -60,24 +59,15 @@ import java.awt.Component;
 
 public class VisualHistorial extends PanelSimulacionAnim {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static DefaultTableModel model;
 	private Dimension dim;
 	private JTable tableEnfermedad;
-	private static Object[] row;
-	private Paciente selected = null;
-	private ArrayList<Paciente> pacientesEspecificosAMostrar = new ArrayList<Paciente>();
-	
 	private final JPanel contentPanel = new JPanel();
-	private String nombre, cedula, telefono;
-	private float peso, altura;
-	private Date fechaNacimiento;
-	// Posiblemente haya que cambiar esto a VisualPaciente
-	private Paciente paciente = null;
-	private char sexoPaciente;
 	public static String codePacienteRegistrado = null;
-	private JButton btnSiguiente;
-	private JButton cancelButton;
-	private JPanel panelDatosPersona;
 	private JPanel panel_1;
 	private JLabel lblRegistrar;
 	private JLabel lbVacuna;
@@ -179,17 +169,7 @@ public class VisualHistorial extends PanelSimulacionAnim {
 				
 				int rowIndex = tableEnfermedad.getSelectedRow(), colIndex = tableEnfermedad.getSelectedColumn();
 				
-				if (rowIndex >= 0) {
-					
-					selected = Clinica.getInstance().buscarPacienteByCode(tableEnfermedad.getValueAt(rowIndex, 0).toString());
-					//lblHistorial.setEnabled(true);
-					
-					if (pacientesEspecificosAMostrar == null) {
-						
-						//lblModificarVacuna.setEnabled(true);
-						//lblEliminarVacuna.setEnabled(true);
-					}
-					
+				if (rowIndex >= 0) {					
 					if (colIndex == 5) {
 						
 						/* RECORDAR QUE AQUI EN VEZ DE ABRIR LA PESTAÑA DE REGISTRAR PACIENTE, DEBEMOS PONER LOS DATOS DE LA PERSONA EN 
@@ -211,7 +191,7 @@ public class VisualHistorial extends PanelSimulacionAnim {
 		scrollPane.setViewportView(tableEnfermedad);
 		{
 			
-			RoundedGlowPanel panel11 = new RoundedGlowPanel();
+			new RoundedGlowPanel();
 			panel_1.setBounds(108, 462, 145, 59);
 			
 

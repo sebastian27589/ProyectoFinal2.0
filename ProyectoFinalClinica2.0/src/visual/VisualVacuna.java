@@ -1,12 +1,7 @@
 package visual;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -16,19 +11,12 @@ import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
-
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -38,29 +26,15 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.awt.event.ActionEvent;
-import javax.swing.JRadioButton;
-import com.toedter.calendar.JDateChooser;
-
-import exception.ValidarCampo;
 import logico.Clinica;
-import logico.Paciente;
 import logico.PanelSimulacionAnim;
-import logico.Persona;
 import logico.RoundedGlowPanel;
 import logico.RoundedPanel;
 import logico.Vacuna;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.UIManager;
 import java.awt.SystemColor;
 import keeptoo.KGradientPanel;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.BevelBorder;
 import javax.swing.ImageIcon;
 import java.awt.Dimension;
 import javax.swing.JCheckBox;
@@ -68,26 +42,23 @@ import javax.swing.border.EtchedBorder;
 
 public class VisualVacuna extends PanelSimulacionAnim {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static DefaultTableModel model;
 	private static DefaultTableModel modelEnfermedad;
 	private Dimension dim;
 	private JTable tableVacuna;
 	private static Object[] row;
 	private Vacuna selected = null;
-	private ArrayList<Paciente> pacientesEspecificosAMostrar = new ArrayList<Paciente>();
 	
-	private final JPanel contentPanel = new JPanel();
-	private String nombre, cedula, telefono;
-	private float peso, altura;
-	private Date fechaNacimiento;
 	private static JTextField txtCodeVacuna;
 	private JTextField txtNombreVacuna;
-	private char sexoPaciente;
 	public static String codePacienteRegistrado = null;
 	private JPanel panelTablaVacuna;
 	private JLabel lblEliminarVacuna;
 	private JLabel lblModificarVacuna;
-	private JLabel lblRegistrar;
 	private JTextField txtBuscarVacuna;
 	private JLabel lblRegistrarVacuna;
 	private JLabel lblRegistroDeVacuna;

@@ -30,11 +30,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Date;
 import java.awt.event.ActionEvent;
 import logico.Clinica;
 import logico.Enfermedad;
-import logico.Paciente;
 import logico.PanelSimulacionAnim;
 import logico.RoundedGlowPanel;
 import logico.RoundedPanel;
@@ -54,26 +52,18 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 	private static final long serialVersionUID = 1L;
 	private static ArrayList<Integer> selectedSin = new ArrayList<Integer>();
 	private static int indexSin = 0;
-	private int lugar = 0;
-	
 	private static DefaultTableModel model;
 	private static DefaultTableModel modelSin;
 	private Dimension dim;
 	private JTable tableEnfermedad;
 	private static Object[] row;
 	private Enfermedad selected = null;
-	private ArrayList<Paciente> pacientesEspecificosAMostrar = new ArrayList<Paciente>();
-	private String nombre, cedula, telefono;
-	private float peso, altura;
-	private Date fechaNacimiento;
 	private static JTextField txtCodeEnfermedad;
 	private JTextField txtNombreEnfermedad;
-	private char sexoPaciente;
 	private JComboBox cbxTipoEnfermedad;
 	private JPanel panelTablaEnfermedad;
 	private JLabel lblEliminar;
 	private JLabel lblModificar;
-	private JLabel lblRegistrar;
 	private JTextField txtBuscarEnfermedad;
 	private JLabel lblRegistrar_1;
 	private JSpinner spnMortalidad;
@@ -188,9 +178,6 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 				loadSintomas(conexion);
 				selectedSin.clear();
 				indexSin = 0;
-				lugar = 0;
-				//tableSintoma.clearSelection();
-				
 				int ind = tableEnfermedad.rowAtPoint(e.getPoint());
 		        if (ind == -1) 
 		        { 
