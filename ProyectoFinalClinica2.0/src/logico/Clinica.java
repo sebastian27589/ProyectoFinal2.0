@@ -30,6 +30,7 @@ public class Clinica implements Serializable{
 	private ArrayList<ConsultaMedica> misConsultasMedicas;
 	private ArrayList<HistorialMedico> misHistorialesMedicos;
 	private ArrayList<Usuario> misUsuarios;
+	private int idUsuarioLogueado;
 	public static int generadorCodePaciente = 1;
 	public static int generadorCodeMedico = 1;
 	public static int generadorCodeConsMed = 1;
@@ -80,6 +81,14 @@ public class Clinica implements Serializable{
 	
 	public static void setClinica(Clinica clinica) {
 		Clinica.clinica = clinica;
+	}
+	
+	public static Clinica getClinica() {
+		return clinica;
+	}
+	
+	public static void setClinica(int idUsuarioLogueado) {
+		this.idUsuarioLogueado = idUsuarioLogueado;
 	}
 
 	public static Clinica getInstance() {
@@ -153,6 +162,14 @@ public class Clinica implements Serializable{
 
 	public void setMisUsuarios(ArrayList<Usuario> misUsuarios) {
 		this.misUsuarios = misUsuarios;
+	}
+	
+	public int getIdUsuarioLogueado() {
+		return idUsuarioLogueado;
+	}
+
+	public void setIdUsuarioLogueado(int idUsuarioLogueado) {
+		this.idUsuarioLogueado = idUsuarioLogueado;
 	}
 
 	public static int getGeneradorCodePaciente() {
@@ -273,14 +290,6 @@ public class Clinica implements Serializable{
 		misUsuarios.add(usuario);
 		// Sysout de verificación [[Borrar más tarde]]
 		System.out.println(misPersonas.size()+" usuarios");
-	}
-	
-	public void insertarCita(Cita cita) {
-		
-		misCitas.add(cita);
-		generadorNumCita++;
-		// Sysout de verificación [[Borrar más tarde]]
-		System.out.println(misPersonas.size()+" citas");
 	}
 	
 	public void actualizarPaciente(Paciente paciente) {
@@ -739,13 +748,14 @@ public class Clinica implements Serializable{
 		boolean encontrado = false;
 		try {
 			Statement statement = conexion.createStatement();
-            String selectSql = "SELECT Cargo, Nombre_Usuario, Pass FROM Administrativo;";
+            String selectSql = "SELECT ID_Administrativo, Cargo, Nombre_Usuario, Pass FROM Administrativo;";
             ResultSet resultSet = statement.executeQuery(selectSql);
 
             while (resultSet.next() && encontrado == false) {
             	String cargo = resultSet.getString("Cargo");
                 String usuario = resultSet.getString("Nombre_Usuario");
                 String contra = resultSet.getString("Pass");
+                Clinica.getInstance().setIdUsuarioLogueado(resultSet.getInt("ID_Administrativo"));
                 if(usuario.equals(nombreUsuario) && contra.equals(contrasena)) {
     				usuarioLogueado = new Usuario("", "", "", "", "", "", "", 'x', null, cargo, usuario, "");
     				permitir = true;
@@ -786,6 +796,23 @@ public class Clinica implements Serializable{
 		try {
 			statement = conexion.createStatement();
             String insertSql = "INSERT INTO Medico (Doc_Identidad, Nombre_Usuario, Pass) VALUES ('"+cedula+"', "+nombreUsuario+", "+pass+");";
+            statement.executeUpdate(insertSql);
+            return true;
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean insertarCita(Connection conexion, Integer ID_Cita, String cedula, int ID_Administrativo, int ID_Medico, Date fechaCita, String hora) {
+
+		Statement statement;
+		SimpleDateFormat formateador = new SimpleDateFormat("yyyy-MM-dd");  
+		String strDate = formateador.format(fechaCita);  
+		
+		try {
+			statement = conexion.createStatement();
+            String insertSql = "INSERT INTO Cita (Doc_Identidad, ID_Administrativo, ID_Medico, Fecha_Cita, Hora_Cita, Pendiente) VALUES ('"+cedula+"', "+ID_Administrativo+", "+ID_Medico+", '"+strDate+"', '"+hora+"', 1);";
             statement.executeUpdate(insertSql);
             return true;
 		} catch (SQLException e1) {
@@ -843,6 +870,56 @@ public class Clinica implements Serializable{
 		
 		return MedicoABuscar;
 	}
+	
+	public Medico buscarMedicoByID(Connection conexion, int codigo) {
+		
+		Medico MedicoABuscar = null;
+		boolean encontrado = false;
+		
+		try {
+			Statement statement = conexion.createStatement();
+            String selectSql = "SELECT Persona.Doc_Identidad, Medico.ID_Medico, Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Telefono, Direccion, Sexo, Fecha_Nacimiento FROM Persona INNER JOIN Medico ON Persona.Doc_Identidad = Medico.Doc_Identidad;";
+            ResultSet resultSet = statement.executeQuery(selectSql);
+
+            while (resultSet.next() && encontrado == false) {
+            	
+                if(resultSet.getInt("ID_Medico") == codigo) {
+                	MedicoABuscar = new Medico(resultSet.getString("Doc_Identidad"), resultSet.getString("Primer_Nombre"), resultSet.getString("Segundo_Nombre"), resultSet.getString("Primer_Apellido"), resultSet.getString("Segundo_Apellido"), resultSet.getString("Telefono"), resultSet.getString("Direccion"), resultSet.getString("Sexo").charAt(0), resultSet.getDate("Fecha_Nacimiento"), resultSet.getInt("ID_Medico"), null, null);
+    				encontrado = true;
+                }
+            }
+
+		} catch(SQLException e) {
+			JOptionPane.showMessageDialog(null, e.toString());
+		}
+		
+		return MedicoABuscar;
+	}
+	
+	public Cita buscarCitaByCode(Connection conexion, Integer codigo) {
+		
+		Cita CitaABuscar = null;
+		boolean encontrado = false;
+		
+		try {
+			Statement statement = conexion.createStatement();
+            String selectSql = "SELECT ID_Cita, Doc_Identidad, ID_Administrativo, ID_Medico, Fecha_Cita, Hora_Cita, Pendiente FROM Cita WHERE ID_Cita = "+codigo+";";
+            ResultSet resultSet = statement.executeQuery(selectSql);
+
+            while (resultSet.next() && encontrado == false) {
+            	
+                if(resultSet.getInt("ID_Cita") == codigo) {
+                	CitaABuscar = new Cita(resultSet.getInt("ID_Cita"), resultSet.getString("Doc_Identidad"), resultSet.getInt("ID_Administrativo"), resultSet.getInt("ID_Medico"), resultSet.getDate("Fecha_Cita"), resultSet.getTime("Hora_Cita"), resultSet.getBoolean("Pendiente"));
+    				encontrado = true;
+                }
+            }
+
+		} catch(SQLException e) {
+			JOptionPane.showMessageDialog(null, e.toString());
+		}
+		
+		return CitaABuscar;
+	}
 
 	public boolean eliminarPersona(Connection conexion, String codigo) {
 		
@@ -875,6 +952,19 @@ public class Clinica implements Serializable{
 		}
 		
 	}
+	
+	public boolean eliminarCita(Connection conexion, int codigoCita) {
+		
+		try {
+			Statement statement = conexion.createStatement();
+			String deleteSQL = "DELETE FROM Cita WHERE ID_Cita = '" + codigoCita + "';";	
+			statement.executeUpdate(deleteSQL);
+			return true;
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			return false;
+		}
+	}
 
 	public boolean modificarPersona(Connection conexion, String cedula, String primerNombre, String segundoNombre, String primerApellido,
 									String segundoApellido, String telefono, String direccion, char sexo, Date fechaDeNacimiento) 
@@ -887,6 +977,31 @@ public class Clinica implements Serializable{
 		try {
 			statement = conexion.createStatement();
 			String updateSql = "UPDATE Persona SET Primer_Nombre = '"+primerNombre+"', Segundo_Nombre = '"+segundoNombre+"', Primer_Apellido = '"+primerApellido+"', Segundo_Apellido = '"+segundoApellido+"', Telefono = '"+telefono+"', Direccion = '"+direccion+"', Sexo = '"+sexo+"', Fecha_Nacimiento = '"+strDate+"' WHERE Doc_Identidad = '"+cedula+"';";
+            statement.executeUpdate(updateSql);
+            return true;
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean modificarCita(Connection conexion, int id_Cita, String cedula, int idUsuarioLogueado2, int id_Medico, Date fechaCita, String horaCita) {
+		
+		Statement statement;
+		SimpleDateFormat formateador = new SimpleDateFormat("yyyy-MM-dd");  
+		String strDate= formateador.format(fechaCita);  
+		Date fechaActual = new Date();
+		byte pendiente;
+		
+		if(fechaActual.getTime() < fechaCita.getTime()) {
+			pendiente = 1;
+		} else {
+			pendiente = 0;
+		}
+		
+		try {
+			statement = conexion.createStatement();
+			String updateSql = "UPDATE Cita SET Doc_Identidad = '"+cedula+"', ID_Administrativo = "+idUsuarioLogueado2+", ID_Medico = "+id_Medico+", Fecha_Cita = '"+strDate+"', Hora_Cita = '"+horaCita+"', Pendiente = "+pendiente+" WHERE ID_Cita = "+id_Cita+";";
             statement.executeUpdate(updateSql);
             return true;
 		} catch (SQLException e1) {

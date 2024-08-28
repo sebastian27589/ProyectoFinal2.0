@@ -1,6 +1,7 @@
 package logico;
 
 import java.io.Serializable;
+import java.sql.Time;
 import java.util.Date;
 
 public class Cita implements Serializable {
@@ -10,73 +11,83 @@ public class Cita implements Serializable {
 	 */
 	private static final long serialVersionUID = 9179413854043792750L;
 	
-	private String numCita;
-    private Persona cliente;
-    private String codeMedico;
-    private Date fechaDeCita;
-    private String horaCita;
+	private int ID_Cita;
+    private String cedula;
+    private int ID_Administrativo;
+    private int ID_Medico;
+    private Date fechaCita;
+    private Time horaCita;
     private boolean pendiente;
     
-	public Cita(String numCita, Persona cliente, String codeMedico, Date fechaDeCita, String horaCita) {
+	public Cita(int iD_Cita, String cedula, int iD_Administrativo, int iD_Medico, Date fechaCita, Time horaCita,
+			boolean pendiente) {
 		super();
-		this.numCita = numCita;
-		this.cliente = cliente;
-		this.codeMedico = codeMedico;
-		this.fechaDeCita = fechaDeCita;
+		ID_Cita = iD_Cita;
+		this.cedula = cedula;
+		ID_Administrativo = iD_Administrativo;
+		ID_Medico = iD_Medico;
+		this.fechaCita = fechaCita;
 		this.horaCita = horaCita;
-		this.pendiente = true;
+		this.pendiente = pendiente;
 	}
-	
-	public String getNumCita() {
-		return numCita;
+
+	public int getID_Cita() {
+		return ID_Cita;
 	}
-	
-	public void setNumCita(String numCita) {
-		this.numCita = numCita;
+
+	public void setID_Cita(int iD_Cita) {
+		ID_Cita = iD_Cita;
 	}
-	
-	public Persona getCliente() {
-		return cliente;
+
+	public String getCedula() {
+		return cedula;
 	}
-	
-	public void setCliente(Persona cliente) {
-		this.cliente = cliente;
+
+	public void setCedula(String cedula) {
+		this.cedula = cedula;
 	}
-	
-	public String getCodeMedico() {
-		return codeMedico;
+
+	public int getID_Administrativo() {
+		return ID_Administrativo;
 	}
-	
-	public void setCodeMedico(String codeMedico) {
-		this.codeMedico = codeMedico;
+
+	public void setID_Administrativo(int iD_Administrativo) {
+		ID_Administrativo = iD_Administrativo;
 	}
-	
-	public Date getFechaDeCita() {
-		return fechaDeCita;
+
+	public int getID_Medico() {
+		return ID_Medico;
 	}
-	
-	public void setFechaDeCita(Date fechaDeCita) {
-		this.fechaDeCita = fechaDeCita;
+
+	public void setID_Medico(int iD_Medico) {
+		ID_Medico = iD_Medico;
 	}
-	
-	public String getHoraCita() {
+
+	public Date getFechaCita() {
+		return fechaCita;
+	}
+
+	public void setFechaCita(Date fechaCita) {
+		this.fechaCita = fechaCita;
+	}
+
+	public Time getHoraCita() {
 		return horaCita;
 	}
-	
-	public void setHoraCita(String horaCita) {
+
+	public void setHoraCita(Time horaCita) {
 		this.horaCita = horaCita;
 	}
-	
+
 	public boolean isPendiente() {
 		return pendiente;
 	}
-	
+
 	public void setPendiente(boolean pendiente) {
 		this.pendiente = pendiente;
 	}
 	
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
+	
+    
   
 }

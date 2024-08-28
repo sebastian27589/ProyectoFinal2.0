@@ -402,7 +402,7 @@ public class VisualMedico extends PanelSimulacionAnim {
 			txtCodeMedicos.setEditable(false);
 			txtCodeMedicos.setFont(new Font("Yu Gothic UI", Font.BOLD, (int)(15*widthRatio)));
 			txtCodeMedicos.setColumns(10);
-			txtCodeMedicos.setText("M-"+(Clinica.getInstance().getGeneradorCodeMedico()+1));
+			txtCodeMedicos.setText("M-"+(Clinica.getGeneradorCodeMedico()+1));
 			
 			RoundedGlowPanel roundedGlowPanelCodePaciente = new RoundedGlowPanel();
 			roundedGlowPanelCodePaciente.setBounds((int)(184*widthRatio),(int)(79*heightRatio), (int)(170*widthRatio),(int)(61*heightRatio));
