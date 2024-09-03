@@ -98,11 +98,38 @@ public class VisualUsuario extends PanelSimulacionAnim {
 		Object[] headerPersona = {"Doc_Identidad", "P_Nombre", "S_Nombre", "P_Apellido", "S_Apellido"};
 		Object[] headerUsuario = {"ID_Adm", "Cargo", "Nombre_Usuario", "Pass"};
 		
-		modelPersona = new DefaultTableModel();
+		modelPersona = new DefaultTableModel() {
+		    /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			public boolean isCellEditable(int row, int column) {
+		        return false;
+		    }
+		};
 		modelPersona.setColumnIdentifiers(headerPersona);
-		modelMedico = new DefaultTableModel();
+		modelMedico = new DefaultTableModel() {
+		    /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			public boolean isCellEditable(int row, int column) {
+		        return false;
+		    }
+		};
 		modelMedico.setColumnIdentifiers(headerPersona);
-		modelUsuario = new DefaultTableModel();
+		modelUsuario = new DefaultTableModel() {
+		    /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			public boolean isCellEditable(int row, int column) {
+		        return false;
+		    }
+		};
 		modelUsuario.setColumnIdentifiers(headerUsuario);
 		
 		setBounds(100, 100, 1444, 993);

@@ -85,9 +85,27 @@ public class VisualVacuna extends PanelSimulacionAnim {
 		Object[] header = {"ID_Vacuna", "Nombre_Vacuna", "Nombre_Laboratorio"};
 		Object[] headerEnf = {"ID_Enfermedad", "Nombre_Enfermedad"};
 		
-		model = new DefaultTableModel();
+		model = new DefaultTableModel() {
+		    /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			public boolean isCellEditable(int row, int column) {
+		        return false;
+		    }
+		};
 		model.setColumnIdentifiers(header);
-		modelEnfermedad = new DefaultTableModel();
+		modelEnfermedad = new DefaultTableModel() {
+		    /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			public boolean isCellEditable(int row, int column) {
+		        return false;
+		    }
+		};
 		
 		modelEnfermedad.setColumnIdentifiers(headerEnf);
 		

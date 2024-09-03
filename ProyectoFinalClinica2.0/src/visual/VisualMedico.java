@@ -45,8 +45,6 @@ import logico.Persona;
 import logico.RoundedGlowPanel;
 import logico.RoundedPanel;
 import java.awt.Component;
-import java.awt.FlowLayout;
-import javax.swing.table.TableModel;
 
 public class VisualMedico extends PanelSimulacionAnim {
 	
@@ -100,9 +98,27 @@ public class VisualMedico extends PanelSimulacionAnim {
 		
 		Object[] header = {"Doc_Identidad", "P_Nombre", "S_Nombre", "P_Apellido", "S_Apellido"};
 		Object[] headerEspecialidad = {"Código", "Nombre_Especialidad", "Elegir"};
-		model = new DefaultTableModel();
+		model = new DefaultTableModel() {
+		    /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			public boolean isCellEditable(int row, int column) {
+		        return false;
+		    }
+		};
 		model.setColumnIdentifiers(header);
-		modelMedico = new DefaultTableModel();
+		modelMedico = new DefaultTableModel() {
+		    /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			public boolean isCellEditable(int row, int column) {
+		        return false;
+		    }
+		};
 		modelMedico.setColumnIdentifiers(header);
 		modelEspecialidad = new DefaultTableModel() {
 			
@@ -111,7 +127,7 @@ public class VisualMedico extends PanelSimulacionAnim {
 			 */
 			private static final long serialVersionUID = 1L;
 
-			public Class getColumnClass(int column) {
+			public Class<?> getColumnClass(int column) {
 				
 				if (column == 2) {
 					return Boolean.class;
@@ -501,7 +517,6 @@ public class VisualMedico extends PanelSimulacionAnim {
 			dateChooserNacim = new JDateChooser();
 			dateChooserNacim.setBounds((int)(521*widthRatio),(int)(211*heightRatio), (int)(118*widthRatio),(int)(46*heightRatio));
 			panelDatosPersona.add(dateChooserNacim);
-			BorderLayout borderLayout = (BorderLayout) dateChooserNacim.getLayout();
 			dateChooserNacim.setBackground(new Color(255, 255, 255));
 			dateChooserNacim.setFont(new Font("Yu Gothic UI", Font.PLAIN, 15));
 			dateChooserNacim.setBorder(new EmptyBorder(0, 0, 0, 0));

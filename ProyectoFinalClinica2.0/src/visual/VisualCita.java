@@ -126,11 +126,23 @@ public class VisualCita extends PanelSimulacionAnim {
 		Object[] header = {"Doc_Identidad", "P_Nombre", "S_Nombre", "P_Apellido", "S_Apellido"};
 		Object[] headerCita = {"ID_Cita", "CedulaPaciente", "NombrePaciente", "NombreMedico", "Fecha_Cita"};
 		
-		model = new DefaultTableModel();
+		model = new DefaultTableModel() {
+		    public boolean isCellEditable(int row, int column) {
+		        return false;
+		    }
+		};
 		model.setColumnIdentifiers(header);
-		modelMedico = new DefaultTableModel();
+		modelMedico = new DefaultTableModel() {
+		    public boolean isCellEditable(int row, int column) {
+		        return false;
+		    }
+		};
 		modelMedico.setColumnIdentifiers(header);
-		modelCita = new DefaultTableModel();
+		modelCita = new DefaultTableModel() {
+		    public boolean isCellEditable(int row, int column) {
+		        return false;
+		    }
+		};
 		modelCita.setColumnIdentifiers(headerCita);
 		
 		setSize(new Dimension((int)(1381*widthRatio),(int)(900*heightRatio)));

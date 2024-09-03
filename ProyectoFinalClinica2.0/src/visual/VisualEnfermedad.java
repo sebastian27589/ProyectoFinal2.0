@@ -87,13 +87,22 @@ public class VisualEnfermedad extends PanelSimulacionAnim {
 		
 		Object[] header = {"ID_Enfermedad", "ID_T_Enfermedad", "Nombre_Enfermedad", "Niv_Mortalidad"};
 		Object[] headerSin = {"ID_Síntoma", "Nombre_Síntoma", "Elegir"};
-		model = new DefaultTableModel();
+		model = new DefaultTableModel() {
+		    /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			public boolean isCellEditable(int row, int column) {
+		        return false;
+		    }
+		};
 		model.setColumnIdentifiers(header);
 		modelSin = new DefaultTableModel() {
 			
 			private static final long serialVersionUID = 1L;
 
-			public Class getColumnClass(int column) {
+			public Class<?> getColumnClass(int column) {
 				
 				if (column == 2) {
 					return Boolean.class;

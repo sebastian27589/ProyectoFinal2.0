@@ -122,7 +122,16 @@ public class VisualPaciente extends PanelSimulacionAnim {
 		//pacientesEspecificosAMostrar = pacientesAMostrar;
 		
 		Object[] header = {"Doc_Identidad", "P_Nombre", "S_Nombre", "P_Apellido", "S_Apellido"};
-		model = new DefaultTableModel();
+		model = new DefaultTableModel() {
+		    /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			public boolean isCellEditable(int row, int column) {
+		        return false;
+		    }
+		};
 		model.setColumnIdentifiers(header);
 		
 		setBounds(100, 100, 1444, 993);
