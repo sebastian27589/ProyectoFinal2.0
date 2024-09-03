@@ -956,6 +956,15 @@ public class VisualMedico extends PanelSimulacionAnim {
 		add(roundedGlowCitasPendientes);
 		
 		lblCitas = new JLabel("Citas");
+		lblCitas.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				if(roundedGlowCitasPendientes.isEnabled()) {
+					//Citas
+				}
+			}
+		});
 		lblCitas.setEnabled(false);
 		lblCitas.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCitas.setForeground(new Color(100, 149, 237));

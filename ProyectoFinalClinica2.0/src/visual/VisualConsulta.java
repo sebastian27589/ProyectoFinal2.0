@@ -906,19 +906,22 @@ public class VisualConsulta extends PanelSimulacionAnim {
 			lblRealizar.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-						
-					boolean res = Clinica.getInstance().insertaConsulta(conexion, txtCedula.getText(), Integer.valueOf((spnAltura.getValue().toString())), Integer.valueOf((spnPeso.getValue().toString())), txtareaAlergia.getText(), Clinica.getInstance().getIdUsuarioLogueado(), selectedSintomas, selectedAnalisis, selectedEnfermedades, selectedVacunas, cbxTipoSangre.getSelectedItem().toString(), textAreaDiagnostico.getText());
 					
-					if(res) {
-						JOptionPane.showMessageDialog(null, "Registrada con éxito", "Registrar Consulta", JOptionPane.INFORMATION_MESSAGE);
+					if(roundedGlowPanelRealizar.isEnabled() == true) {
 						
-						loadSintomas(conexion);
-					    loadEnfermedad(conexion);
-					    loadAnalisis(conexion);
-					    loadVacunas(conexion);   
-					}
-					else {
-						JOptionPane.showMessageDialog(null,"¡No Se Pudo Insertar la Consulta!", "Error", JOptionPane.ERROR_MESSAGE);
+						boolean res = Clinica.getInstance().insertaConsulta(conexion, txtCedula.getText(), Integer.valueOf((spnAltura.getValue().toString())), Integer.valueOf((spnPeso.getValue().toString())), txtareaAlergia.getText(), Clinica.getInstance().getIdUsuarioLogueado(), selectedSintomas, selectedAnalisis, selectedEnfermedades, selectedVacunas, cbxTipoSangre.getSelectedItem().toString(), textAreaDiagnostico.getText());
+						
+						if(res) {
+							JOptionPane.showMessageDialog(null, "Registrada con éxito", "Registrar Consulta", JOptionPane.INFORMATION_MESSAGE);
+							
+							loadSintomas(conexion);
+						    loadEnfermedad(conexion);
+						    loadAnalisis(conexion);
+						    loadVacunas(conexion);   
+						}
+						else {
+							JOptionPane.showMessageDialog(null,"¡No Se Pudo Insertar la Consulta!", "Error", JOptionPane.ERROR_MESSAGE);
+						}
 					}
 				}
 			});
@@ -945,6 +948,12 @@ public class VisualConsulta extends PanelSimulacionAnim {
 			roundedGlowHistorial.setBackground(Color.WHITE);
 			
 			lblHistorial = new JLabel("Historial");
+			lblHistorial.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					//Agregar el historial
+				}
+			});
 			lblHistorial.setEnabled(false);
 			lblHistorial.setHorizontalAlignment(SwingConstants.CENTER);
 			lblHistorial.setForeground(new Color(100, 149, 237));

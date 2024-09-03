@@ -836,42 +836,45 @@ public class VisualPaciente extends PanelSimulacionAnim {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				
-				int Option = JOptionPane.showConfirmDialog(null, "¿Está seguro de modificar los datos de la Persona con la Cédula <" + selected.getCedula() + "> y cuyo nombre es: <" + selected.getPrimerNombre() + ">?", "Modificar Persona", JOptionPane.OK_CANCEL_OPTION);
+				if(roundedGlowPanelModificar.isEnabled()) {
 				
-				if (Option == JOptionPane.OK_OPTION) {
+					int Option = JOptionPane.showConfirmDialog(null, "¿Está seguro de modificar los datos de la Persona con la Cédula <" + selected.getCedula() + "> y cuyo nombre es: <" + selected.getPrimerNombre() + ">?", "Modificar Persona", JOptionPane.OK_CANCEL_OPTION);
 					
-					char sexo;
-					
-					if(rdbtnMasculino.isSelected()) {
-						sexo = 'M';
+					if (Option == JOptionPane.OK_OPTION) {
+						
+						char sexo;
+						
+						if(rdbtnMasculino.isSelected()) {
+							sexo = 'M';
+						}
+						
+						else {
+							sexo = 'F';
+						}
+						
+						boolean mod = Clinica.getInstance().modificarPersona(conexion, txtCedula.getText(), txtPNombre.getText(), txtSNombre.getText(), txtPApellido.getText(), txtSApellido.getText(), txtTelefono.getText(), txtareaDireccion.getText(), sexo, dateChooserNacim.getDate());
+						
+						if(mod == true) {
+							JOptionPane.showMessageDialog(null, "Modificado con éxito", "Modificar Persona", JOptionPane.INFORMATION_MESSAGE);
+						}
+						else {
+							JOptionPane.showMessageDialog(null,"¡No Se Pudo Modificar la Persona!", "Error", JOptionPane.ERROR_MESSAGE);
+						}
 					}
 					
-					else {
-						sexo = 'F';
+					limpiarDatos();
+					if (Clinica.getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Administrador")) {
+						loadPersonas(conexion);
 					}
 					
-					boolean mod = Clinica.getInstance().modificarPersona(conexion, txtCedula.getText(), txtPNombre.getText(), txtSNombre.getText(), txtPApellido.getText(), txtSApellido.getText(), txtTelefono.getText(), txtareaDireccion.getText(), sexo, dateChooserNacim.getDate());
+					if (Clinica.getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Secretario")) {
+						loadPersonasEspecificas(conexion);
+					}
 					
-					if(mod == true) {
-						JOptionPane.showMessageDialog(null, "Modificado con éxito", "Modificar Persona", JOptionPane.INFORMATION_MESSAGE);
-					}
-					else {
-						JOptionPane.showMessageDialog(null,"¡No Se Pudo Modificar la Persona!", "Error", JOptionPane.ERROR_MESSAGE);
-					}
+					roundedGlowPanelModificar.setEnabled(false);
+					roundedGlowPanelEliminar.setEnabled(false);
+					roundedGlowHistorial.setEnabled(false);
 				}
-				
-				limpiarDatos();
-				if (Clinica.getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Administrador")) {
-					loadPersonas(conexion);
-				}
-				
-				if (Clinica.getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Secretario")) {
-					loadPersonasEspecificas(conexion);
-				}
-				
-				roundedGlowPanelModificar.setEnabled(false);
-				roundedGlowPanelEliminar.setEnabled(false);
-				roundedGlowHistorial.setEnabled(false);
 			}
 		});
 		roundedGlowPanelModificar.setLayout(null);
@@ -901,30 +904,33 @@ public class VisualPaciente extends PanelSimulacionAnim {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				
-				int Option = JOptionPane.showConfirmDialog(null, "¿Está seguro de eliminar a la Persona con la Cédula <" + selected.getCedula() + "> y cuyo nombre es: <" + selected.getPrimerNombre() + ">?", "Eliminar Persona", JOptionPane.OK_CANCEL_OPTION);
+				if(roundedGlowPanelEliminar.isEnabled()) {
 				
-				if (Option == JOptionPane.OK_OPTION) {
-					boolean elim = Clinica.getInstance().eliminarPersona(conexion, selected.getCedula());
-					if(elim == true) {
-						JOptionPane.showMessageDialog(null, "Eliminado con éxito", "Eliminar Persona", JOptionPane.INFORMATION_MESSAGE);
+					int Option = JOptionPane.showConfirmDialog(null, "¿Está seguro de eliminar a la Persona con la Cédula <" + selected.getCedula() + "> y cuyo nombre es: <" + selected.getPrimerNombre() + ">?", "Eliminar Persona", JOptionPane.OK_CANCEL_OPTION);
+					
+					if (Option == JOptionPane.OK_OPTION) {
+						boolean elim = Clinica.getInstance().eliminarPersona(conexion, selected.getCedula());
+						if(elim == true) {
+							JOptionPane.showMessageDialog(null, "Eliminado con éxito", "Eliminar Persona", JOptionPane.INFORMATION_MESSAGE);
+						}
+						else {
+							JOptionPane.showMessageDialog(null,"¡No Se Pudo Eliminar la Persona!", "Error", JOptionPane.ERROR_MESSAGE);
+						}
 					}
-					else {
-						JOptionPane.showMessageDialog(null,"¡No Se Pudo Eliminar la Persona!", "Error", JOptionPane.ERROR_MESSAGE);
+					
+					limpiarDatos();
+					if (Clinica.getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Administrador")) {
+						loadPersonas(conexion);
 					}
+					
+					if (Clinica.getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Secretario")) {
+						loadPersonasEspecificas(conexion);
+					}
+					
+					roundedGlowPanelModificar.setEnabled(false);
+					roundedGlowPanelEliminar.setEnabled(false);
+					roundedGlowHistorial.setEnabled(false);
 				}
-				
-				limpiarDatos();
-				if (Clinica.getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Administrador")) {
-					loadPersonas(conexion);
-				}
-				
-				if (Clinica.getUsuarioLogueado().getCargoUsuario().equalsIgnoreCase("Secretario")) {
-					loadPersonasEspecificas(conexion);
-				}
-				
-				roundedGlowPanelModificar.setEnabled(false);
-				roundedGlowPanelEliminar.setEnabled(false);
-				roundedGlowHistorial.setEnabled(false);
 			}
 		});
 		roundedGlowPanelEliminar.setLayout(null);

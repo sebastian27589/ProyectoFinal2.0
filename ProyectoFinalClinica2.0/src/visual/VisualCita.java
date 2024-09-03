@@ -127,19 +127,34 @@ public class VisualCita extends PanelSimulacionAnim {
 		Object[] headerCita = {"ID_Cita", "CedulaPaciente", "NombrePaciente", "NombreMedico", "Fecha_Cita"};
 		
 		model = new DefaultTableModel() {
-		    public boolean isCellEditable(int row, int column) {
+		    /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			public boolean isCellEditable(int row, int column) {
 		        return false;
 		    }
 		};
 		model.setColumnIdentifiers(header);
 		modelMedico = new DefaultTableModel() {
-		    public boolean isCellEditable(int row, int column) {
+		    /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			public boolean isCellEditable(int row, int column) {
 		        return false;
 		    }
 		};
 		modelMedico.setColumnIdentifiers(header);
 		modelCita = new DefaultTableModel() {
-		    public boolean isCellEditable(int row, int column) {
+		    /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			public boolean isCellEditable(int row, int column) {
 		        return false;
 		    }
 		};
@@ -1006,12 +1021,14 @@ public class VisualCita extends PanelSimulacionAnim {
 		lblConsultar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				mostrarConsulta.setPersonaConsulta(selected);
-				VisualConsulta.loadPersonaTxt(selected);
-				mostrarConsulta.Aparecer(20);
-				panelTablaMedico.setVisible(false);
-				panelTablaPersona.setVisible(false);
-				panelDatosPersona.setVisible(false);
+				if(roundedGlowConsultar.isEnabled() == true) {
+					mostrarConsulta.setPersonaConsulta(selected);
+					VisualConsulta.loadPersonaTxt(selected);
+					mostrarConsulta.Aparecer(20);
+					panelTablaMedico.setVisible(false);
+					panelTablaPersona.setVisible(false);
+					panelDatosPersona.setVisible(false);
+				}
 			}
 		});
 		lblConsultar.setEnabled(false);
